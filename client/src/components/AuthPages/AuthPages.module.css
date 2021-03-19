@@ -1,0 +1,107 @@
+.AuthContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align: center;
+}
+.Logo {
+  font-size: 150px;
+  width: 150px;
+  height: 150px;
+}
+.Form {
+  width: 100%;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+.Input, .InputContainer {
+  margin: 10px auto;
+  width: 100%;
+  max-width: 350px;
+}
+.Input, .PassInput {
+  display: block;
+  padding: 8px;
+  font-size: 15px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 2px solid rgb(230, 230, 230);
+  outline: none;
+  transition: border 250ms;
+}
+.Input:hover, .PassInput:hover {
+  border: 2px solid rgb(220,220,220);
+  background: rgb(252,252,252);
+}
+.Input:focus, .PassInput:focus {
+  border: 2px solid rgb(var(--blue), 0.5);
+  background: white;
+  box-shadow: 0 0 3px 0.5px rgb(var(--blue), 0.4);
+}
+.Input::placeholder, .PassInput::placeholder {
+  color: rgb(150,150,150);
+}
+.InputContainer {
+  position: relative;
+}
+.PassInput {
+  width: 100%;
+  padding-right: 30px;
+}
+.EyeIcon {
+  position: absolute;
+  right: 8px;
+  top: calc(50% - 8px);
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: rgb(115,115,115);
+}
+.EyeIcon:hover {
+  color: rgb(50,50,50);
+}
+.SubmitBtn {
+  display: block;
+  font-size: 16px;
+  width: 100%;
+  max-width: 350px;
+  margin: 10px auto 20px;
+  padding: 8px;
+  border-radius: 3px;
+  border: 0;
+  outline: 0;
+  background: rgb(var(--blue));
+  color: white;
+  cursor: pointer;
+  transition: background 250ms;
+}
+.SubmitBtn:hover {
+  background: rgb(87, 123, 250);
+}
+.SubmitBtn:active {
+  background: rgb(68, 106, 246);
+}
+.RememberMe {
+  margin: 0 0 30px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  color: rgb(100,100,100);
+}
+.RememberMe input {
+  margin-right: 5px;
+}
+.Link {
+  font-size: 15px;
+  margin-bottom: 15px;
+}
+.Link a {
+  text-decoration: none;
+  color: rgb(var(--blue));
+}

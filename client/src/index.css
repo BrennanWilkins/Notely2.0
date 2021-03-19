@@ -8,3 +8,7 @@ body {
 code {
   font-family: monospace;
 }
+
+:root {
+  --blue: 104, 136, 252;
+}

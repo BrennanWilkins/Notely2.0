@@ -6,7 +6,7 @@
   top: calc(50vh - 260px);
   left: calc(50vw - 130px);
 }
-.Logo {
+.Spinner__logo {
   position: absolute;
   width: 160px;
   height: 160px;
@@ -14,7 +14,7 @@
   left: 55px;
   top: 45px;
 }
-.Circle {
+.Spinner__circle {
   position: absolute;
   width: 100%;
   height: 100%;

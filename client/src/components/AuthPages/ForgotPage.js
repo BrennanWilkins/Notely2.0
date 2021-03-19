@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
-import classes from './AuthPages.module.css';
 import AuthContainer from './AuthContainer';
 import { Link } from 'react-router-dom';
+import { isEmail } from '../../utils/authValidation';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
+  const [msg, setMsg] = useState('');
+  const [showMsg, setShowMsg] = useState(false);
 
   const submitHandler = e => {
     e.preventDefault();
+    if (!isEmail(email)) {
+      setMsg('Please enter a valid email.');
+      return setShowMsg(true);
+    }
   };
 
   return (
     <AuthContainer title="Forgot my password">
-      <form onSubmit={submitHandler} className={classes.Form}>
-        <input className={classes.Input} value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
-        <button type="Submit" className={classes.SubmitBtn}>Send link</button>
+      <form onSubmit={submitHandler} className="AuthPages__form">
+        <input className="AuthPages__input" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
+        <div className={showMsg ? 'AuthPages__msg--show' : 'AuthPages__msg--hide'}>{msg}</div>
+        <button type="Submit" className="AuthPages__submitBtn">Send link</button>
       </form>
-      <div className={classes.Link}><Link to="/login">Back to login</Link></div>
+      <div className="AuthPages__link"><Link to="/login">Back to login</Link></div>
     </AuthContainer>
   );
 };

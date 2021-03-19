@@ -1,11 +1,11 @@
 import React from 'react';
-import classes from './AuthPages.module.css';
+import './AuthPages.css';
 import PropTypes from 'prop-types';
 import { logo } from '../UI/icons';
 
 const AuthContainer = props => (
-  <div className={classes.AuthContainer}>
-    <div className={classes.Logo}>{logo}</div>
+  <div className="AuthContainer">
+    <div className="AuthContainer__logo">{logo}</div>
     <h1>{props.title}</h1>
     {props.children}
   </div>

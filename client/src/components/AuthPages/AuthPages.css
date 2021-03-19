@@ -8,22 +8,23 @@
   overflow-y: auto;
   text-align: center;
 }
-.Logo {
+.AuthContainer__logo {
   font-size: 150px;
   width: 150px;
   height: 150px;
 }
-.Form {
+.AuthPages__form {
   width: 100%;
   padding: 0 10px;
   box-sizing: border-box;
+  position: relative;
 }
-.Input, .InputContainer {
+.AuthPages__input, .AuthPages__inputContainer {
   margin: 10px auto;
   width: 100%;
   max-width: 350px;
 }
-.Input, .PassInput {
+.AuthPages__input, .AuthPages__passInput {
   display: block;
   padding: 8px;
   font-size: 15px;
@@ -33,26 +34,26 @@
   outline: none;
   transition: border 250ms;
 }
-.Input:hover, .PassInput:hover {
+.AuthPages__input:hover, .AuthPages__passInput:hover {
   border: 2px solid rgb(220,220,220);
   background: rgb(252,252,252);
 }
-.Input:focus, .PassInput:focus {
+.AuthPages__input:focus, .AuthPages__passInput:focus {
   border: 2px solid rgb(var(--blue), 0.5);
   background: white;
   box-shadow: 0 0 3px 0.5px rgb(var(--blue), 0.4);
 }
-.Input::placeholder, .PassInput::placeholder {
+.AuthPages__input::placeholder, .AuthPages__passInput::placeholder {
   color: rgb(150,150,150);
 }
-.InputContainer {
+.AuthPages__inputContainer {
   position: relative;
 }
-.PassInput {
+.AuthPages__passInput {
   width: 100%;
   padding-right: 30px;
 }
-.EyeIcon {
+.AuthPages__eye {
   position: absolute;
   right: 8px;
   top: calc(50% - 8px);
@@ -63,15 +64,15 @@
   cursor: pointer;
   color: rgb(115,115,115);
 }
-.EyeIcon:hover {
+.AuthPages__eye:hover {
   color: rgb(50,50,50);
 }
-.SubmitBtn {
+.AuthPages__submitBtn {
   display: block;
   font-size: 16px;
   width: 100%;
   max-width: 350px;
-  margin: 10px auto 20px;
+  margin: 0 auto 20px;
   padding: 8px;
   border-radius: 3px;
   border: 0;
@@ -81,27 +82,44 @@
   cursor: pointer;
   transition: background 250ms;
 }
-.SubmitBtn:hover {
+.AuthPages__submitBtn:hover {
   background: rgb(87, 123, 250);
 }
-.SubmitBtn:active {
+.AuthPages__submitBtn:active {
   background: rgb(68, 106, 246);
 }
-.RememberMe {
+.AuthPages__rememberMe {
   margin: 0 0 30px;
   font-size: 15px;
   display: flex;
   align-items: center;
   color: rgb(100,100,100);
 }
-.RememberMe input {
+.AuthPages__rememberMe input {
   margin-right: 5px;
 }
-.Link {
+.AuthPages__link {
   font-size: 15px;
   margin-bottom: 15px;
 }
-.Link a {
+.AuthPages__link a {
   text-decoration: none;
   color: rgb(var(--blue));
+}
+.AuthPages__msg--show, .AuthPages__msg--hide {
+  width: 100%;
+  max-width: 350px;
+  max-height: 400px;
+  font-size: 14.5px;
+}
+.AuthPages__msg--show {
+  transition: max-height 350ms ease-in, opacity 300ms ease-out 200ms;
+  margin: 0 auto 10px;
+}
+.AuthPages__msg--hide {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  margin: 0 auto;
+  transition: opacity 250ms ease-out, max-height 300ms ease-out 250ms, margin 100ms ease-out 500ms;
 }

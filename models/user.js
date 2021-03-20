@@ -8,7 +8,8 @@ const UserSchema = new Schema({
   invites: [{ type: Schema.Types.ObjectId, ref: 'Note' }],
   notes: [{ type: Schema.Types.ObjectId, ref: 'Note' }],
   pinnedNotes: [String],
-  recoverPassID: String
+  recoverPassID: String,
+  signupID: String
 });
 
 module.exports = mongoose.model('User', UserSchema);

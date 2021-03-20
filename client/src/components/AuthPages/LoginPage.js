@@ -28,7 +28,7 @@ const LoginPage = () => {
   return (
     <AuthContainer title="Log in to Notely">
       <form onSubmit={submitHandler} className="AuthPages__form">
-        <input className="AuthPages__input" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
+        <input className="AuthPages__input" value={email} onChange={e => setEmail(e.target.value)} placeholder="Username or email" />
         <div className="AuthPages__inputContainer">
           <input type={showPass ? 'text' : 'password'} className="AuthPages__passInput" value={pass} onChange={e => setPass(e.target.value)} placeholder="Password" />
           <div className="AuthPages__eye" onClick={() => setShowPass(show => !show)}>{showPass ? eyeHideIcon : eyeIcon}</div>

@@ -3,3 +3,6 @@ export {
   tryAutoLogin,
   login
 } from './auth';
+export {
+  toggleSideNav
+} from './ui';

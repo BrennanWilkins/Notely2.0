@@ -7,7 +7,7 @@ import { doubleChevronIcon } from '../icons';
 const ToggleSideNavBtn = props => (
   <div onClick={props.onClick} className={`ToggleSideNavBtn ${props.isExpanded ? 'ToggleSideNavBtn--left' : 'ToggleSideNavBtn--right'}`}>
     {doubleChevronIcon}
-    <Tooltip position="right">{props.isExpanded ? 'Collapse Menu' : 'Expand Menu'}</Tooltip>
+    <Tooltip position="right">{props.isExpanded ? 'Collapse Menu' : 'Expand Menu'}<div>Ctrl+m</div></Tooltip>
   </div>
 );
 

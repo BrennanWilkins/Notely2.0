@@ -24,7 +24,12 @@ const App = props => {
           <Spinner />
         :
         props.isAuth ?
-          <Suspense fallback={<Spinner />}><NotelyContainer /></Suspense>
+          <Switch>
+            <Route exact path="/">
+              <Suspense fallback={<Spinner />}><NotelyContainer /></Suspense>
+            </Route>
+            <Redirect to="/" />
+          </Switch>
         :
           <Switch>
             <Route exact path="/login">

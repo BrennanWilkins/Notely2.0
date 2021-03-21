@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router';
 import { instance as axios } from '../../axios';
 import { logo } from '../UI/icons';
 import Spinner from '../UI/Spinner/Spinner';
 import './AuthPages.css';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { login } from '../../store/actions';
+import { searchIsValid } from '../../utils/authValidation';
 
-const FinishSignupPage = () => {
+const FinishSignupPage = props => {
   const history = useHistory();
   const [msg, setMsg] = useState('There was an error while finishing your signup.');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!history.location.search || history.location.search.slice(0, 7) !== '?token=') {
+    if (!searchIsValid(history.location.search)) {
       return history.push('/');
     }
     const signupID = history.location.search.slice(7);
     axios.get(`/auth/finishSignup/${signupID}`).then(res => {
       setIsLoading(false);
-      history.push('/');
+      props.login(res.data);
     }).catch(err => {
       setIsLoading(false);
       let errMsg = err?.response?.data?.msg || 'There was an error while finishing your signup.';
@@ -41,4 +45,12 @@ const FinishSignupPage = () => {
   );
 };
 
-export default FinishSignupPage;
+FinishSignupPage.propTypes = {
+  login: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = dispatch => ({
+  login: payload => dispatch(login(payload))
+});
+
+export default connect(null, mapDispatchToProps)(FinishSignupPage);

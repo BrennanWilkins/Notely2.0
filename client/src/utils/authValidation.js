@@ -50,6 +50,8 @@ export const validateLogin = (loginName, pass) => {
   return '';
 };
 
+export const searchIsValid = search => search && search.slice(0, 7) !== '?token=';
+
 export const validateResetPass = (pass, confPass, search) => {
   if (!pass.length) {
     return 'Your password cannot be empty.';
@@ -60,7 +62,7 @@ export const validateResetPass = (pass, confPass, search) => {
   if (pass !== confPass) {
     return 'Password and confirm password must be the same.';
   }
-  if (!search || search.slice(0, 7) !== '?token=') {
+  if (!searchIsValid(search)) {
     return 'Your recovery link is not valid.';
   }
   return '';

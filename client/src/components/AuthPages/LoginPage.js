@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import AuthContainer from './AuthContainer';
 import { eyeIcon, eyeHideIcon } from '../UI/icons';
 import { Link } from 'react-router-dom';
 import { validateLogin } from '../../utils/authValidation';
 import { instance as axios } from '../../axios';
+import { connect } from 'react-redux';
+import { login } from '../../store/actions';
 
-const LoginPage = () => {
+const LoginPage = props => {
   const [loginName, setLoginName] = useState('');
   const [pass, setPass] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -29,6 +32,7 @@ const LoginPage = () => {
     setShowMsg(false);
     axios.post('/auth/login', { loginName, pass, rememberUser }).then(res => {
       setIsLoading(false);
+      props.login(res.data);
     }).catch(err => {
       setIsLoading(false);
       let errMsg = err?.response?.data?.msg || 'There was an error while logging in.';
@@ -58,4 +62,12 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+LoginPage.propTypes = {
+  login: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = dispatch => ({
+  login: payload => dispatch(login(payload))
+});
+
+export default connect(null, mapDispatchToProps)(LoginPage);

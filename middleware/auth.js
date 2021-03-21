@@ -5,12 +5,14 @@ module.exports = (req, res, next) => {
   const token = req.header('x-auth-token');
   if (!token) { return res.status(401); }
 
-  jwt.verify(token, config.get('AUTH_KEY'), (err, decoded) => {
+  jwt.verify(token, process.env.AUTH_KEY, (err, decoded) => {
     if (err) { return res.status(401); }
+    const { userID, email, username } = decoded;
+    if (!userID || !email || !username) { return res.status(401); }
 
-    req.userID = decoded.userID;
-    req.email = decoded.email;
-    req.username = decoded.username;
+    req.userID = userID;
+    req.email = email;
+    req.username = username;
 
     next();
   });

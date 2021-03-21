@@ -1,0 +1,26 @@
+.ToggleSideNavBtn {
+  position: absolute;
+  top: 10px;
+  left: calc(100% - 30px);
+  color: #ddd;
+  background: rgba(var(--gray), 0.5);
+  padding: 4px;
+  border-radius: 3px 0 0 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 30px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.ToggleSideNavBtn:hover .Tooltip {
+  opacity: 1;
+  transform: scale(1);
+}
+.ToggleSideNavBtn--left svg {
+  transform: rotate(0deg);
+}
+.ToggleSideNavBtn--right svg {
+  transform: rotate(180deg);
+}

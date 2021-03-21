@@ -1,0 +1,55 @@
+.SideNav {
+  background: rgb(var(--black));
+  height: 100%;
+  transition: width 200ms ease-out;
+}
+.SideNav--expand {
+  width: 230px;
+}
+.SideNav--contract {
+  width: 55px;
+}
+.SideNav__title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 23px;
+  color: rgb(var(--blue));
+  margin: 20px 0;
+}
+.SideNav__title div {
+  margin-left: 5px;
+}
+.SideNav__title svg {
+  font-size: 32px;
+  margin-left: 20px;
+}
+.SideNav--contract .SideNav__title div, .SideNav--contract .SideNav__link div {
+  display: none;
+}
+.SideNav__link {
+  color: rgb(238, 238, 238);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 17px;
+  box-sizing: border-box;
+  cursor: pointer;
+  padding: 10px 0;
+}
+.SideNav__link:hover {
+  background: rgba(var(--gray), 0.5);
+}
+.SideNav__link div {
+  margin-left: 6px;
+}
+.SideNav__link svg {
+  font-size: 20px;
+  margin-left: 20px;
+}
+.SideNav--contract .SideNav__title, .SideNav--contract .SideNav__link {
+  justify-content: center;
+}
+.SideNav--contract .SideNav__link svg, .SideNav--contract .SideNav__title svg {
+  margin: 0;
+}

@@ -14,13 +14,16 @@ const NotelyContainer = lazy(() => import('./components/NotelyContainer/NotelyCo
 const App = props => {
   useEffect(() => props.tryAutoLogin(), []);
 
+  // if trying to auto log in or not auth yet but token in LS then show spinner
+  // if user is auth then show notely container
+  // if auto log in failed & user not auth & no token then show auth pages
   return (
     <BrowserRouter>
       {
-        props.isAutoLoggingIn ?
+        (props.isAutoLoggingIn || (!props.isAuth && localStorage['token'])) ?
           <Spinner />
         :
-        (props.isAuth || localStorage['token']) ?
+        props.isAuth ?
           <Suspense fallback={<Spinner />}><NotelyContainer /></Suspense>
         :
           <Switch>

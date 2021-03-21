@@ -1,0 +1,30 @@
+.Tooltip {
+  position: absolute;
+  font-size: 11px;
+  border-radius: 6px;
+  padding: 8px 5px;
+  color: white;
+  background: #555;
+  width: 90px;
+  height: 11px;
+  line-height: 11px;
+  text-align: center;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 250ms, transform 250ms;
+}
+.Tooltip--right {
+  left: calc(100% + 8px);
+}
+.Tooltip--right::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid #555;
+  left: -5px;
+  top: calc(50% - 5px);
+}

@@ -8,6 +8,9 @@
   overflow-y: auto;
   text-align: center;
 }
+.AuthContainer--dark {
+  background: rgb(245,245,245);
+}
 .AuthContainer__logo {
   font-size: 150px;
   width: 150px;
@@ -88,6 +91,10 @@
 .AuthPages__submitBtn:active {
   background: rgb(68, 106, 246);
 }
+.AuthPages__submitBtn:disabled {
+  background: rgb(200,200,200);
+  cursor: default;
+}
 .AuthPages__rememberMe {
   margin: 0 0 30px;
   font-size: 15px;
@@ -122,4 +129,15 @@
   overflow: hidden;
   margin: 0 auto;
   transition: opacity 250ms ease-out, max-height 300ms ease-out 250ms, margin 100ms ease-out 500ms;
+}
+.SignupSuccess__text {
+  font-size: 20px;
+  margin: 40px 0;
+}
+.SignupSuccess__mailIcon {
+  color: rgb(150,150,150);
+  font-size: 50px;
+  display: flex;
+  justify-content: center;
+  margin: 60px 0 -30px;
 }

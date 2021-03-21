@@ -26,8 +26,8 @@ export const validateSignup = (email, username, pass, confPass) => {
   if (pass.length < 8) {
     return 'Your password must be at least 8 characters.';
   }
-  if (pass.length > 100) {
-    return 'Your password cannot be over 100 characters.';
+  if (pass.length > 70) {
+    return 'Your password cannot be over 70 characters.';
   }
   if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%&*?])[\w\d#$@!%&*?]{8,100}$/.test(pass)) {
     return 'Your password must contain at least one number, letter, and special character.';
@@ -38,8 +38,8 @@ export const validateSignup = (email, username, pass, confPass) => {
   return '';
 };
 
-export const validateLogin = (email, pass) => {
-  if (!email.length) {
+export const validateLogin = (loginName, pass) => {
+  if (!loginName.length) {
     return 'Please enter your username or email.';
   }
   if (!pass.length) {

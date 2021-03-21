@@ -3,6 +3,8 @@ import AuthContainer from './AuthContainer';
 import { eyeIcon, eyeHideIcon } from '../UI/icons';
 import { Link } from 'react-router-dom';
 import { validateSignup } from '../../utils/authValidation';
+import { instance as axios } from '../../axios';
+import { logo, mailIcon } from '../UI/icons';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +16,8 @@ const LoginPage = () => {
   const [rememberUser, setRememberUser] = useState(false);
   const [msg, setMsg] = useState('');
   const [showMsg, setShowMsg] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSignupSuccess, setShowSignupSuccess] = useState(false);
 
   useEffect(() => {
     if (showMsg) { setShowMsg(false); }
@@ -26,9 +30,27 @@ const LoginPage = () => {
       setShowMsg(true);
       return setMsg(validationMsg);
     }
+    setIsLoading(true);
+    axios.post('/auth/signup', { email, username, pass, rememberUser }).then(res => {
+      setIsLoading(false);
+      setShowSignupSuccess(true);
+    }).catch(err => {
+      let errMsg = err?.response?.data?.msg || 'There was an error while signing up.';
+      setMsg(errMsg);
+      setShowMsg(true);
+      setIsLoading(false);
+    });
   };
 
-  return (
+  return showSignupSuccess ?
+    <div className="AuthContainer AuthContainer--dark">
+      <div className="AuthContainer__logo">{logo}</div>
+      <div className="SignupSuccess__mailIcon">{mailIcon}</div>
+      <div className="SignupSuccess__text">
+        Please click on the link sent to your email address to finish signing up.
+      </div>
+    </div>
+  : (
     <AuthContainer title="Sign up for Notely">
       <form onSubmit={submitHandler} className="AuthPages__form">
         <input className="AuthPages__input" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />
@@ -43,7 +65,7 @@ const LoginPage = () => {
           <div className="AuthPages__eye" onClick={() => setShowConfirmPass(show => !show)}>{showConfirmPass ? eyeHideIcon : eyeIcon}</div>
         </div>
         <div className={showMsg ? 'AuthPages__msg--show' : 'AuthPages__msg--hide'}>{msg}</div>
-        <button type="Submit" className="AuthPages__submitBtn">Sign up</button>
+        <button type="Submit" className="AuthPages__submitBtn" disabled={isLoading}>Sign up</button>
       </form>
       <label className="AuthPages__rememberMe">
         <input type="checkbox" checked={rememberUser} onChange={() => setRememberUser(prev => !prev)} />

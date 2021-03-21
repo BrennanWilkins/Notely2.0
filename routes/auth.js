@@ -1,10 +1,12 @@
 const router = require('express').Router();
 const User = require('../models/user');
+const Note = require('../models/note');
 const { body, param } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const validate = require('../middleware/validate');
 const nodemailer = require('nodemailer');
+const auth = require('../middleware/auth');
 
 const signToken = async (user, expiration) => {
   // create jwt token that expires in given expiration days when logging in
@@ -97,7 +99,14 @@ router.get('/finishSignup/:signupID',
         // if user chose remember me in signup, token expires in 30 days, else 7 days
         const token = await signToken(user, decoded.rememberUser ? '30d' : '7d');
 
-        res.status(200).json({ token });
+        res.status(200).json({
+          token,
+          notes: [],
+          pinnedNotes: [],
+          invites: [],
+          email: user.email,
+          username: user.username
+        });
       } catch (err) { res.status(500).json({ msg: 'There was an error while finishing your signup.' }); }
     });
   }
@@ -110,7 +119,7 @@ router.post('/login',
       const { loginName, pass, rememberUser } = req.body;
       // if loginName includes '@' then user logging in with email, else with username
       const userQuery = loginName.includes('@') ? { email: loginName } : { username: loginName };
-      const user = await User.findOne(userQuery).select('email username password').lean();
+      const user = await User.findOne(userQuery);
 
       const errMsg = userQuery.email ? 'Incorrect email or password.' : 'Incorrect username or password.';
       if (!user) {
@@ -127,8 +136,38 @@ router.post('/login',
 
       const token = await signToken(user, rememberUser ? '30d' : '7d');
 
-      res.status(200).json({ token });
+      await user.populate('notes').populate('invites').execPopulate();
+
+      res.status(200).json({
+        token,
+        notes: user.notes,
+        pinnedNotes: user.pinnedNotes,
+        invites: user.invites,
+        email: user.email,
+        username: user.username
+      });
     } catch (err) { res.status(500).json({ msg: 'There was an error while logging in.' }); }
+  }
+);
+
+// client calls get login if token already present in LS
+router.get('/login',
+  auth,
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.userID).populate('notes').populate('invites').lean();
+      if (!user) { throw 'No user found'; }
+
+      res.status(200).json({
+        notes: user.notes,
+        pinnedNotes: user.pinnedNotes,
+        invites: user.invites,
+        email: user.email,
+        username: user.username
+      });
+    } catch (err) {
+      res.sendStatus(500);
+    }
   }
 );
 

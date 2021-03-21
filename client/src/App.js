@@ -5,6 +5,7 @@ const LoginPage = lazy(() => import('./components/AuthPages/LoginPage'));
 const SignupPage = lazy(() => import('./components/AuthPages/SignupPage'));
 const ForgotPage = lazy(() => import('./components/AuthPages/ForgotPage'));
 const FinishSignupPage = lazy(() => import('./components/AuthPages/FinishSignupPage'));
+const ResetPassPage = lazy(() => import('./components/AuthPages/ResetPassPage'));
 
 const App = () => {
   return (
@@ -21,6 +22,9 @@ const App = () => {
         </Route>
         <Route exact path="/forgot">
           <Suspense fallback={<Spinner />}><ForgotPage /></Suspense>
+        </Route>
+        <Route exact path="/reset-password">
+          <Suspense fallback={<Spinner />}><ResetPassPage /></Suspense>
         </Route>
         <Redirect to="/login" />
       </Switch>

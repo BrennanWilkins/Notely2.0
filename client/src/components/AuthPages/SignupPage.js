@@ -6,7 +6,7 @@ import { validateSignup } from '../../utils/authValidation';
 import { instance as axios } from '../../axios';
 import { logo, mailIcon } from '../UI/icons';
 
-const LoginPage = () => {
+const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [pass, setPass] = useState('');
@@ -31,6 +31,7 @@ const LoginPage = () => {
       return setMsg(validationMsg);
     }
     setIsLoading(true);
+    setShowMsg(false);
     axios.post('/auth/signup', { email, username, pass, rememberUser }).then(res => {
       setIsLoading(false);
       setShowSignupSuccess(true);
@@ -76,4 +77,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;

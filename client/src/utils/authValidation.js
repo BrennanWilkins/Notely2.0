@@ -4,6 +4,8 @@ export const isEmail = email => (
 
 export const isUsername = username => /^[A-Za-z0-9]+$/.test(username);
 
+export const passIsValid = pass => /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%&*?])[\w\d#$@!%&*?]{8,70}$/.test(pass);
+
 export const validateSignup = (email, username, pass, confPass) => {
   if (!username.length) {
     return 'Please enter your username';
@@ -29,7 +31,7 @@ export const validateSignup = (email, username, pass, confPass) => {
   if (pass.length > 70) {
     return 'Your password cannot be over 70 characters.';
   }
-  if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%&*?])[\w\d#$@!%&*?]{8,100}$/.test(pass)) {
+  if (!passIsValid(pass)) {
     return 'Your password must contain at least one number, letter, and special character.';
   }
   if (pass !== confPass) {
@@ -44,6 +46,22 @@ export const validateLogin = (loginName, pass) => {
   }
   if (!pass.length) {
     return 'Please enter your password.';
+  }
+  return '';
+};
+
+export const validateResetPass = (pass, confPass, search) => {
+  if (!pass.length) {
+    return 'Your password cannot be empty.';
+  }
+  if (!passIsValid(pass)) {
+    return 'Your password must contain at least one number, letter, and special character.';
+  }
+  if (pass !== confPass) {
+    return 'Password and confirm password must be the same.';
+  }
+  if (!search || search.slice(0, 7) !== '?token=') {
+    return 'Your recovery link is not valid.';
   }
   return '';
 };

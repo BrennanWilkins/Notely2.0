@@ -13,6 +13,16 @@ const signToken = async (user, expiration) => {
   return token;
 };
 
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  secure: false,
+  tls: { rejectUnauthorized: false },
+  auth: {
+    user: process.env.NOTELY_EMAIL,
+    pass: process.env.NOTELY_PASS
+  }
+});
+
 router.post('/signup',
   validate(
     [body('email').isEmail(),
@@ -48,16 +58,6 @@ router.post('/signup',
         signupID
       });
       await user.save();
-
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        secure: false,
-        tls: { rejectUnauthorized: false },
-        auth: {
-          user: process.env.NOTELY_EMAIL,
-          pass: process.env.NOTELY_PASS
-        }
-      });
 
       // send link to provided email with hash to finish signup
       const hRef = `http://localhost:3000/finish-signup?token=${signupID}`;
@@ -129,6 +129,63 @@ router.post('/login',
 
       res.status(200).json({ token });
     } catch (err) { res.status(500).json({ msg: 'There was an error while logging in.' }); }
+  }
+);
+
+router.post('/resetPass',
+  validate([
+    body('recoverPassID').notEmpty(),
+    body('newPass').matches(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%&*?])[\w\d#$@!%&*?]{8,70}$/),
+  ]),
+  async (req, res) => {
+    try {
+      const { recoverPassID, newPass } = req.body;
+      jwt.verify(recoverPassID, process.env.AUTH_KEY, async (err, decoded) => {
+        if (err) {
+          if (err.name === 'TokenExpiredError') {
+            const user = await User.updateOne({ email: decoded.email, recoverPassID }, { recoverPassID: null });
+            if (!user) { return res.status(400).json({ msg: 'Your recovery link is not valid.' }); }
+            return res.status(400).json({ msg: 'Your recovery link has expired.' });
+          }
+          throw err;
+        }
+        try {
+          const hashedPass = await bcryptjs.hash(newPass, 10);
+          await User.updateOne({ email: decoded.email }, { recoverPassID: null, password: hashedPass });
+        } catch (err) { throw err; }
+      });
+
+      res.sendStatus(200);
+    } catch (err) { res.status(500).json({ msg: 'There was an error while changing your password.' }); }
+  }
+);
+
+router.post('/forgotPass',
+  validate([body('email').isEmail()]),
+  async (req, res) => {
+    try {
+      const email = req.body.email;
+      const user = await User.findOne({ email });
+      if (!user) { return res.status(400).json({ msg: 'No user was found for the provided email.' }); }
+
+      // jwt token expires in 8hr to recover password
+      const recoverPassID = await jwt.sign({ email }, process.env.AUTH_KEY, { expiresIn: '8h' });
+
+      user.recoverPassID = recoverPassID;
+      await user.save();
+
+      // send email to user with link to reset password
+      const hRef = `http://localhost:3000/reset-password?token=${recoverPassID}`;
+      const mailOptions = {
+        from: process.env.NOTELY_EMAIL,
+        to: email,
+        subject: 'Reset your Notely password',
+        html: `<h2>Please click on the link below to reset your password.</h2><p><a href="${hRef}">Reset password</a></p>`
+      };
+      await transporter.sendMail(mailOptions);
+
+      res.sendStatus(200);
+    } catch (err) { res.sendStatus(500); }
   }
 );
 

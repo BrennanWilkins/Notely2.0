@@ -113,6 +113,9 @@
   text-decoration: none;
   color: rgb(var(--blue));
 }
+.AuthPages__link a:hover {
+  color: rgb(68, 106, 244);
+}
 .AuthPages__msg--show, .AuthPages__msg--hide {
   width: 100%;
   max-width: 350px;

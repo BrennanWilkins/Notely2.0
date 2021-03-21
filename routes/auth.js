@@ -17,7 +17,7 @@ router.post('/signup',
   validate(
     [body('email').isEmail(),
     body('username').isAlphanumeric().isLength({ min: 1, max: 50 }),
-    body('pass').matches(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%&*?])[\w\d#$@!%&*?]{8,100}$/),
+    body('pass').matches(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%&*?])[\w\d#$@!%&*?]{8,70}$/),
     body('rememberUser').isBoolean()]
   ),
   async (req, res) => {
@@ -77,27 +77,58 @@ router.post('/signup',
 router.get('/finishSignup/:signupID',
   validate([param('signupID').notEmpty()]),
   (req, res) => {
-    jwt.verify(req.params.signupID, process.env.AUTH_KEY, async (err, decoded) => {
+    const signupID = req.params.signupID;
+    jwt.verify(signupID, process.env.AUTH_KEY, async (err, decoded) => {
       try {
         if (err) {
           if (err.name === 'TokenExpiredError') {
-            await User.deleteOne({ email: decoded.email });
+            await User.deleteOne({ email: decoded.email, signupID });
             return res.status(400).json({ msg: 'Your signup link has expired. Try signing up again.' });
           }
           throw err;
         }
-        const user = await User.findOneAndUpdate({ email: decoded.email }, { signupID: null });
+        const user = await User.findOne({ email: decoded.email });
+        if (user.signupID === null) {
+          return res.status(400).json({ msg: 'Your account has already been signed up.' });
+        }
+        user.signupID = null;
+        await user.save();
 
         // if user chose remember me in signup, token expires in 30 days, else 7 days
-        const token = await signToken(user, decoded.rememberMe ? '30d' : '7d');
+        const token = await signToken(user, decoded.rememberUser ? '30d' : '7d');
 
-        res.status(200).json({
-          email: user.email,
-          username: user.username,
-          token
-        });
+        res.status(200).json({ token });
       } catch (err) { res.status(500).json({ msg: 'There was an error while finishing your signup.' }); }
     });
+  }
+);
+
+router.post('/login',
+  validate([body('loginName').notEmpty(), body('pass').notEmpty(), body('rememberUser').isBoolean()]),
+  async (req, res) => {
+    try {
+      const { loginName, pass, rememberUser } = req.body;
+      // if loginName includes '@' then user logging in with email, else with username
+      const userQuery = loginName.includes('@') ? { email: loginName } : { username: loginName };
+      const user = await User.findOne(userQuery).select('email username password').lean();
+
+      const errMsg = userQuery.email ? 'Incorrect email or password.' : 'Incorrect username or password.';
+      if (!user) {
+        return res.status(400).json({ msg: errMsg });
+      }
+      // verify password
+      const isValidPass = await bcryptjs.compare(pass, user.password);
+      if (!isValidPass) {
+        return res.status(400).json({ msg: errMsg });
+      }
+
+      // user logged in so no longer needs password recovery token if was generated
+      if (user.recoverPassID) { await User.updateOne({ _id: user._id }, { recoverPassID: null }); }
+
+      const token = await signToken(user, rememberUser ? '30d' : '7d');
+
+      res.status(200).json({ token });
+    } catch (err) { res.status(500).json({ msg: 'There was an error while logging in.' }); }
   }
 );
 

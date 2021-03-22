@@ -1,0 +1,214 @@
+.SettingsContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.3);
+}
+.SettingsModal {
+  position: absolute;
+  width: 95%;
+  height: 95%;
+  max-width: 500px;
+  max-height: 500px;
+  background: white;
+  top: max(2.5%, calc(50% - 250px));
+  left: max(2.5%, calc(50% - 250px));
+  border-radius: 4px;
+  box-shadow: 0 3px 7px 3px rgba(0,0,0,0.15);
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: auto;
+  text-align: center;
+}
+.SettingsModal::-webkit-scrollbar-track {
+  border-radius: 15px;
+  background: rgb(225, 225, 225);
+}
+.SettingsModal::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  border-radius: 15px;
+  background: rgb(225, 225, 225);
+}
+.SettingsModal::-webkit-scrollbar-thumb {
+  border-radius: 15px;
+  background: rgb(197, 197, 197);
+}
+.SettingsModal__title {
+  font-size: 18px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1.2px solid #ddd;
+  color: rgb(50,50,50);
+}
+.SettingsModal__closeBtn, .SettingsModal__backBtn {
+  position: absolute;
+  cursor: pointer;
+  border-radius: 4px;
+  color: rgb(50,50,50);
+  transition: all 250ms;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 10px;
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+.SettingsModal__closeBtn {
+  right: 10px;
+}
+.SettingsModal__backBtn {
+  left: 10px;
+  font-size: 19px;
+  animation: backBtnSlideIn 250ms forwards;
+}
+@keyframes backBtnSlideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.SettingsModal__closeBtn:hover, .SettingsModal__backBtn:hover {
+  background: rgb(240,240,240);
+  color: black;
+}
+.SettingsModal__subTitle {
+  font-size: 15px;
+  color: rgb(110,110,110);
+  margin: 10px 0 4px;
+}
+.SettingsModal__info {
+  font-size: 16px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.SettingsModal__saveBtn, .SettingsModal__logoutBtn, .SettingsModal__deleteBtn {
+  display: block;
+  border-radius: 3px;
+  border: 0;
+  outline: 0;
+  background: rgb(var(--blue));
+  color: white;
+  cursor: pointer;
+  transition: background 250ms;
+}
+.SettingsModal__saveBtn {
+  font-size: 15px;
+  margin-top: 15px;
+  padding: 8px 12px;
+}
+.SettingsModal__deleteBtn {
+  background: red;
+  margin: auto;
+  width: 100%;
+  font-size: 14px;
+  padding: 8px 12px;
+}
+.SettingsModal__logoutBtn {
+  font-size: 16px;
+  width: 100%;
+  max-width: 200px;
+  margin: 20px auto 30px;
+  padding: 8px 6px;
+}
+.SettingsModal__logoutBtn:hover, .SettingsModal__saveBtn:hover {
+  background: rgb(87, 123, 250);
+}
+.SettingsModal__logoutBtn:active, .SettingsModal__saveBtn:active {
+  background: rgb(68, 106, 246);
+}
+.SettingsModal__deleteBtn:hover {
+  background: rgb(228, 0, 0);
+}
+.SettingsModal__deleteBtn:active {
+  background: rgb(200, 0, 0);
+}
+.SettingsModal__btn {
+  margin: 20px auto;
+  cursor: pointer;
+  text-decoration: underline;
+  border-radius: 3px;
+  width: 100%;
+  max-width: 200px;
+  padding: 8px 0;
+}
+.SettingsModal__btn:hover {
+  background: rgb(240,240,240);
+}
+.SettingsModal__container {
+  width: 100%;
+  max-width: 280px;
+  text-align: left;
+  margin: 15px auto;
+}
+.SettingsModal__section {
+  width: 100%;
+  margin: 10px auto;
+}
+.SettingsModal__section span {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgb(120,120,120);
+  width: 100%;
+  margin-left: 2px;
+  padding-bottom: 2px;
+}
+.SettingsModal__input input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 2px solid #ddd;
+  padding: 6px 28px 6px 7px;
+  outline: none;
+  transition: border 250ms;
+}
+.SettingsModal__input input:hover {
+  background: rgb(252,252,252);
+}
+.SettingsModal__input input:focus {
+  background: white;
+  border: 2px solid rgb(var(--blue));
+}
+.SettingsModal button:disabled {
+  background: rgb(200,200,200);
+  cursor: default;
+}
+.SettingsModal__msg {
+  font-size: 15px;
+  margin-top: 10px;
+  transition: opacity 250ms;
+}
+.SettingsModal__msg--hide {
+  opacity: 0;
+}
+.SettingsModal__input {
+  position: relative;
+}
+.SettingsModal__eye {
+  position: absolute;
+  right: 8px;
+  top: calc(50% - 8px);
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: rgb(115,115,115);
+}
+.SettingsModal__eye:hover {
+  color: rgb(50,50,50);
+}
+.SettingsModal__deleteInfo {
+  font-size: 15px;
+  text-align: center;
+  padding: 12px;
+}

@@ -56,6 +56,12 @@ export const validateResetPass = (pass, confPass, search) => {
   if (!pass.length) {
     return 'Your password cannot be empty.';
   }
+  if (pass.length < 8) {
+    return 'Your password must be at least 8 characters.';
+  }
+  if (pass.length > 70) {
+    return 'Your password cannot be over 70 characters.';
+  }
   if (!passIsValid(pass)) {
     return 'Your password must contain at least one number, letter, and special character.';
   }
@@ -64,6 +70,28 @@ export const validateResetPass = (pass, confPass, search) => {
   }
   if (!searchIsValid(search)) {
     return 'Your recovery link is not valid.';
+  }
+  return '';
+};
+
+export const validateChangePass = (oldPass, newPass, confPass) => {
+  if (!oldPass.length) {
+    return 'Please enter your old password.';
+  }
+  if (newPass.length < 8) {
+    return 'Your new password must be at least 8 characters.';
+  }
+  if (newPass.length > 70) {
+    return 'Your new password cannot be over 70 characters.';
+  }
+  if (!passIsValid(newPass)) {
+    return 'Your new password must contain at least one number, letter, and special character.';
+  }
+  if (newPass === oldPass) {
+    return 'Your new password cannot be the same as your old password.';
+  }
+  if (newPass !== confPass) {
+    return 'Your new password and confirm password must be the same.';
   }
   return '';
 };

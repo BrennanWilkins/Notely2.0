@@ -42,7 +42,7 @@ router.post('/signup',
 
       // check if username taken
       const usernameExists = await User.exists({ username });
-      if (usernameExists) { return res.status(400).json({ msg: 'That username is already taken' }); }
+      if (usernameExists) { return res.status(400).json({ msg: 'That username is already taken.' }); }
 
       const hashedPassword = await bcryptjs.hash(pass, 10);
 
@@ -222,6 +222,36 @@ router.post('/forgotPass',
         html: `<h2>Please click on the link below to reset your password.</h2><p><a href="${hRef}">Reset password</a></p>`
       };
       await transporter.sendMail(mailOptions);
+
+      res.sendStatus(200);
+    } catch (err) { res.sendStatus(500); }
+  }
+);
+
+router.post('/changePass',
+  auth,
+  validate([body('oldPass').notEmpty(), body('newPass').matches(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%&*?])[\w\d#$@!%&*?]{8,70}$/)]),
+  async (req, res) => {
+    try {
+      const { oldPass, newPass } = req.body;
+      const user = await User.findById(req.userID);
+      if (!user) { throw 'User not found'; }
+
+      // verify correct old pass & new pass not same as old
+      const [isValidPass, isSamePass] = await Promise.all([
+        bcryptjs.compare(oldPass, user.password),
+        bcryptjs.compare(newPass, user.password)
+      ]);
+      if (!isValidPass) {
+        return res.status(400).json({ msg: 'Your old password is not correct.' });
+      }
+      if (isSamePass) {
+        return res.status(400).json({ msg: 'Your new password cannot be the same as your old password.' });
+      }
+
+      const hashedPass = await bcryptjs.hash(newPass, 10);
+      user.password = hashedPass;
+      await user.save();
 
       res.sendStatus(200);
     } catch (err) { res.sendStatus(500); }

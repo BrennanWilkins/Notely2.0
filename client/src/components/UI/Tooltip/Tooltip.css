@@ -13,6 +13,13 @@
   transform: scale(0.9);
   transition: opacity 250ms, transform 250ms;
   white-space: nowrap;
+  user-select: none;
+  cursor: default;
+  pointer-events: none;
+}
+.Tooltip:hover {
+  opacity: 0 !important;
+  transform: scale(0.9) !important;
 }
 .Tooltip div {
   font-size: 11;

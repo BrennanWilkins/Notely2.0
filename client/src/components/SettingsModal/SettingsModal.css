@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.3);
+  animation: settingsModalFadeIn 325ms forwards;
 }
 .SettingsModal {
   position: absolute;
@@ -21,6 +21,23 @@
   box-sizing: border-box;
   overflow: auto;
   text-align: center;
+  animation: settingsModalSlideIn 250ms ease-out forwards;
+}
+@keyframes settingsModalFadeIn {
+  from {
+    background: transparent;
+  }
+  to {
+    background: rgba(0,0,0,0.3);
+  }
+}
+@keyframes settingsModalSlideIn {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 .SettingsModal::-webkit-scrollbar-track {
   border-radius: 15px;

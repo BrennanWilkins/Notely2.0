@@ -150,27 +150,6 @@ router.post('/login',
   }
 );
 
-// client calls get login if token already present in LS
-router.get('/login',
-  auth,
-  async (req, res) => {
-    try {
-      const user = await User.findById(req.userID).populate('notes').populate('invites').lean();
-      if (!user) { throw 'No user found'; }
-
-      res.status(200).json({
-        notes: user.notes,
-        pinnedNotes: user.pinnedNotes,
-        invites: user.invites,
-        email: user.email,
-        username: user.username
-      });
-    } catch (err) {
-      res.sendStatus(500);
-    }
-  }
-);
-
 router.post('/resetPass',
   validate([
     body('recoverPassID').notEmpty(),

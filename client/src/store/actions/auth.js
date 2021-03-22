@@ -11,7 +11,7 @@ export const tryAutoLogin = () => async dispatch => {
   try {
     dispatch({ type: actionTypes.AUTO_LOGIN_IS_LOADING });
     axios.defaults.headers.common['x-auth-token'] = localStorage['token'];
-    const res = await axios.get('/auth/login');
+    const res = await axios.get('/user');
     dispatch({ type: actionTypes.LOGIN, payload: res.data });
   } catch (err) {
     dispatch(logout());

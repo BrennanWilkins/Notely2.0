@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { instance as axios } from '../../axios';
 import { validateChangePass } from '../../utils/authValidation';
-import { eyeIcon, eyeHideIcon } from '../UI/icons';
+import PassInput from '../UI/PassInput/PassInput';
 
 const ChangePass = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,9 +10,6 @@ const ChangePass = () => {
   const [oldPass, setOldPass] = useState('');
   const [newPass, setNewPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
-  const [showOldPass, setShowOldPass] = useState(false);
-  const [showNewPass, setShowNewPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
 
   const changePassHandler = () => {
     const validationMsg = validateChangePass(oldPass, newPass, confirmPass);
@@ -56,28 +53,19 @@ const ChangePass = () => {
       <div className="SettingsModal__section">
         <label>
           <span>Old password</span>
-          <div className="SettingsModal__input">
-            <input type={showOldPass ? 'text' : 'password'} value={oldPass} onChange={oldPassHandler} />
-            <div className="SettingsModal__eye" onClick={() => setShowOldPass(show => !show)}>{showOldPass ? eyeHideIcon : eyeIcon}</div>
-          </div>
+          <PassInput value={oldPass} onChange={oldPassHandler} />
         </label>
       </div>
       <div className="SettingsModal__section">
         <label>
           <span>New password</span>
-          <div className="SettingsModal__input">
-            <input type={showNewPass ? 'text' : 'password'} value={newPass} onChange={newPassHandler} />
-            <div className="SettingsModal__eye" onClick={() => setShowNewPass(show => !show)}>{showNewPass ? eyeHideIcon : eyeIcon}</div>
-          </div>
+          <PassInput value={newPass} onChange={newPassHandler} />
         </label>
       </div>
       <div className="SettingsModal__section">
         <label>
           <span>Confirm new password</span>
-          <div className="SettingsModal__input">
-            <input type={showConfirmPass ? 'text' : 'password'} value={confirmPass} onChange={confPassHandler} />
-            <div className="SettingsModal__eye" onClick={() => setShowConfirmPass(show => !show)}>{showConfirmPass ? eyeHideIcon : eyeIcon}</div>
-          </div>
+          <PassInput value={confirmPass} onChange={confPassHandler} />
         </label>
       </div>
       <button className="SettingsModal__saveBtn" disabled={isLoading} onClick={changePassHandler}>Save</button>

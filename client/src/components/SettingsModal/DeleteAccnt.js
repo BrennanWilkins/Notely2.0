@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { instance as axios } from '../../axios';
-import { eyeIcon, eyeHideIcon } from '../UI/icons';
+import PassInput from '../UI/PassInput/PassInput';
 
 const DeleteAccnt = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [msg, setMsg] = useState('');
   const [showMsg, setShowMsg] = useState(false);
   const [pass, setPass] = useState('');
-  const [showPass, setShowPass] = useState(false);
 
   const deleteHandler = () => {
     setIsLoading(true);
@@ -33,10 +32,7 @@ const DeleteAccnt = props => {
       Any notes that are shared with another collaborator will not be deleted. Please enter your password to confirm.</p>
       <div className="SettingsModal__container">
         <div className="SettingsModal__section">
-          <div className="SettingsModal__input">
-            <input type={showPass ? 'text' : 'password'} value={pass} onChange={passHandler} />
-            <div className="SettingsModal__eye" onClick={() => setShowPass(show => !show)}>{showPass ? eyeHideIcon : eyeIcon}</div>
-          </div>
+          <PassInput value={pass} onChange={passHandler} />
         </div>
         <button className="SettingsModal__deleteBtn" disabled={isLoading || !pass} onClick={deleteHandler}>DELETE MY ACCOUNT</button>
         <div className={`SettingsModal__msg ${!showMsg ? 'SettingsModal__msg--hide' : ''}`}>{msg}</div>

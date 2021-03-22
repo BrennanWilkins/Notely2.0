@@ -161,23 +161,6 @@
   margin-left: 2px;
   padding-bottom: 2px;
 }
-.SettingsModal__input input {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: 3px;
-  border: 2px solid #ddd;
-  padding: 6px 28px 6px 7px;
-  outline: none;
-  transition: border 250ms;
-}
-.SettingsModal__input input:hover {
-  background: rgb(252,252,252);
-}
-.SettingsModal__input input:focus {
-  background: white;
-  border: 2px solid rgb(var(--blue));
-}
 .SettingsModal button:disabled {
   background: rgb(200,200,200);
   cursor: default;
@@ -189,23 +172,6 @@
 }
 .SettingsModal__msg--hide {
   opacity: 0;
-}
-.SettingsModal__input {
-  position: relative;
-}
-.SettingsModal__eye {
-  position: absolute;
-  right: 8px;
-  top: calc(50% - 8px);
-  font-size: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: rgb(115,115,115);
-}
-.SettingsModal__eye:hover {
-  color: rgb(50,50,50);
 }
 .SettingsModal__deleteInfo {
   font-size: 15px;

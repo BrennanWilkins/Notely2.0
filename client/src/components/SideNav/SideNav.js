@@ -21,19 +21,19 @@ const SideNav = props => {
         <div className="SideNav__container">
           <div className="SideNav__link">
             <div className="SideNav__innerLink">{notesIcon}<div>All Notes</div></div>
-            {!props.sideNavShown && <Tooltip className="SideNav__tooltip" position="right">All Notes</Tooltip>}
+            {!props.sideNavShown && <Tooltip position="right">All Notes</Tooltip>}
           </div>
           <div className="SideNav__link">
             <div className="SideNav__innerLink">{trashIcon}<div>Trash</div></div>
-            {!props.sideNavShown && <Tooltip className="SideNav__tooltip" position="right">Trash</Tooltip>}
+            {!props.sideNavShown && <Tooltip position="right">Trash</Tooltip>}
           </div>
           <div className="SideNav__link" onClick={() => setShowSettings(true)}>
             <div className="SideNav__innerLink">{settingsIcon}<div>Settings</div></div>
-            {!props.sideNavShown && <Tooltip className="SideNav__tooltip" position="right">Settings</Tooltip>}
+            {!props.sideNavShown && <Tooltip position="right">Settings</Tooltip>}
           </div>
           <div className="SideNav__link">
             <div className="SideNav__innerLink">{tagsIcon}<div>Tags</div></div>
-            {!props.sideNavShown && <Tooltip className="SideNav__tooltip" position="right">Tags</Tooltip>}
+            {!props.sideNavShown && <Tooltip position="right">Tags</Tooltip>}
           </div>
         </div>
       </div>

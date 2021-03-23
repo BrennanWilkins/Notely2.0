@@ -8,11 +8,19 @@ import Toolbar from './Toolbar';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 
-const HOTKEYS = {
+const MARK_HOTKEYS = {
   'mod+b': 'bold',
   'mod+i': 'italic',
   'mod+u': 'underline',
   'mod+`': 'code'
+};
+
+const BLOCK_HOTKEYS = {
+  'mod+shift+5': 'heading-one',
+  'mod+shift+6': 'heading-two',
+  'mod+shift+7': 'block-quote',
+  'mod+shift+8': 'numbered-list',
+  'mod+shift+9': 'bulleted-list'
 };
 
 const NoteContent = () => {
@@ -22,11 +30,16 @@ const NoteContent = () => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   const keyDownHandler = e => {
-    for (const hotkey in HOTKEYS) {
+    for (const hotkey in MARK_HOTKEYS) {
       if (isHotkey(hotkey, e)) {
         e.preventDefault();
-        const mark = HOTKEYS[hotkey];
-        toggleMark(editor, mark);
+        toggleMark(editor, MARK_HOTKEYS[hotkey]);
+      }
+    }
+    for (const hotkey in BLOCK_HOTKEYS) {
+      if (isHotkey(hotkey, e)) {
+        e.preventDefault();
+        toggleBlock(editor, BLOCK_HOTKEYS[hotkey]);
       }
     }
   };

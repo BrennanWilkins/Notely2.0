@@ -11,11 +11,22 @@
   flex-direction: column;
   opacity: 0;
   transform: scale(0.9);
-  transition: opacity 250ms, transform 250ms;
   white-space: nowrap;
   user-select: none;
   cursor: default;
   pointer-events: none;
+  transition: opacity 250ms, transform 250ms;
+}
+.SideNav__link:hover .Tooltip, .ToggleSideNavBtn:hover .Tooltip, .Toolbar__btn:hover .Tooltip {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 250ms 350ms, transform 250ms 350ms;
+}
+.SideNav .Tooltip {
+  top: 9px;
+}
+.ToggleSideNavBtn .Tooltip {
+  top: -7px;
 }
 .Tooltip:hover {
   opacity: 0 !important;
@@ -28,6 +39,9 @@
 .Tooltip--right {
   left: calc(100% + 8px);
 }
+.Tooltip--down {
+  top: 40px;
+}
 .Tooltip--right::after {
   content: "";
   display: block;
@@ -39,4 +53,17 @@
   border-right: 5px solid #555;
   left: -5px;
   top: calc(50% - 5px);
+}
+.Tooltip--down::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid #555;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  top: -10px;
+  left: calc(50% - 5px);
 }

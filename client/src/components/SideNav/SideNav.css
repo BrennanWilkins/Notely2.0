@@ -48,13 +48,6 @@
 .SideNav__link {
   position: relative;
 }
-.SideNav__link:hover .Tooltip {
-  opacity: 1;
-  transform: scale(1);
-}
-.SideNav__tooltip {
-  top: 9px;
-}
 .SideNav__innerLink {
   color: rgb(238, 238, 238);
   display: flex;

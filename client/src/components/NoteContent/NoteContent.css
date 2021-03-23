@@ -19,13 +19,22 @@
 }
 .NoteContent code {
   background: rgb(245,245,245);
+  font-size: 16px;
+}
+.NoteContent blockquote {
+  border-left: 2px solid rgb(219,219,219);
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 10px;
+  color: rgb(167,167,167);
+  font-style: italic;
 }
 .Toolbar {
   width: 100%;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgb(242,242,242);
   padding-bottom: 12px;
 }
 .Toolbar__btn {
@@ -41,6 +50,7 @@
   border: 1px solid #eee;
   background: rgb(252,252,252);
   transition: background 250ms;
+  position: relative;
 }
 .Toolbar__btn:hover {
   background: rgb(245,245,245);

@@ -14,10 +14,6 @@
   box-sizing: border-box;
   cursor: pointer;
 }
-.ToggleSideNavBtn:hover .Tooltip {
-  opacity: 1;
-  transform: scale(1);
-}
 .ToggleSideNavBtn--left svg {
   transform: rotate(0deg);
 }

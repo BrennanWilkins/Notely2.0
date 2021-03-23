@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import './NoteContent.css';
 import isHotkey from 'is-hotkey';
-import { Editable, withReact, useSlate, Slate } from 'slate-react';
+import { Editable, withReact, Slate } from 'slate-react';
 import { Editor, Transforms, createEditor, Descendant, Node, Element as SlateElement } from 'slate';
 import { withHistory } from 'slate-history';
+import Toolbar from './Toolbar';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 
@@ -127,56 +128,6 @@ const Leaf = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>;
 };
 
-const Toolbar = React.memo(() => (
-  <div className="NoteContent__toolbar">
-    <MarkButton format="bold" />
-    <MarkButton format="italic" />
-    <MarkButton format="underline" />
-    <MarkButton format="code" />
-    <BlockButton format="heading-one" />
-    <BlockButton format="heading-two" />
-    <BlockButton format="block-quote" />
-    <BlockButton format="numbered-list" />
-    <BlockButton format="bulleted-list" />
-  </div>
-));
-
-const BlockButton = ({ format }) => {
-  const editor = useSlate();
-
-  const clickHandler = e => {
-    e.preventDefault();
-    toggleBlock(editor, format);
-  };
-
-  return (
-    <div
-      onMouseDown={clickHandler}
-      className={`NoteContent__toolbarBtn ${isBlockActive(editor, format) ? 'NoteContent__toolbarBtn--active' : ''}`}
-    >
-      {format}
-    </div>
-  )
-};
-
-const MarkButton = ({ format }) => {
-  const editor = useSlate();
-
-  const clickHandler = e => {
-    e.preventDefault();
-    toggleMark(editor, format);
-  };
-
-  return (
-    <div
-      onMouseDown={clickHandler}
-      className={`NoteContent__toolbarBtn ${isBlockActive(editor, format) ? 'NoteContent__toolbarBtn--active' : ''}`}
-    >
-      {format}
-    </div>
-  );
-};
-
 const initialValue = [
   {
     type: 'paragraph',
@@ -185,3 +136,5 @@ const initialValue = [
 ];
 
 export default NoteContent;
+
+export { toggleBlock, toggleMark, isBlockActive, isMarkActive };

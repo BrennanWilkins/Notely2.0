@@ -1,15 +1,54 @@
 .NoteContent {
   width: 100%;
   height: calc(100% - 80px);
-  padding: 12px;
+  padding: 12px 15px;
   box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.NoteContent::-webkit-scrollbar-track, .NoteContent::-webkit-scrollbar {
+  border-radius: 15px;
+  background: rgb(235,235,235);
+}
+.NoteContent::-webkit-scrollbar {
+  width: 10px;
+}
+.NoteContent::-webkit-scrollbar-thumb {
+  border-radius: 15px;
+  background: rgb(215,215,215);
 }
 .NoteContent code {
   background: rgb(245,245,245);
 }
-.NoteContent__toolbar {
+.Toolbar {
   width: 100%;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+}
+.Toolbar__btn {
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-size: 22px;
+  cursor: pointer;
+  margin: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #eee;
+  background: rgb(252,252,252);
+  transition: background 250ms;
+}
+.Toolbar__btn:hover {
+  background: rgb(245,245,245);
+}
+.Toolbar__btn--active {
+  background: rgba(var(--blue), 0.3);
+  border: 1px solid rgba(var(--blue), 0.2);
+}
+.Toolbar__btn--active:hover {
+  background: rgba(var(--blue), 0.4);
 }

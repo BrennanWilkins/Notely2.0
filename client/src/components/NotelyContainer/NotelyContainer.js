@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import './NotelyContainer.css';
 import PropTypes from 'prop-types';
 import SideNav from '../SideNav/SideNav';
+import NoteList from '../NoteList/NoteList';
+import NoteContainer from '../NoteContainer/NoteContainer';
 import { toggleSideNav } from '../../store/actions';
 import { connect } from 'react-redux';
 
@@ -22,6 +24,8 @@ const NotelyContainer = props => {
   return (
     <div className="NotelyContainer">
       <SideNav />
+      <NoteList />
+      <NoteContainer />
     </div>
   );
 };

@@ -1,0 +1,15 @@
+.NoteContent {
+  width: 100%;
+  height: calc(100% - 80px);
+  padding: 12px;
+  box-sizing: border-box;
+}
+.NoteContent code {
+  background: rgb(245,245,245);
+}
+.NoteContent__toolbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}

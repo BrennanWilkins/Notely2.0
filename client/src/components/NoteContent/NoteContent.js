@@ -2,9 +2,10 @@ import React, { useCallback, useMemo, useState } from 'react';
 import './NoteContent.css';
 import isHotkey from 'is-hotkey';
 import { Editable, withReact, Slate } from 'slate-react';
-import { Editor, Transforms, createEditor, Descendant, Node, Element as SlateElement } from 'slate';
+import { Editor, Point, Range, Transforms, createEditor, Element as SlateElement } from 'slate';
 import { withHistory } from 'slate-history';
 import Toolbar from './Toolbar';
+import ChecklistItemElement from './ChecklistItem';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 
@@ -16,18 +17,19 @@ const MARK_HOTKEYS = {
 };
 
 const BLOCK_HOTKEYS = {
-  'mod+shift+5': 'heading-one',
-  'mod+shift+6': 'heading-two',
-  'mod+shift+7': 'block-quote',
-  'mod+shift+8': 'numbered-list',
-  'mod+shift+9': 'bulleted-list'
+  'mod+shift+1': 'heading-one',
+  'mod+shift+2': 'heading-two',
+  'mod+shift+3': 'block-quote',
+  'mod+shift+4': 'numbered-list',
+  'mod+shift+5': 'bulleted-list',
+  'mod+shift+6': 'check-list-item'
 };
 
 const NoteContent = () => {
   const [value, setValue] = useState(initialValue);
   const renderElement = useCallback(props => <Element {...props} />, []);
   const renderLeaf = useCallback(props => <Leaf {...props} />, []);
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const editor = useMemo(() => withChecklists(withHistory(withReact(createEditor()))), []);
 
   const keyDownHandler = e => {
     for (const hotkey in MARK_HOTKEYS) {
@@ -106,7 +108,8 @@ const isMarkActive = (editor, format) => {
   return marks ? marks[format] === true : false;
 };
 
-const Element = ({ attributes, children, element }) => {
+const Element = props => {
+  const { attributes, children, element } = props;
   switch (element.type) {
     case 'block-quote':
       return <blockquote {...attributes}>{children}</blockquote>;
@@ -120,6 +123,8 @@ const Element = ({ attributes, children, element }) => {
       return <li {...attributes}>{children}</li>;
     case 'numbered-list':
       return <ol {...attributes}>{children}</ol>;
+    case 'check-list-item':
+      return <ChecklistItemElement {...props} />;
     default:
       return <p {...attributes}>{children}</p>;
   }
@@ -139,6 +144,41 @@ const Leaf = ({ attributes, children, leaf }) => {
     children = <u>{children}</u>;
   }
   return <span {...attributes}>{children}</span>;
+};
+
+const withChecklists = editor => {
+  const { deleteBackward } = editor;
+  editor.deleteBackward = (...args) => {
+    const { selection } = editor;
+
+    if (selection && Range.isCollapsed(selection)) {
+      const [match] = Editor.nodes(editor, {
+        match: n =>
+          !Editor.isEditor(n) &&
+          SlateElement.isElement(n) &&
+          n.type === 'check-list-item'
+      });
+
+      if (match) {
+        const [, path] = match;
+        const start = Editor.start(editor, path);
+
+        if (Point.equals(selection.anchor, start)) {
+          const newProperties = { type: 'paragraph' };
+          Transforms.setNodes(editor, newProperties, {
+            match: n =>
+              !Editor.isEditor(n) &&
+              SlateElement.isElement(n) &&
+              n.type === 'check-list-item'
+          })
+          return;
+        }
+      }
+    }
+    deleteBackward(...args);
+  }
+
+  return editor;
 };
 
 const initialValue = [

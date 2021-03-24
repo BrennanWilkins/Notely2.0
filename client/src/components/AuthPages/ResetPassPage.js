@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { validateResetPass } from '../../utils/authValidation';
 import { instance as axios } from '../../axios';
 import { useLocation } from 'react-router';
-import { eyeIcon, eyeHideIcon } from '../UI/icons';
+import PassInput from '../UI/PassInput/PassInput';
 
 const ResetPassPage = () => {
   const location = useLocation();
@@ -13,8 +13,6 @@ const ResetPassPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showMsg, setShowMsg] = useState(false);
   const [msg, setMsg] = useState('');
-  const [showNewPass, setShowNewPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
 
   useEffect(() => {
     if (showMsg) { setShowMsg(false); }
@@ -45,15 +43,8 @@ const ResetPassPage = () => {
   return (
     <AuthContainer title="Reset your password">
       <form onSubmit={submitHandler} className="AuthPages__form">
-        <div className="AuthPages__inputContainer">
-          <input type={showNewPass ? 'text' : 'password'} className="AuthPages__passInput" value={newPass} onChange={e => setNewPass(e.target.value)} placeholder="Password" />
-          <div className="AuthPages__eye" onClick={() => setShowNewPass(show => !show)}>{showNewPass ? eyeHideIcon : eyeIcon}</div>
-        </div>
-        <div className="AuthPages__inputContainer">
-          <input type={showConfirmPass ? 'text' : 'password'} className="AuthPages__passInput" value={confirmPass} onChange={e => setConfirmPass(e.target.value)}
-          placeholder="Confirm Password" />
-          <div className="AuthPages__eye" onClick={() => setShowConfirmPass(show => !show)}>{showConfirmPass ? eyeHideIcon : eyeIcon}</div>
-        </div>
+        <PassInput className="AuthPages__passInput" value={newPass} onChange={e => setNewPass(e.target.value)} placeholder="Password" />
+        <PassInput className="AuthPages__passInput" value={confirmPass} onChange={e => setConfirmPass(e.target.value)} placeholder="Confirm Password" />
         <div className={showMsg ? 'AuthPages__msg--show' : 'AuthPages__msg--hide'}>{msg}</div>
         <button type="Submit" className="AuthPages__submitBtn" disabled={isLoading}>Reset Password</button>
       </form>

@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import AuthContainer from './AuthContainer';
-import { eyeIcon, eyeHideIcon } from '../UI/icons';
 import { Link } from 'react-router-dom';
 import { validateSignup } from '../../utils/authValidation';
 import { instance as axios } from '../../axios';
 import { logo, mailIcon } from '../UI/icons';
+import PassInput from '../UI/PassInput/PassInput';
 
 const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [pass, setPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
-  const [showPass, setShowPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
   const [rememberUser, setRememberUser] = useState(false);
   const [msg, setMsg] = useState('');
   const [showMsg, setShowMsg] = useState(false);
@@ -56,15 +54,8 @@ const SignupPage = () => {
       <form onSubmit={submitHandler} className="AuthPages__form">
         <input className="AuthPages__input" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />
         <input className="AuthPages__input" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
-        <div className="AuthPages__inputContainer">
-          <input type={showPass ? 'text' : 'password'} className="AuthPages__passInput" value={pass} onChange={e => setPass(e.target.value)} placeholder="Password" />
-          <div className="AuthPages__eye" onClick={() => setShowPass(show => !show)}>{showPass ? eyeHideIcon : eyeIcon}</div>
-        </div>
-        <div className="AuthPages__inputContainer">
-          <input type={showConfirmPass ? 'text' : 'password'} className="AuthPages__passInput" value={confirmPass} onChange={e => setConfirmPass(e.target.value)}
-          placeholder="Confirm Password" />
-          <div className="AuthPages__eye" onClick={() => setShowConfirmPass(show => !show)}>{showConfirmPass ? eyeHideIcon : eyeIcon}</div>
-        </div>
+        <PassInput className="AuthPages__passInput" value={pass} onChange={e => setPass(e.target.value)} placeholder="Password" />
+        <PassInput className="AuthPages__passInput" value={confirmPass} onChange={e => setConfirmPass(e.target.value)} placeholder="Confirm Password" />
         <div className={showMsg ? 'AuthPages__msg--show' : 'AuthPages__msg--hide'}>{msg}</div>
         <button type="Submit" className="AuthPages__submitBtn" disabled={isLoading}>Sign up</button>
       </form>

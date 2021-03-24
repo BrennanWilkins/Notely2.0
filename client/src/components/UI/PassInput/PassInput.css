@@ -1,7 +1,7 @@
 .PassInput {
   position: relative;
 }
-.PassInput input {
+.PassInput__input {
   display: block;
   width: 100%;
   box-sizing: border-box;
@@ -11,12 +11,15 @@
   outline: none;
   transition: border 250ms;
 }
-.PassInput input:hover {
+.PassInput__input:hover {
   background: rgb(252,252,252);
 }
-.PassInput input:focus {
+.PassInput__input:focus {
   background: white;
   border: 2px solid rgb(var(--blue));
+}
+.PassInput__input::placeholder {
+  color: rgb(150,150,150);
 }
 .PassInput__eye {
   position: absolute;

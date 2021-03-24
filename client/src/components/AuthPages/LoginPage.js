@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import AuthContainer from './AuthContainer';
-import { eyeIcon, eyeHideIcon } from '../UI/icons';
 import { Link } from 'react-router-dom';
 import { validateLogin } from '../../utils/authValidation';
 import { instance as axios } from '../../axios';
 import { connect } from 'react-redux';
 import { login } from '../../store/actions';
+import PassInput from '../UI/PassInput/PassInput';
 
 const LoginPage = props => {
   const [loginName, setLoginName] = useState('');
   const [pass, setPass] = useState('');
-  const [showPass, setShowPass] = useState(false);
   const [rememberUser, setRememberUser] = useState(false);
   const [msg, setMsg] = useState('');
   const [showMsg, setShowMsg] = useState(false);
@@ -45,10 +44,7 @@ const LoginPage = props => {
     <AuthContainer title="Log in to Notely">
       <form onSubmit={submitHandler} className="AuthPages__form">
         <input className="AuthPages__input" value={loginName} onChange={e => setLoginName(e.target.value)} placeholder="Username or email" />
-        <div className="AuthPages__inputContainer">
-          <input type={showPass ? 'text' : 'password'} className="AuthPages__passInput" value={pass} onChange={e => setPass(e.target.value)} placeholder="Password" />
-          <div className="AuthPages__eye" onClick={() => setShowPass(show => !show)}>{showPass ? eyeHideIcon : eyeIcon}</div>
-        </div>
+        <PassInput className="AuthPages__passInput" value={pass} onChange={e => setPass(e.target.value)} placeholder="Password" />
         <div className={showMsg ? 'AuthPages__msg--show' : 'AuthPages__msg--hide'}>{msg}</div>
         <button type="Submit" className="AuthPages__submitBtn" disabled={isLoading}>Log in</button>
       </form>

@@ -22,54 +22,6 @@
   box-sizing: border-box;
   position: relative;
 }
-.AuthPages__input, .AuthPages__inputContainer {
-  margin: 10px auto;
-  width: 100%;
-  max-width: 350px;
-}
-.AuthPages__input, .AuthPages__passInput {
-  display: block;
-  padding: 8px;
-  font-size: 15px;
-  box-sizing: border-box;
-  border-radius: 3px;
-  border: 2px solid rgb(230, 230, 230);
-  outline: none;
-  transition: border 250ms;
-}
-.AuthPages__input:hover, .AuthPages__passInput:hover {
-  border: 2px solid rgb(220,220,220);
-  background: rgb(252,252,252);
-}
-.AuthPages__input:focus, .AuthPages__passInput:focus {
-  border: 2px solid rgb(var(--blue), 0.5);
-  background: white;
-  box-shadow: 0 0 3px 0.5px rgb(var(--blue), 0.4);
-}
-.AuthPages__input::placeholder, .AuthPages__passInput::placeholder {
-  color: rgb(150,150,150);
-}
-.AuthPages__inputContainer {
-  position: relative;
-}
-.AuthPages__passInput {
-  width: 100%;
-  padding-right: 30px;
-}
-.AuthPages__eye {
-  position: absolute;
-  right: 8px;
-  top: calc(50% - 8px);
-  font-size: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: rgb(115,115,115);
-}
-.AuthPages__eye:hover {
-  color: rgb(50,50,50);
-}
 .AuthPages__submitBtn {
   display: block;
   font-size: 16px;
@@ -86,10 +38,10 @@
   transition: background 250ms;
 }
 .AuthPages__submitBtn:hover {
-  background: rgb(87, 123, 250);
+  background: rgb(var(--blue2));
 }
 .AuthPages__submitBtn:active {
-  background: rgb(68, 106, 246);
+  background: rgb(var(--blue3));
 }
 .AuthPages__submitBtn:disabled {
   background: rgb(200,200,200);
@@ -143,4 +95,35 @@
   display: flex;
   justify-content: center;
   margin: 60px 0 -30px;
+}
+.AuthPages__input, .AuthPages__passInput {
+  margin: 10px auto;
+  width: 100%;
+  max-width: 350px;
+}
+.AuthPages__input, .AuthPages__passInput input {
+  display: block;
+  padding: 8px;
+  font-size: 15px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 2px solid rgb(230, 230, 230);
+  outline: none;
+  transition: border 250ms;
+}
+.AuthPages__input:hover, .AuthPages__passInput input:hover {
+  border: 2px solid rgb(220,220,220);
+  background: rgb(252,252,252);
+}
+.AuthPages__input:focus, .AuthPages__passInput input:focus {
+  border: 2px solid rgba(var(--blue), 0.5);
+  background: white;
+  box-shadow: 0 0 3px 0.5px rgba(var(--blue), 0.4);
+}
+.AuthPages__input::placeholder {
+  color: rgb(150,150,150);
+}
+.AuthPages__passInput input {
+  width: 100%;
+  padding-right: 30px;
 }

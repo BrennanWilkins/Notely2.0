@@ -8,8 +8,16 @@ const PassInput = props => {
 
   return (
     <div className={`PassInput ${props.className || ''}`}>
-      <input type={showPass ? 'text' : 'password'} value={props.value} onChange={props.onChange} />
-      <div className="PassInput__eye" onClick={() => setShowPass(show => !show)}>{showPass ? eyeHideIcon : eyeIcon}</div>
+      <input
+        className="PassInput__input"
+        type={showPass ? 'text' : 'password'}
+        value={props.value}
+        onChange={props.onChange}
+        placeholder={props.placeholder || ''}
+      />
+      <div className="PassInput__eye" onClick={() => setShowPass(show => !show)}>
+        {showPass ? eyeHideIcon : eyeIcon}
+      </div>
     </div>
   );
 };
@@ -17,7 +25,8 @@ const PassInput = props => {
 PassInput.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  className: PropTypes.string
+  className: PropTypes.string,
+  placeholder: PropTypes.string
 };
 
 export default PassInput;

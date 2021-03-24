@@ -4,11 +4,52 @@
   background: rgb(246, 246, 246);
   border-right: 1px solid #ddd;
 }
-.NoteList__title {
+.NoteList__header {
   height: 80px;
-  font-weight: 500;
-  text-align: center;
-  line-height: 80px;
-  font-size: 18px;
   border-bottom: 1px solid #ddd;
+}
+.NoteList__title {
+  font-weight: 500;
+  font-size: 19px;
+  padding: 15px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.NoteList__addBtn, .NoteList__sortBtn {
+  border: 0;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 250ms;
+  position: relative;
+}
+.NoteList__addBtn {
+  font-size: 30px;
+  color: white;
+  background:  rgb(var(--blue));
+  padding: 0;
+  border-radius: 50%;
+}
+.NoteList__addBtn:hover {
+  background: rgb(var(--blue2));
+}
+.NoteList__addBtn:active {
+  background: rgb(var(--blue3));
+}
+.NoteList__sortBtn {
+  font-size: 20px;
+  padding: 5px;
+  color: black;
+  background: rgba(0,0,0,0.05);
+  border-radius: 3px;
+}
+.NoteList__sortBtn:hover {
+  background: rgba(0,0,0,0.08);
+}
+.NoteList__sortBtn:active {
+  background: rgba(var(--blue), 0.2);
 }

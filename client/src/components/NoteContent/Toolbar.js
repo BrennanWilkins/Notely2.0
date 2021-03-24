@@ -23,16 +23,16 @@ const Toolbar = React.memo(() => (
 
 const getFormatInfo = format => {
   switch (format) {
-    case 'bold': return [boldIcon, 'Bold', 'ctrl+b'];
-    case 'italic': return [italicIcon, 'Italics', 'ctrl+i'];
-    case 'underline': return [underlineIcon, 'Underline', 'ctrl+u'];
-    case 'code': return [codeIcon, 'Code Block', 'ctrl+`'];
-    case 'heading-one': return [heading1Icon, 'Heading 1', 'ctrl+shift+1'];
-    case 'heading-two': return [heading2Icon, 'Heading 2', 'ctrl+shift+2'];
-    case 'block-quote': return [blockQuoteIcon, 'Block Quote', 'ctrl+shift+3'];
-    case 'numbered-list': return [olIcon, 'Numbered List', 'ctrl+shift+4'];
-    case 'bulleted-list': return [ulIcon, 'Bulleted List', 'ctrl+shift+5'];
-    case 'check-list-item': return [checklistIcon, 'Checkbox', 'ctrl+shift+6'];
+    case 'bold': return [boldIcon, 'Bold', 'Ctrl+B'];
+    case 'italic': return [italicIcon, 'Italics', 'Ctrl+I'];
+    case 'underline': return [underlineIcon, 'Underline', 'Ctrl+U'];
+    case 'code': return [codeIcon, 'Code Block', 'Ctrl+`'];
+    case 'heading-one': return [heading1Icon, 'Heading 1', 'Ctrl+Shift+1'];
+    case 'heading-two': return [heading2Icon, 'Heading 2', 'Ctrl+Shift+2'];
+    case 'block-quote': return [blockQuoteIcon, 'Block Quote', 'Ctrl+Shift+3'];
+    case 'numbered-list': return [olIcon, 'Numbered List', 'Ctrl+Shift+4'];
+    case 'bulleted-list': return [ulIcon, 'Bulleted List', 'Ctrl+Shift+5'];
+    case 'check-list-item': return [checklistIcon, 'Checkbox', 'Ctrl+Shift+6'];
     default: return null;
   }
 };

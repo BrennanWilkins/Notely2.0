@@ -12,7 +12,7 @@ const ToggleSideNavBtn = props => (
     {doubleChevronIcon}
     <Tooltip position="right">
       {props.isExpanded ? 'Collapse Menu' : 'Expand Menu'}
-      <div>Ctrl+M</div>
+      <div>Ctrl+Shift+M</div>
     </Tooltip>
   </div>
 );

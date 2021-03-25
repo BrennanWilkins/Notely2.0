@@ -188,6 +188,6 @@ const initialValue = [
   }
 ];
 
-export default NoteContent;
+export default React.memo(NoteContent);
 
 export { toggleBlock, toggleMark, isBlockActive, isMarkActive };

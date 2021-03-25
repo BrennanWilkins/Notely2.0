@@ -16,20 +16,24 @@
   cursor: default;
   pointer-events: none;
   transition: opacity 250ms, transform 250ms;
+  z-index: 3;
 }
 .SideNav__link:hover .Tooltip,
 .ToggleSideNavBtn:hover .Tooltip,
 .Toolbar__btn:hover .Tooltip,
 .NoteList__addBtn:hover .Tooltip,
-.NoteList__sortBtn:hover .Tooltip {
+.NoteList__sortBtn:hover .Tooltip,
+.NoteMenu__fsBtn:hover .Tooltip {
   opacity: 1;
   transform: scale(1);
-  transition: opacity 250ms 350ms, transform 250ms 350ms;
+  transition: opacity 250ms 450ms, transform 250ms 450ms;
 }
 .SideNav .Tooltip {
   top: 9px;
 }
-.NoteList__addBtn .Tooltip, .NoteList__sortBtn .Tooltip {
+.NoteList__addBtn .Tooltip,
+.NoteList__sortBtn .Tooltip,
+.NoteMenu__fsBtn .Tooltip {
   top: 38px;
 }
 .ToggleSideNavBtn .Tooltip {

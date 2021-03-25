@@ -4,5 +4,6 @@ export {
   login
 } from './auth';
 export {
-  toggleSideNav
+  toggleSideNav,
+  toggleFullscreen
 } from './ui';

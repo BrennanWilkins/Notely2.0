@@ -3,3 +3,28 @@
   height: 80px;
   border-bottom: 1px solid #ddd;
 }
+.NoteMenu__btns {
+  display: flex;
+  padding: 15px;
+}
+.NoteMenu__fsBtn {
+  border: 0;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 250ms;
+  position: relative;
+  font-size: 16px;
+  padding: 7px;
+  color: black;
+  background: rgba(0,0,0,0.05);
+  border-radius: 3px;
+}
+.NoteMenu__fsBtn:hover {
+  background: rgba(0,0,0,0.08);
+}
+.NoteMenu__fsBtn:active {
+  background: rgba(var(--blue), 0.2);
+}

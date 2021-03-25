@@ -5,3 +5,4 @@ export const LOGIN = 'LOGIN';
 
 // UI actionTypes
 export const TOGGLE_SIDE_NAV = 'TOGGLE_SIDE_NAV';
+export const TOGGLE_FULLSCREEN = 'TOGGLE_FULLSCREEN';

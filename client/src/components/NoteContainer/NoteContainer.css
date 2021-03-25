@@ -1,4 +1,11 @@
-.NoteContainer {
+.NoteContainer--contract {
   flex-grow: 1;
+  height: 100%;
+}
+.NoteContainer--expanded {
+  position: fixed;
+  width: 100vw;
+  z-index: 2;
+  background: white;
   height: 100%;
 }

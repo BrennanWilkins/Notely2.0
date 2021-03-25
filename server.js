@@ -5,8 +5,13 @@ const cors = require('cors');
 require('dotenv').config();
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
+const initSocket = require('./socket/socket');
 
 const app = express();
+
+const server = require('http').createServer(app);
+
+initSocket(server);
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, autoIndex: false });
@@ -29,6 +34,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const port = process.env.PORT || 4000;
-app.listen(port, () => console.log(`Server started on port ${port}`));
+server.listen(port, () => console.log(`Server started on port ${port}`));
 
 module.exports = app;

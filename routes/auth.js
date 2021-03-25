@@ -99,9 +99,19 @@ router.get('/finishSignup/:signupID',
         // if user chose remember me in signup, token expires in 30 days, else 7 days
         const token = await signToken(user, decoded.rememberUser ? '30d' : '7d');
 
+        const firstNote = new Note({
+          body: [{ type: 'paragraph', children: [{ text: 'Welcome to Notely!' }]}],
+          tags: [],
+          collaborators: [user._id],
+          nanoID: '',
+          isPublished: false,
+          isTrash: false
+        });
+        await firstNote.save();
+
         res.status(200).json({
           token,
-          notes: [],
+          notes: [firstNote],
           pinnedNotes: [],
           invites: [],
           email: user.email,

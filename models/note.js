@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const NoteSchema = new Schema({
-  text: String,
+  body: [],
   tags: [String],
   collaborators: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   nanoID: String,

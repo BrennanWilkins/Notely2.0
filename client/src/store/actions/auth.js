@@ -1,8 +1,10 @@
 import * as actionTypes from './actionTypes';
 import { instance as axios, removeToken, setToken } from '../../axios';
+import { closeSocket, initSocket, connectSocket } from '../../socket';
 
 export const logout = () => {
   removeToken();
+  closeSocket();
   return { type: actionTypes.LOGOUT };
 };
 
@@ -13,13 +15,17 @@ export const tryAutoLogin = () => async dispatch => {
     axios.defaults.headers.common['x-auth-token'] = localStorage['token'];
     const res = await axios.get('/user');
     dispatch({ type: actionTypes.LOGIN, payload: res.data });
+    initSocket();
+    connectSocket();
   } catch (err) {
     dispatch(logout());
   }
 };
 
-export const login = data => {
+export const login = data => dispatch => {
   const { token, ...payload } = data;
   setToken(token);
-  return { type: actionTypes.LOGIN, payload };
+  dispatch({ type: actionTypes.LOGIN, payload });
+  initSocket();
+  connectSocket();
 };

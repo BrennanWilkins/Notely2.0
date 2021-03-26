@@ -7,3 +7,8 @@ export {
   toggleSideNav,
   toggleFullscreen
 } from './ui';
+export {
+  createNote,
+  updateNote,
+  showNote
+} from './notes';

@@ -5,9 +5,15 @@
 }
 .NoteMenu__btns {
   display: flex;
+  align-items: center;
   padding: 15px;
 }
-.NoteMenu__fsBtn {
+.NoteMenu__options {
+  display: flex;
+  align-items: center;
+  margin: 0 5px 0 auto;
+}
+.NoteMenu__btn, .NoteMenu__optionBtn {
   border: 0;
   outline: none;
   display: flex;
@@ -22,9 +28,17 @@
   background: rgba(0,0,0,0.05);
   border-radius: 3px;
 }
-.NoteMenu__fsBtn:hover {
+.NoteMenu__optionBtn {
+  background: transparent;
+  margin: 0 3px;
+  font-size: 19px;
+}
+.NoteMenu__optionBtn:hover {
+  background: rgba(0,0,0,0.05);
+}
+.NoteMenu__btn:hover {
   background: rgba(0,0,0,0.08);
 }
-.NoteMenu__fsBtn:active {
+.NoteMenu__btn:active, .NoteMenu__optionBtn:active {
   background: rgba(var(--blue), 0.2);
 }

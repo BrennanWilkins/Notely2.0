@@ -23,7 +23,8 @@
 .Toolbar__btn:hover .Tooltip,
 .NoteList__addBtn:hover .Tooltip,
 .NoteList__sortBtn:hover .Tooltip,
-.NoteMenu__fsBtn:hover .Tooltip {
+.NoteMenu__btn:hover .Tooltip,
+.NoteMenu__optionBtn:hover .Tooltip {
   opacity: 1;
   transform: scale(1);
   transition: opacity 250ms 450ms, transform 250ms 450ms;

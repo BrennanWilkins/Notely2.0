@@ -1,7 +1,7 @@
 .NoteContent {
   width: 100%;
   height: calc(100% - 80px);
-  padding: 12px 15px;
+  padding: 0 15px 12px;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
@@ -35,8 +35,11 @@
   align-items: center;
   flex-wrap: wrap;
   border-bottom: 1px solid rgb(242,242,242);
-  padding-bottom: 12px;
+  padding: 12px 0;
   margin-bottom: 16px;
+  position: sticky;
+  top: 0;
+  background: white;
 }
 .Toolbar__btn {
   padding: 5px;

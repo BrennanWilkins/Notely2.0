@@ -46,4 +46,4 @@ const mapDispatchToProps = dispatch => ({
   toggleFullscreen: () => dispatch(toggleFullscreen())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(NoteMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(NoteMenu));

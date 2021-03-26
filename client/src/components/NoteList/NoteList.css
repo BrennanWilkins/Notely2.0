@@ -53,3 +53,48 @@
 .NoteList__sortBtn:active {
   background: rgba(var(--blue), 0.2);
 }
+.NoteList__notes {
+  height: calc(100% - 80px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.NoteList__notes::-webkit-scrollbar-track {
+  border-radius: 15px;
+  background: rgb(200,200,200);
+}
+.NoteList__notes::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 15px;
+  background: rgb(200,200,200);
+}
+.NoteList__notes::-webkit-scrollbar-thumb {
+  border-radius: 15px;
+  background: rgb(180,180,180);
+}
+.NoteList__note {
+  height: 75px;
+  border-bottom: 1px solid #ddd;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+}
+.NoteList__note:hover {
+  background: rgb(241,241,241);
+}
+.NoteList__note--active {
+  background: rgba(var(--blue), 0.12);
+}
+.NoteList__note--active:hover {
+  background: rgba(var(--blue), 0.15);
+}
+.NoteList__note div {
+  font-weight: 500;
+  font-size: 15.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

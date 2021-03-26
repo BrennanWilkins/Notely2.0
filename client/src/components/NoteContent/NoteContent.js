@@ -1,11 +1,15 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import './NoteContent.css';
+import PropTypes from 'prop-types';
 import isHotkey from 'is-hotkey';
 import { Editable, withReact, Slate } from 'slate-react';
 import { Editor, Point, Range, Transforms, createEditor, Element as SlateElement } from 'slate';
 import { withHistory } from 'slate-history';
 import Toolbar from './Toolbar';
 import ChecklistItemElement from './ChecklistItem';
+import { connect } from 'react-redux';
+import { joinNote } from '../../socket';
+import { updateNote } from '../../store/actions';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 
@@ -25,11 +29,29 @@ const BLOCK_HOTKEYS = {
   'mod+shift+6': 'check-list-item'
 };
 
-const NoteContent = () => {
-  const [value, setValue] = useState(initialValue);
+const NoteContent = props => {
+  const [value, setValue] = useState(props.currentNote.body);
   const renderElement = useCallback(props => <Element {...props} />, []);
   const renderLeaf = useCallback(props => <Leaf {...props} />, []);
   const editor = useMemo(() => withChecklists(withHistory(withReact(createEditor()))), []);
+
+  useEffect(() => {
+    if (!props.currentNote.noteID) { return; }
+    if (value !== props.currentNote.body) {
+      setValue(props.currentNote.body);
+    }
+
+    joinNote(props.currentNote.noteID);
+  }, [props.currentNote.noteID]);
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      if (value === props.currentNote.body || !props.currentNote.noteID) { return; }
+      props.updateNote(props.currentNote.noteID, value);
+    }, 1500);
+
+    return () => clearTimeout(delay);
+  }, [value]);
 
   const keyDownHandler = e => {
     for (const hotkey in MARK_HOTKEYS) {
@@ -181,13 +203,19 @@ const withChecklists = editor => {
   return editor;
 };
 
-const initialValue = [
-  {
-    type: 'paragraph',
-    children: [{ text: '' }],
-  }
-];
+NoteContent.propTypes = {
+  currentNote: PropTypes.object.isRequired,
+  updateNote: PropTypes.func.isRequired
+};
 
-export default React.memo(NoteContent);
+const mapStateToProps = state => ({
+  currentNote: state.notes.currentNote
+});
+
+const mapDispatchToProps = dispatch => ({
+  updateNote: (noteID, body) => dispatch(updateNote(noteID, body))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(NoteContent));
 
 export { toggleBlock, toggleMark, isBlockActive, isMarkActive };

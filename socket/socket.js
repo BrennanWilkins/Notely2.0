@@ -18,11 +18,12 @@ const initSocket = server => {
   }).on('connection', socket => {
     socket.on('join', async noteID => {
       try {
+        if (noteID === socket.noteID) { return; }
         const note = await Note.findOne({ _id: noteID, collaborators: socket.userID });
         if (!note) { throw 'No note found'; }
         socket.join(noteID);
         socket.noteID = noteID;
-        socket.emit('joined', 'User joined note');
+        socket.emit('joined', noteID);
       } catch (err) {
         socket.emit('cannot join');
       }
@@ -30,6 +31,9 @@ const initSocket = server => {
 
     socket.on('post/note', data => noteRoutes.createNote(socket, data));
     socket.on('put/note', data => noteRoutes.updateNote(socket, data));
+    socket.on('put/note/trash', data => noteRoutes.trashNote(socket, data));
+    socket.on('put/note/restore', data => noteRoutes.restoreNote(socket, data));
+    socket.on('delete/note', data => noteRoutes.deleteNote(socket, data));
   });
 };
 

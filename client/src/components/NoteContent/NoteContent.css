@@ -6,6 +6,15 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+.NoteContent--empty {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 50px;
+}
+.NoteContent__logo {
+  font-size: 140px;
+}
 .NoteContent::-webkit-scrollbar-track, .NoteContent::-webkit-scrollbar {
   border-radius: 15px;
   background: rgb(235,235,235);

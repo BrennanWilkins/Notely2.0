@@ -10,5 +10,6 @@ export {
 export {
   createNote,
   updateNote,
-  showNote
+  showNote,
+  setShowTrash
 } from './notes';

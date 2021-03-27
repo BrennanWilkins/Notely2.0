@@ -10,6 +10,7 @@ import ChecklistItemElement from './ChecklistItem';
 import { connect } from 'react-redux';
 import { joinNote } from '../../socket';
 import { updateNote } from '../../store/actions';
+import { logo } from '../UI/icons';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 
@@ -69,19 +70,24 @@ const NoteContent = props => {
   };
 
   return (
-    <div className="NoteContent">
-      <Slate editor={editor} value={value} onChange={value => setValue(value)}>
-        <Toolbar />
-        <Editable
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-          placeholder="Start here"
-          spellCheck
-          autoFocus
-          onKeyDown={keyDownHandler}
-        />
-      </Slate>
-    </div>
+    props.currentNote.noteID ?
+      <div className="NoteContent">
+        <Slate editor={editor} value={value} onChange={value => setValue(value)}>
+          <Toolbar />
+          <Editable
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            placeholder="Start here"
+            spellCheck
+            autoFocus
+            onKeyDown={keyDownHandler}
+          />
+        </Slate>
+      </div>
+    :
+      <div className="NoteContent NoteContent--empty">
+        <div className="NoteContent__logo">{logo}</div>
+      </div>
   );
 };
 

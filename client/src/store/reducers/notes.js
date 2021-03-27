@@ -13,7 +13,8 @@ const initialState = {
   currentNote: {
     noteID: null,
     body: [{ type: 'paragraph', children: [{ text: '' }]}]
-  }
+  },
+  trashShown: false
 };
 
 const reducer = (state  = initialState, action) => {
@@ -22,6 +23,7 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.CREATE_NOTE: return createNote(state, action);
     case actionTypes.UPDATE_NOTE: return updateNote(state, action);
     case actionTypes.SHOW_NOTE: return showNote(state, action);
+    case actionTypes.SET_SHOW_TRASH: return setShowTrash(state, action);
     default: return state;
   }
 };
@@ -55,7 +57,9 @@ const login = (state, action) => {
       allIDs: trashAllIDs
     },
     pinnedNotes: action.payload.pinnedNotes,
-    currentNote: notesAllIDs.length ? notesByID[notesAllIDs[0]] : state.currentNote
+    currentNote: notesAllIDs.length ?
+      notesByID[notesAllIDs[0]] :
+      state.currentNote
   };
 };
 
@@ -106,5 +110,22 @@ const showNote = (state, action) => ({
   ...state,
   currentNote: { ...state.notes.byID[action.noteID] }
 });
+
+const setShowTrash = (state, action) => {
+  if (action.bool === state.trashShown) { return state; }
+  return {
+    ...state,
+    trashShown: action.bool,
+    currentNote: action.bool ? 
+      (!state.trash.allIDs.length ?
+        { ...initialState.currentNote } :
+        { ...state.trash.byID[state.trash.allIDs[0]] }
+      )
+      :
+      (!state.notes.allIDs.length ?
+        { ...initialState.currentNote } :
+        { ...state.notes.byID[state.notes.allIDs[0]] })
+  };
+};
 
 export default reducer;

@@ -11,3 +11,4 @@ export const TOGGLE_FULLSCREEN = 'TOGGLE_FULLSCREEN';
 export const CREATE_NOTE = 'CREATE_NOTE';
 export const UPDATE_NOTE = 'UPDATE_NOTE';
 export const SHOW_NOTE = 'SHOW_NOTE';
+export const SET_SHOW_TRASH = 'SET_SHOW_TRASH';

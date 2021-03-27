@@ -40,6 +40,10 @@
 .NoteList__addBtn:active {
   background: rgb(var(--blue3));
 }
+.NoteList__addBtn:disabled {
+  background: rgb(210,210,210);
+  cursor: default;
+}
 .NoteList__sortBtn {
   font-size: 20px;
   padding: 5px;
@@ -97,4 +101,26 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+.NoteList__noNotes {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 100px;
+  box-sizing: border-box;
+  font-size: 18px;
+  font-weight: 500;
+}
+.NoteList__noNotes div {
+  color: rgb(var(--blue));
+  font-size: 17px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+.NoteList__noNotes div:hover {
+  text-decoration: underline;
 }

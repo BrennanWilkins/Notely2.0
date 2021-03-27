@@ -31,3 +31,5 @@ export const updateNote = (noteID, body) => dispatch => {
 };
 
 export const showNote = noteID => ({ type: actionTypes.SHOW_NOTE, noteID });
+
+export const setShowTrash = bool => ({ type: actionTypes.SET_SHOW_TRASH, bool });

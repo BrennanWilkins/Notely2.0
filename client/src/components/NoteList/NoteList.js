@@ -28,26 +28,55 @@ const NoteList = props => {
             {sortIcon}
             <Tooltip position="down">Sort Notes</Tooltip>
           </button>
-          All Notes
-          <button className="NoteList__addBtn" onClick={props.createNote}>
+          {props.trashShown ? 'Trash' : 'All Notes'}
+          <button className="NoteList__addBtn" disabled={props.trashShown} onClick={props.createNote}>
             {plusIcon}
             <Tooltip position="down">New Note<div>Ctrl+Shift+N</div></Tooltip>
           </button>
         </div>
       </div>
       <div className="NoteList__notes">
-        {props.notes.allIDs.map(noteID => {
-          const note = props.notes.byID[noteID];
-          return (
-            <div
-              key={noteID}
-              className={`NoteList__note ${props.currentNoteID === noteID ? 'NoteList__note--active' : ''}`}
-              onClick={() => props.showNote(noteID)}
-            >
-              {serialize(note.body)}
-            </div>
-          );
-        })}
+        {
+          props.trashShown ?
+            (props.trash.allIDs.length ?
+              props.trash.allIDs.map(noteID => {
+                const note = props.trash.byID[noteID];
+                return (
+                  <div
+                    key={noteID}
+                    className={`NoteList__note ${props.currentNoteID === noteID ? 'NoteList__note--active' : ''}`}
+                    onClick={() => props.showNote(noteID)}
+                  >
+                    {serialize(note.body)}
+                  </div>
+                );
+              })
+              :
+              <div className="NoteList__noNotes">
+                Your trash is empty.
+              </div>
+            )
+          :
+            (props.notes.allIDs.length ?
+              props.notes.allIDs.map(noteID => {
+                const note = props.notes.byID[noteID];
+                return (
+                  <div
+                    key={noteID}
+                    className={`NoteList__note ${props.currentNoteID === noteID ? 'NoteList__note--active' : ''}`}
+                    onClick={() => props.showNote(noteID)}
+                  >
+                    {serialize(note.body)}
+                  </div>
+                );
+              })
+              :
+              <div className="NoteList__noNotes">
+                No notes
+                <div onClick={props.createNote}>Create a new note</div>
+              </div>
+            )
+        }
       </div>
     </div>
   );
@@ -65,7 +94,9 @@ NoteList.propTypes = {
 
 const mapStateToProps = state => ({
   notes: state.notes.notes,
-  currentNoteID: state.notes.currentNote.noteID
+  currentNoteID: state.notes.currentNote.noteID,
+  trashShown: state.notes.trashShown,
+  trash: state.notes.trash
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -25,6 +25,10 @@ export const initSocket = () => {
     }
   });
 
+  newSocket.on('note error', errMsg => {
+    console.log(errMsg);
+  });
+
   socket = newSocket;
 };
 

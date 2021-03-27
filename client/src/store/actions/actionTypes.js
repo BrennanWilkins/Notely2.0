@@ -10,5 +10,8 @@ export const TOGGLE_FULLSCREEN = 'TOGGLE_FULLSCREEN';
 // note actionTypes
 export const CREATE_NOTE = 'CREATE_NOTE';
 export const UPDATE_NOTE = 'UPDATE_NOTE';
+export const TRASH_NOTE = 'TRASH_NOTE';
+export const RESTORE_NOTE = 'RESTORE_NOTE';
+export const DELETE_NOTE = 'DELETE_NOTE';
 export const SHOW_NOTE = 'SHOW_NOTE';
 export const SET_SHOW_TRASH = 'SET_SHOW_TRASH';

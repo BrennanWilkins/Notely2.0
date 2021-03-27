@@ -8,8 +8,8 @@ import { createNote, showNote } from '../../store/actions';
 import { Node } from 'slate';
 
 const serialize = nodes => {
-  let title = Node.string(nodes[0]) || 'New Note';
-  let txt = nodes.slice(1).map(n => Node.string(n)).join('\n');
+  let title = (nodes && nodes.length) ? Node.string(nodes[0]) || 'New Note' : 'New Note';
+  let txt = (nodes && nodes.length > 1) ? nodes.slice(1).map(n => Node.string(n)).join('\n') : '';
 
   return (
     <>
@@ -83,20 +83,25 @@ const NoteList = props => {
 };
 
 NoteList.propTypes = {
-  createNote: PropTypes.func.isRequired,
   notes: PropTypes.shape({
     allIDs: PropTypes.array.isRequired,
     byID: PropTypes.object.isRequired
   }).isRequired,
+  trash: PropTypes.shape({
+    allIDs: PropTypes.array.isRequired,
+    byID: PropTypes.object.isRequired
+  }).isRequired,
+  trashShown: PropTypes.bool.isRequired,
+  currentNoteID: PropTypes.string,
   showNote: PropTypes.func.isRequired,
-  currentNoteID: PropTypes.string
+  createNote: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   notes: state.notes.notes,
+  trash: state.notes.trash,
   currentNoteID: state.notes.currentNote.noteID,
-  trashShown: state.notes.trashShown,
-  trash: state.notes.trash
+  trashShown: state.notes.trashShown
 });
 
 const mapDispatchToProps = dispatch => ({

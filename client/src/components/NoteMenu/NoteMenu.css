@@ -13,7 +13,7 @@
   align-items: center;
   margin: 0 5px 0 auto;
 }
-.NoteMenu__btn, .NoteMenu__optionBtn {
+.NoteMenu__btn {
   border: 0;
   outline: none;
   display: flex;
@@ -28,17 +28,22 @@
   background: rgba(0,0,0,0.05);
   border-radius: 3px;
 }
-.NoteMenu__optionBtn {
+.NoteMenu__iconBtn {
   background: transparent;
   margin: 0 3px;
   font-size: 19px;
 }
-.NoteMenu__optionBtn:hover {
+.NoteMenu__trashBtn {
+  margin-left: 10px;
+  font-size: 14px;
   background: rgba(0,0,0,0.05);
 }
-.NoteMenu__btn:hover {
+.NoteMenu__iconBtn:hover {
+  background: rgba(0,0,0,0.05);
+}
+.NoteMenu__fsBtn:hover, .NoteMenu__trashBtn:hover {
   background: rgba(0,0,0,0.08);
 }
-.NoteMenu__btn:active, .NoteMenu__optionBtn:active {
+.NoteMenu__btn:active {
   background: rgba(var(--blue), 0.2);
 }

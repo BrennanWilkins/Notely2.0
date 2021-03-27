@@ -3,9 +3,8 @@ const User = require('../models/user');
 
 const createNote = async (socket, data) => {
   try {
-    const { body } = JSON.parse(data);
     const note = new Note({
-      body,
+      body: [{ type: 'paragraph', children: [{ text: '' }]}],
       tags: [],
       collaborators: [socket.userID],
       nanoID: '',
@@ -21,7 +20,10 @@ const createNote = async (socket, data) => {
       user.save()
     ]);
 
-    socket.emit('post/note', note._id);
+    // auto join user to note room on creation
+    socket.userNotes[note._id] = true;
+    socket.join(note._id);
+    socket.emit('post/note', JSON.stringify(note));
   } catch (err) {
     socket.emit('note error', 'Your note could not be created.');
   }
@@ -30,7 +32,8 @@ const createNote = async (socket, data) => {
 const updateNote = async (socket, data) => {
   try {
     const { noteID, body } = JSON.parse(data);
-    if (noteID !== socket.noteID) { throw 'Invalid noteID'; }
+    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+
     const note = await Note.findByIdAndUpdate(noteID, { body });
     if (!note) { throw 'Invalid noteID'; }
     socket.to(noteID).emit('put/note', data);
@@ -42,7 +45,8 @@ const updateNote = async (socket, data) => {
 const trashNote = async (socket, data) => {
   try {
     const { noteID } = JSON.parse(data);
-    if (noteID !== socket.noteID) { throw 'Invalid noteID'; }
+    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+
     const note = await Note.findByIdAndUpdate(noteID, { isTrash: true });
     if (!note) { throw 'Invalid noteID'; }
     socket.to(noteID).emit('put/note/trash', data);
@@ -54,7 +58,8 @@ const trashNote = async (socket, data) => {
 const restoreNote = async (socket, data) => {
   try {
     const { noteID } = JSON.parse(data);
-    if (noteID !== socket.noteID) { throw 'Invalid noteID'; }
+    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+
     const note = await Note.findByIdAndUpdate(noteID, { isTrash: false });
     if (!note) { throw 'Invalid noteID'; }
     socket.to(noteID).emit('put/note/restore', data);
@@ -66,19 +71,27 @@ const restoreNote = async (socket, data) => {
 const deleteNote = async (socket, data) => {
   try {
     const { noteID } = JSON.parse(data);
-    if (noteID !== socket.noteID) { throw 'Invalid noteID'; }
-    const note = await Note.findByIdAndDelete(noteID);
+    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+
+    const [note] = await Promise.all([
+      Note.findByIdAndDelete(noteID),
+      User.updateMany({ notes: noteID }, { $pull: { notes: noteID, pinnedNotes: noteID } }),
+      User.updateMany({ invites: noteID }, { $pull: { invites: noteID } })
+    ]);
     if (!note) { throw 'Invalid noteID'; }
+
     socket.to(noteID).emit('delete/note', data);
+    socket.leave(noteID);
+    delete socket.userNotes[noteID];
   } catch (err) {
     socket.emit('note error', 'There was an error while deleting your note.');
   }
 };
 
 module.exports = {
-  createNote,
-  updateNote,
-  trashNote,
-  deleteNote,
-  restoreNote
+  'post/note' : createNote,
+  'put/note' : updateNote,
+  'put/note/trash' : trashNote,
+  'put/note/restore' : restoreNote,
+  'delete/note' : deleteNote
 };

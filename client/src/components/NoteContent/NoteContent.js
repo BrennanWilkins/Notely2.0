@@ -8,7 +8,6 @@ import { withHistory } from 'slate-history';
 import Toolbar from './Toolbar';
 import ChecklistItemElement from './ChecklistItem';
 import { connect } from 'react-redux';
-import { joinNote } from '../../socket';
 import { updateNote } from '../../store/actions';
 import { logo } from '../UI/icons';
 
@@ -31,24 +30,22 @@ const BLOCK_HOTKEYS = {
 };
 
 const NoteContent = props => {
-  const [value, setValue] = useState(props.currentNote.body);
+  const [value, setValue] = useState(props.currentBody);
   const renderElement = useCallback(props => <Element {...props} />, []);
   const renderLeaf = useCallback(props => <Leaf {...props} />, []);
   const editor = useMemo(() => withChecklists(withHistory(withReact(createEditor()))), []);
 
   useEffect(() => {
-    if (!props.currentNote.noteID) { return; }
-    if (value !== props.currentNote.body) {
-      setValue(props.currentNote.body);
+    if (!props.currentNoteID) { return; }
+    if (value !== props.currentBody) {
+      setValue(props.currentBody);
     }
-
-    joinNote(props.currentNote.noteID);
-  }, [props.currentNote.noteID]);
+  }, [props.currentBody]);
 
   useEffect(() => {
     const delay = setTimeout(() => {
-      if (value === props.currentNote.body || !props.currentNote.noteID) { return; }
-      props.updateNote(props.currentNote.noteID, value);
+      if (!props.currentNoteID || value === props.currentBody) { return; }
+      props.updateNote(props.currentNoteID, value);
     }, 1500);
 
     return () => clearTimeout(delay);
@@ -70,7 +67,7 @@ const NoteContent = props => {
   };
 
   return (
-    props.currentNote.noteID ?
+    props.currentNoteID ?
       <div className="NoteContent">
         <Slate editor={editor} value={value} onChange={value => setValue(value)}>
           <Toolbar />
@@ -210,12 +207,22 @@ const withChecklists = editor => {
 };
 
 NoteContent.propTypes = {
-  currentNote: PropTypes.object.isRequired,
+  currentBody: PropTypes.array.isRequired,
+  currentNoteID: PropTypes.string,
   updateNote: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  currentNote: state.notes.currentNote
+  currentNoteID: state.notes.currentNoteID,
+  currentBody: (
+    state.notes.currentNoteID ?
+      (state.notes.trashShown ?
+        state.notes.trash.byID[state.notes.currentNoteID].body :
+        state.notes.notes.byID[state.notes.currentNoteID].body
+      )
+    :
+    []
+  )
 });
 
 const mapDispatchToProps = dispatch => ({

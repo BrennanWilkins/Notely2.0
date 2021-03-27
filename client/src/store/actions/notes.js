@@ -1,41 +1,39 @@
 import * as actionTypes from './actionTypes';
 import { sendUpdate } from '../../socket';
 
-export const createNote = () => (dispatch, getState) => {
-  const username = getState().user.username;
-  // initial body is empty paragraph
-  const body = [{ type: 'paragraph', children: [{ text: '' }]}];
-  const socket = sendUpdate('post/note', { body });
+export const createNote = () => dispatch => {
+  const socket = sendUpdate('post/note');
 
-  socket.on('post/note', noteID => {
+  // when creating note wait for response w new note
+  socket.on('post/note', data => {
     socket.off('post/note');
-    const payload = { noteID, body, username };
+    const payload = { note: JSON.parse(data) };
     dispatch({ type: actionTypes.CREATE_NOTE, payload });
   });
 };
 
 export const updateNote = (noteID, body) => dispatch => {
-  sendUpdate('put/note', { noteID, body });
   const payload = { noteID, body };
+  sendUpdate('put/note', payload);
   dispatch({ type: actionTypes.UPDATE_NOTE, payload });
 };
 
 export const trashNote = () => (dispatch, getState) => {
-  const noteID = getState().notes.currentNote.noteID;
-  sendUpdate('put/note/trash', { noteID });
-  dispatch({ type: actionTypes.TRASH_NOTE, noteID });
+  const payload = { noteID: getState().notes.currentNoteID };
+  sendUpdate('put/note/trash', payload);
+  dispatch({ type: actionTypes.TRASH_NOTE, payload });
 };
 
 export const restoreNote = () => (dispatch, getState) => {
-  const noteID = getState().notes.currentNote.noteID;
-  sendUpdate('put/note/restore', { noteID });
-  dispatch({ type: actionTypes.RESTORE_NOTE, noteID });
+  const payload = { noteID: getState().notes.currentNoteID };
+  sendUpdate('put/note/restore', payload);
+  dispatch({ type: actionTypes.RESTORE_NOTE, payload });
 };
 
 export const deleteNote = () => (dispatch, getState) => {
-  const noteID = getState().notes.currentNote.noteID;
-  sendUpdate('delete/note', { noteID });
-  dispatch({ type: actionTypes.DELETE_NOTE, noteID });
+  const payload = { noteID: getState().notes.currentNoteID };
+  sendUpdate('delete/note', payload);
+  dispatch({ type: actionTypes.DELETE_NOTE, payload });
 };
 
 export const showNote = noteID => ({ type: actionTypes.SHOW_NOTE, noteID });

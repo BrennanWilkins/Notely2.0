@@ -59,7 +59,7 @@ NoteMenu.propTypes = {
 const mapStateToProps = state => ({
   isFullscreen: state.ui.isFullscreen,
   trashShown: state.notes.trashShown,
-  currentNoteID: state.notes.currentNote.noteID
+  currentNoteID: state.notes.currentNoteID
 });
 
 const mapDispatchToProps = dispatch => ({

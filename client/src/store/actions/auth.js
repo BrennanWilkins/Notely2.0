@@ -1,6 +1,6 @@
 import * as actionTypes from './actionTypes';
 import { instance as axios, removeToken, setToken } from '../../axios';
-import { closeSocket, initSocket, connectSocket } from '../../socket';
+import { closeSocket, initSocket } from '../../socket';
 
 export const logout = () => {
   removeToken();
@@ -16,7 +16,6 @@ export const tryAutoLogin = () => async dispatch => {
     const res = await axios.get('/user');
     dispatch({ type: actionTypes.LOGIN, payload: res.data });
     initSocket();
-    connectSocket();
   } catch (err) {
     dispatch(logout());
   }
@@ -27,5 +26,4 @@ export const login = data => dispatch => {
   setToken(token);
   dispatch({ type: actionTypes.LOGIN, payload });
   initSocket();
-  connectSocket();
 };

@@ -36,46 +36,24 @@ const NoteList = props => {
         </div>
       </div>
       <div className="NoteList__notes">
-        {
-          props.trashShown ?
-            (props.trash.allIDs.length ?
-              props.trash.allIDs.map(noteID => {
-                const note = props.trash.byID[noteID];
-                return (
-                  <div
-                    key={noteID}
-                    className={`NoteList__note ${props.currentNoteID === noteID ? 'NoteList__note--active' : ''}`}
-                    onClick={() => props.showNote(noteID)}
-                  >
-                    {serialize(note.body)}
-                  </div>
-                );
-              })
-              :
-              <div className="NoteList__noNotes">
-                Your trash is empty.
+        {props.shownNotes.allIDs.length ?
+          props.shownNotes.allIDs.map(noteID => {
+            const note = props.shownNotes.byID[noteID];
+            return (
+              <div
+                key={noteID}
+                className={`NoteList__note ${props.currentNoteID === noteID ? 'NoteList__note--active' : ''}`}
+                onClick={() => props.showNote(noteID)}
+              >
+                {serialize(note.body)}
               </div>
-            )
+            );
+          })
           :
-            (props.notes.allIDs.length ?
-              props.notes.allIDs.map(noteID => {
-                const note = props.notes.byID[noteID];
-                return (
-                  <div
-                    key={noteID}
-                    className={`NoteList__note ${props.currentNoteID === noteID ? 'NoteList__note--active' : ''}`}
-                    onClick={() => props.showNote(noteID)}
-                  >
-                    {serialize(note.body)}
-                  </div>
-                );
-              })
-              :
-              <div className="NoteList__noNotes">
-                No notes
-                <div onClick={props.createNote}>Create a new note</div>
-              </div>
-            )
+          <div className="NoteList__noNotes">
+            {props.trashShown ? 'Your trash is empty.' : 'No notes'}
+            {!props.trashShown && <div onClick={props.createNote}>Create a new note</div>}
+          </div>
         }
       </div>
     </div>
@@ -83,24 +61,19 @@ const NoteList = props => {
 };
 
 NoteList.propTypes = {
-  notes: PropTypes.shape({
+  shownNotes: PropTypes.shape({
     allIDs: PropTypes.array.isRequired,
     byID: PropTypes.object.isRequired
   }).isRequired,
-  trash: PropTypes.shape({
-    allIDs: PropTypes.array.isRequired,
-    byID: PropTypes.object.isRequired
-  }).isRequired,
-  trashShown: PropTypes.bool.isRequired,
   currentNoteID: PropTypes.string,
+  trashShown: PropTypes.bool.isRequired,
   showNote: PropTypes.func.isRequired,
   createNote: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  notes: state.notes.notes,
-  trash: state.notes.trash,
-  currentNoteID: state.notes.currentNote.noteID,
+  shownNotes: state.notes.trashShown ? state.notes.trash : state.notes.notes,
+  currentNoteID: state.notes.currentNoteID,
   trashShown: state.notes.trashShown
 });
 

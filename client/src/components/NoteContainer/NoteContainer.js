@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 
 const NoteContainer = props => (
   <div
-    className={props.isFullscreen ? 'NoteContainer--expanded' : 'NoteContainer--contract'}
-    style={{ maxWidth: props.sideNavShown ? 'calc(100% - 571px)' : 'calc(100% - 396px)'}}
+    className={`NoteContainer ${props.isFullscreen ? 'NoteContainer--expanded' : 'NoteContainer--contract'} ${props.listShown ? 'NoteContainer--hide' : 'NoteContainer--show'}`}
+    style={!props.isFullscreen ? { maxWidth: props.sideNavShown ? 'calc(100% - 541px)' : 'calc(100% - 376px)'} : null}
   >
     <NoteMenu />
     <NoteContent />
@@ -17,12 +17,14 @@ const NoteContainer = props => (
 
 NoteContainer.propTypes = {
   isFullscreen: PropTypes.bool.isRequired,
-  sideNavShown: PropTypes.bool.isRequired
+  sideNavShown: PropTypes.bool.isRequired,
+  listShown: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   isFullscreen: state.ui.isFullscreen,
-  sideNavShown: state.ui.sideNavShown
+  sideNavShown: state.ui.sideNavShown,
+  listShown: state.ui.listShown
 });
 
 export default connect(mapStateToProps)(NoteContainer);

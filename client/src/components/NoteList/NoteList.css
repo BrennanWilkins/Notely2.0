@@ -1,5 +1,5 @@
 .NoteList {
-  width: 340px;
+  width: 320px;
   height: 100%;
   background: rgb(246, 246, 246);
   border-right: 1px solid #ddd;
@@ -123,4 +123,23 @@
 }
 .NoteList__noNotes div:hover {
   text-decoration: underline;
+}
+@media (max-width: 900px) {
+  .NoteList {
+    margin-left: 55px;
+  }
+}
+@media (max-width: 750px) {
+  .NoteList {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100vw - 55px);
+  }
+  .NoteList--show {
+    z-index: 3;
+  }
+  .NoteList--hide {
+    z-index: 2;
+  }
 }

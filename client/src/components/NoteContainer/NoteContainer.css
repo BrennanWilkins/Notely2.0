@@ -1,11 +1,31 @@
+.NoteContainer {
+  height: 100%;
+  background: white;
+}
 .NoteContainer--contract {
   flex-grow: 1;
-  height: 100%;
 }
 .NoteContainer--expanded {
   position: fixed;
   width: 100vw;
   z-index: 2;
-  background: white;
-  height: 100%;
+}
+@media (max-width: 900px) {
+  .NoteContainer {
+    max-width: calc(100% - 376px) !important;
+  }
+}
+@media (max-width: 750px) {
+  .NoteContainer {
+    position: fixed;
+    width: calc(100vw - 55px);
+    margin-left: 55px;
+    max-width: calc(100vw - 55px) !important;
+  }
+  .NoteContainer--show {
+    z-index: 3;
+  }
+  .NoteContainer--hide {
+    z-index: 2;
+  }
 }

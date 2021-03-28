@@ -21,7 +21,7 @@ const serialize = nodes => {
 
 const NoteList = props => {
   return (
-    <div className="NoteList">
+    <div className={`NoteList ${props.listShown ? 'NoteList--show' : 'NoteList--hide'}`}>
       <div className="NoteList__header">
         <div className="NoteList__title">
           <button className="NoteList__sortBtn">
@@ -68,13 +68,15 @@ NoteList.propTypes = {
   currentNoteID: PropTypes.string,
   trashShown: PropTypes.bool.isRequired,
   showNote: PropTypes.func.isRequired,
-  createNote: PropTypes.func.isRequired
+  createNote: PropTypes.func.isRequired,
+  listShown: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   shownNotes: state.notes.trashShown ? state.notes.trash : state.notes.notes,
   currentNoteID: state.notes.currentNoteID,
-  trashShown: state.notes.trashShown
+  trashShown: state.notes.trashShown,
+  listShown: state.ui.listShown
 });
 
 const mapDispatchToProps = dispatch => ({

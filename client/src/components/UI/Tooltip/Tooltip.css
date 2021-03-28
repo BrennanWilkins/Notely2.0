@@ -34,7 +34,8 @@
 }
 .NoteList__addBtn .Tooltip,
 .NoteList__sortBtn .Tooltip,
-.NoteMenu__fsBtn .Tooltip {
+.NoteMenu__fsBtn .Tooltip,
+.NoteMenu__backBtn .Tooltip {
   top: 38px;
 }
 .ToggleSideNavBtn .Tooltip {

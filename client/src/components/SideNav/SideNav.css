@@ -4,7 +4,7 @@
   transition: width 200ms ease-out;
 }
 .SideNav--expand {
-  width: 230px;
+  width: 220px;
 }
 .SideNav--contract {
   width: 55px;
@@ -73,4 +73,12 @@
 }
 .SideNav--contract .SideNav__innerLink svg, .SideNav--contract .SideNav__title svg {
   margin: 0;
+}
+@media (max-width: 900px) {
+  .SideNav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+  }
 }

@@ -41,9 +41,20 @@
 .NoteMenu__iconBtn:hover {
   background: rgba(0,0,0,0.05);
 }
-.NoteMenu__fsBtn:hover, .NoteMenu__trashBtn:hover {
+.NoteMenu__fsBtn:hover, .NoteMenu__trashBtn:hover, .NoteMenu__backBtn:hover {
   background: rgba(0,0,0,0.08);
 }
 .NoteMenu__btn:active {
   background: rgba(var(--blue), 0.2);
+}
+.NoteMenu__backBtn {
+  display: none;
+}
+@media (max-width: 750px) {
+  .NoteMenu__fsBtn {
+    display: none;
+  }
+  .NoteMenu__backBtn {
+    display: flex;
+  }
 }

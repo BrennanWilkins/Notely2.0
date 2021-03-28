@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './SideNav.css';
 import PropTypes from 'prop-types';
 import ToggleSideNavBtn from '../UI/ToggleSideNavBtn/ToggleSideNavBtn';
@@ -10,10 +10,35 @@ import Tooltip from '../UI/Tooltip/Tooltip';
 
 const SideNav = props => {
   const [showSettings, setShowSettings] = useState(false);
+  const sideNavRef = useRef();
+
+  useEffect(() => {
+    const clickHandler = e => {
+      if (props.sideNavShown && !sideNavRef.current.contains(e.target)) {
+        props.toggleSideNav();
+      }
+    };
+
+    const resizeHandler = () => {
+      if (window.innerWidth <= 900) {
+        document.addEventListener('mousedown', clickHandler);
+      } else {
+        document.removeEventListener('mousedown', clickHandler);
+      }
+    };
+
+    if (props.sideNavShown) { resizeHandler(); }
+
+    window.addEventListener('resize', resizeHandler);
+    return () => {
+      window.removeEventListener('resize', resizeHandler);
+      document.removeEventListener('mousedown', clickHandler);
+    };
+  }, [props.sideNavShown]);
 
   return (
     <>
-      <div className={`SideNav ${props.sideNavShown ? 'SideNav--expand' : 'SideNav--contract'}`}>
+      <div ref={sideNavRef} className={`SideNav ${props.sideNavShown ? 'SideNav--expand' : 'SideNav--contract'}`}>
         <ToggleSideNavBtn isExpanded={props.sideNavShown} onClick={props.toggleSideNav} />
         <div className="SideNav__title">
           {logo}<div>Notely</div>

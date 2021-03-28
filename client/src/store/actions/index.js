@@ -5,7 +5,8 @@ export {
 } from './auth';
 export {
   toggleSideNav,
-  toggleFullscreen
+  toggleFullscreen,
+  setListShown
 } from './ui';
 export {
   createNote,

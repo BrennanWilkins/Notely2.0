@@ -46,7 +46,7 @@ const NoteContent = props => {
     const delay = setTimeout(() => {
       if (!props.currentNoteID || value === props.currentBody) { return; }
       props.updateNote(props.currentNoteID, value);
-    }, 1500);
+    }, 700);
 
     return () => clearTimeout(delay);
   }, [value]);

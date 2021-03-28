@@ -76,15 +76,16 @@
   background: rgb(180,180,180);
 }
 .NoteList__note {
-  height: 75px;
+  height: 65px;
   border-bottom: 1px solid #ddd;
-  padding: 15px;
   box-sizing: border-box;
   font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   cursor: pointer;
+  position: relative;
+  padding: 10px 8px 10px 30px;
 }
 .NoteList__note:hover {
   background: rgb(241,241,241);
@@ -123,6 +124,20 @@
 }
 .NoteList__noNotes div:hover {
   text-decoration: underline;
+}
+.NoteList__pin {
+  font-size: 17px;
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  opacity: 0;
+}
+.NoteList__note:hover .NoteList__pin {
+  opacity: 1;
+}
+.NoteList__pin--hl {
+  color: rgb(var(--blue));
+  opacity: 1;
 }
 @media (max-width: 900px) {
   .NoteList {

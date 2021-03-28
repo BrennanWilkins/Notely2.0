@@ -50,6 +50,9 @@
 .NoteMenu__backBtn {
   display: none;
 }
+.NoteMenu__btn--hl {
+  color: rgb(var(--blue));
+}
 @media (max-width: 750px) {
   .NoteMenu__fsBtn {
     display: none;

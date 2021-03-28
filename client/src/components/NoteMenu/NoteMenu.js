@@ -3,10 +3,16 @@ import './NoteMenu.css';
 import PropTypes from 'prop-types';
 import { expandIcon, contractIcon, trashIcon, shareIcon, pinIcon, arrowIcon } from '../UI/icons';
 import { connect } from 'react-redux';
-import { toggleFullscreen, trashNote, restoreNote, deleteNote, setListShown } from '../../store/actions';
+import { toggleFullscreen, trashNote, restoreNote, deleteNote, setListShown, pinNote, unpinNote } from '../../store/actions';
 import Tooltip from '../UI/Tooltip/Tooltip';
 
 const NoteMenu = props => {
+  const pinHandler = () => {
+    props.noteIsPinned ?
+    props.unpinNote(props.currentNoteID) :
+    props.pinNote(props.currentNoteID);
+  };
+
   return (
     <div className="NoteMenu">
       <div className="NoteMenu__btns">
@@ -30,9 +36,12 @@ const NoteMenu = props => {
             </>
             :
             <>
-              <button className="NoteMenu__btn NoteMenu__iconBtn">
+              <button
+                className={`NoteMenu__btn NoteMenu__iconBtn ${props.noteIsPinned ? 'NoteMenu__btn--hl' : ''}`}
+                onClick={pinHandler}
+              >
                 {pinIcon}
-                <Tooltip position="down">Pin to top</Tooltip>
+                <Tooltip position="down">{props.noteIsPinned ? 'Unpin' : 'Pin to top'}</Tooltip>
               </button>
               <button className="NoteMenu__btn NoteMenu__iconBtn">
                 {shareIcon}
@@ -58,13 +67,17 @@ NoteMenu.propTypes = {
   restoreNote: PropTypes.func.isRequired,
   deleteNote: PropTypes.func.isRequired,
   currentNoteID: PropTypes.string,
-  showList: PropTypes.func.isRequired
+  showList: PropTypes.func.isRequired,
+  pinNote: PropTypes.func.isRequired,
+  unpinNote: PropTypes.func.isRequired,
+  noteIsPinned: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   isFullscreen: state.ui.isFullscreen,
   trashShown: state.notes.trashShown,
-  currentNoteID: state.notes.currentNoteID
+  currentNoteID: state.notes.currentNoteID,
+  noteIsPinned: state.notes.pinnedNotes.includes(state.notes.currentNoteID)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -72,7 +85,9 @@ const mapDispatchToProps = dispatch => ({
   trashNote: () => dispatch(trashNote()),
   restoreNote: () => dispatch(restoreNote()),
   deleteNote: () => dispatch(deleteNote()),
-  showList: () => dispatch(setListShown(true))
+  showList: () => dispatch(setListShown(true)),
+  pinNote: noteID => dispatch(pinNote(noteID)),
+  unpinNote: noteID => dispatch(unpinNote(noteID))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(React.memo(NoteMenu));

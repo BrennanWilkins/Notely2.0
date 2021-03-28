@@ -88,10 +88,39 @@ const deleteNote = async (socket, data) => {
   }
 };
 
+const pinNote = async (socket, data) => {
+  try {
+    const { noteID } = JSON.parse(data);
+    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+
+    const user = await User.findById(socket.userID);
+    if (!user) { throw 'No user found'; }
+    if (user.pinnedNotes.includes(noteID)) { return; }
+    user.pinnedNotes.unshift(noteID);
+    
+    await user.save();
+  } catch (err) {
+    socket.emit('note error', 'There was an error while pinning your note.');
+  }
+};
+
+const unpinNote = async (socket, data) => {
+  try {
+    const { noteID } = JSON.parse(data);
+    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+
+    await User.findByIdAndUpdate(socket.userID, { $pull: { pinnedNotes: noteID } });
+  } catch (err) {
+    socket.emit('note error', 'There was an error while unpinning your note.');
+  }
+};
+
 module.exports = {
   'post/note' : createNote,
   'put/note' : updateNote,
   'put/note/trash' : trashNote,
   'put/note/restore' : restoreNote,
-  'delete/note' : deleteNote
+  'delete/note' : deleteNote,
+  'put/note/pin': pinNote,
+  'put/note/unpin': unpinNote
 };

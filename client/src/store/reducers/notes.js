@@ -24,6 +24,8 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.DELETE_NOTE: return deleteNote(state, action);
     case actionTypes.SHOW_NOTE: return { ...state, currentNoteID: action.noteID };
     case actionTypes.SET_SHOW_TRASH: return setShowTrash(state, action);
+    case actionTypes.PIN_NOTE: return pinNote(state, action);
+    case actionTypes.UNPIN_NOTE: return unpinNote(state, action);
     case actionTypes.LOGOUT: return initialState;
     default: return state;
   }
@@ -185,8 +187,19 @@ const deleteNote = (state, { payload: { noteID } }) => {
       byID: trashByID,
       allIDs: trashAllIDs
     },
+    pinnedNotes: state.pinnedNotes.includes(noteID) ? state.pinnedNotes.filter(id => id !== noteID) : state.pinnedNotes,
     currentNoteID: state.currentNoteID !== noteID ? state.currentNoteID : trashAllIDs[0] || null
   };
 };
+
+const pinNote = (state, { noteID }) => ({
+  ...state,
+  pinnedNotes: [noteID, ...state.pinnedNotes]
+});
+
+const unpinNote = (state, { noteID }) => ({
+  ...state,
+  pinnedNotes: state.pinnedNotes.filter(id => id !== noteID)
+});
 
 export default reducer;

@@ -39,3 +39,13 @@ export const deleteNote = () => (dispatch, getState) => {
 export const showNote = noteID => ({ type: actionTypes.SHOW_NOTE, noteID });
 
 export const setShowTrash = bool => ({ type: actionTypes.SET_SHOW_TRASH, bool });
+
+export const pinNote = noteID => dispatch => {
+  sendUpdate('put/note/pin', { noteID });
+  dispatch({ type: actionTypes.PIN_NOTE, noteID });
+};
+
+export const unpinNote = noteID => dispatch => {
+  sendUpdate('put/note/unpin', { noteID });
+  dispatch({ type: actionTypes.UNPIN_NOTE, noteID });
+};

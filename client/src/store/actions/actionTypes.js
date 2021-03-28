@@ -16,3 +16,5 @@ export const RESTORE_NOTE = 'RESTORE_NOTE';
 export const DELETE_NOTE = 'DELETE_NOTE';
 export const SHOW_NOTE = 'SHOW_NOTE';
 export const SET_SHOW_TRASH = 'SET_SHOW_TRASH';
+export const PIN_NOTE = 'PIN_NOTE';
+export const UNPIN_NOTE = 'UNPIN_NOTE';

@@ -24,6 +24,8 @@ const NoteList = props => {
     isPinned ? props.unpinNote(noteID) : props.pinNote(noteID);
   };
 
+  const noteCount = props.shownNotes.allIDs.length;
+
   return (
     <div className={`NoteList ${props.listShown ? 'NoteList--show' : 'NoteList--hide'}`}>
       <div className="NoteList__header">
@@ -38,9 +40,12 @@ const NoteList = props => {
             <Tooltip position="down">New Note<div>Ctrl+Shift+N</div></Tooltip>
           </button>
         </div>
+        <div className="NoteList__noteCount">
+          {noteCount} {noteCount === 1 ? 'Note' : 'Notes'}
+        </div>
       </div>
       <div className="NoteList__notes">
-        {props.shownNotes.allIDs.length ?
+        {noteCount ?
           props.shownNotes.allIDs.slice().sort((a,b) => (
             props.pinnedNotes.indexOf(b) - props.pinnedNotes.indexOf(a)
           )).map(noteID => {

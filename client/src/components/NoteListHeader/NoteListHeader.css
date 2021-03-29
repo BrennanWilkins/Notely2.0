@@ -1,0 +1,61 @@
+.NoteListHeader {
+  height: 90px;
+  border-bottom: 1px solid #ddd;
+  padding: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.NoteListHeader__title {
+  font-weight: 500;
+  font-size: 19px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.NoteListHeader__addBtn, .NoteListHeader__sortBtn {
+  border: 0;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 250ms;
+  position: relative;
+}
+.NoteListHeader__addBtn {
+  font-size: 30px;
+  color: white;
+  background:  rgb(var(--blue));
+  padding: 0;
+  border-radius: 50%;
+}
+.NoteListHeader__addBtn:hover {
+  background: rgb(var(--blue2));
+}
+.NoteListHeader__addBtn:active {
+  background: rgb(var(--blue3));
+}
+.NoteListHeader__addBtn:disabled {
+  background: rgb(210,210,210);
+  cursor: default;
+}
+.NoteListHeader__sortBtn {
+  font-size: 20px;
+  padding: 5px;
+  color: black;
+  background: rgba(0,0,0,0.05);
+  border-radius: 3px;
+}
+.NoteListHeader__sortBtn:hover {
+  background: rgba(0,0,0,0.08);
+}
+.NoteListHeader__sortBtn:active {
+  background: rgba(var(--blue), 0.2);
+}
+.NoteListHeader__count {
+  margin-top: auto;
+  font-size: 12.5px;
+  color: rgb(150,150,150);
+}

@@ -1,11 +1,11 @@
 import React from 'react';
 import './NoteList.css';
 import PropTypes from 'prop-types';
-import { plusIcon, sortIcon, pinIcon } from '../UI/icons';
-import Tooltip from '../UI/Tooltip/Tooltip';
+import { pinIcon } from '../UI/icons';
 import { connect } from 'react-redux';
 import { createNote, showNote, pinNote, unpinNote } from '../../store/actions';
 import { Node } from 'slate';
+import NoteListHeader from '../NoteListHeader/NoteListHeader';
 
 const serialize = nodes => {
   let title = (nodes && nodes.length) ? Node.string(nodes[0]) || 'New Note' : 'New Note';
@@ -24,28 +24,15 @@ const NoteList = props => {
     isPinned ? props.unpinNote(noteID) : props.pinNote(noteID);
   };
 
-  const noteCount = props.noteIDs.length;
-
   return (
     <div className={`NoteList ${props.listShown ? 'NoteList--show' : 'NoteList--hide'}`}>
-      <div className="NoteList__header">
-        <div className="NoteList__title">
-          <button className="NoteList__sortBtn">
-            {sortIcon}
-            <Tooltip position="down">Sort Notes</Tooltip>
-          </button>
-          {props.trashShown ? 'Trash' : 'All Notes'}
-          <button className="NoteList__addBtn" disabled={props.trashShown} onClick={props.createNote}>
-            {plusIcon}
-            <Tooltip position="down">New Note<div>Ctrl+Shift+N</div></Tooltip>
-          </button>
-        </div>
-        <div className="NoteList__noteCount">
-          {noteCount} {noteCount === 1 ? 'Note' : 'Notes'}
-        </div>
-      </div>
+      <NoteListHeader
+        createNote={props.createNote}
+        trashShown={props.trashShown}
+        noteCount={props.noteIDs.length}
+      />
       <div className="NoteList__notes">
-        {noteCount ?
+        {props.noteIDs.length ?
           props.noteIDs.slice().sort((a,b) => (
             props.pinnedNotes.indexOf(b) - props.pinnedNotes.indexOf(a)
           )).map(noteID => {
@@ -72,7 +59,9 @@ const NoteList = props => {
           :
           <div className="NoteList__noNotes">
             {props.trashShown ? 'Your trash is empty.' : 'No notes'}
-            {!props.trashShown && <div onClick={props.createNote}>Create a new note</div>}
+            {!props.trashShown &&
+              <div onClick={props.createNote}>Create a new note</div>
+            }
           </div>
         }
       </div>

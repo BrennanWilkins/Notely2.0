@@ -18,10 +18,7 @@ const NoteStatus = props => (
 );
 
 const mapStateToProps = state => ({
-  updatedAt:
-    !state.notes.currentNoteID ? null :
-    state.notes.trashShown ? state.notes.trash.byID[state.notes.currentNoteID].updatedAt || null :
-    state.notes.notes.byID[state.notes.currentNoteID].updatedAt || null,
+  updatedAt: state.notesByID[state.notes.currentNoteID].updatedAt,
   changesSaved: state.notes.changesSaved
 });
 

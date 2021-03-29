@@ -43,16 +43,15 @@ const NoteContent = props => {
   const editor = useMemo(() => withChecklists(withHistory(withReact(createEditor()))), []);
 
   useEffect(() => {
-    if (!props.currentNoteID) { return; }
-    if (value !== props.currentBody) {
-      setValue(props.currentBody);
-    }
+    if (!props.currentNoteID || value === props.currentBody) { return; }
+    setValue(props.currentBody);
   }, [props.currentBody]);
 
   useEffect(() => {
-    if (value !== props.currentBody) { props.setStatus(); }
+    if (!props.currentNoteID || value === props.currentBody) { return; }
+    props.setStatus();
     const delay = setTimeout(() => {
-      if (!props.currentNoteID || value === props.currentBody) { return; }
+      if (!props.currentNoteID) { return; }
       props.updateNote(props.currentNoteID, value);
     }, 700);
 
@@ -223,15 +222,7 @@ NoteContent.propTypes = {
 
 const mapStateToProps = state => ({
   currentNoteID: state.notes.currentNoteID,
-  currentBody: (
-    state.notes.currentNoteID ?
-      (state.notes.trashShown ?
-        state.notes.trash.byID[state.notes.currentNoteID].body :
-        state.notes.notes.byID[state.notes.currentNoteID].body
-      )
-    :
-    []
-  )
+  currentBody: state.notes.currentNoteID ? state.notesByID[state.notes.currentNoteID].body : []
 });
 
 const mapDispatchToProps = dispatch => ({

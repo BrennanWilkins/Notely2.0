@@ -24,7 +24,7 @@ const NoteList = props => {
     isPinned ? props.unpinNote(noteID) : props.pinNote(noteID);
   };
 
-  const noteCount = props.shownNotes.allIDs.length;
+  const noteCount = props.noteIDs.length;
 
   return (
     <div className={`NoteList ${props.listShown ? 'NoteList--show' : 'NoteList--hide'}`}>
@@ -46,10 +46,10 @@ const NoteList = props => {
       </div>
       <div className="NoteList__notes">
         {noteCount ?
-          props.shownNotes.allIDs.slice().sort((a,b) => (
+          props.noteIDs.slice().sort((a,b) => (
             props.pinnedNotes.indexOf(b) - props.pinnedNotes.indexOf(a)
           )).map(noteID => {
-            const note = props.shownNotes.byID[noteID];
+            const note = props.notesByID[noteID];
             const isPinned = props.trashShown ? false : props.pinnedNotes.includes(noteID);
             return (
               <div
@@ -81,10 +81,8 @@ const NoteList = props => {
 };
 
 NoteList.propTypes = {
-  shownNotes: PropTypes.shape({
-    allIDs: PropTypes.array.isRequired,
-    byID: PropTypes.object.isRequired
-  }).isRequired,
+  noteIDs: PropTypes.array.isRequired,
+  notesByID: PropTypes.object.isRequired,
   currentNoteID: PropTypes.string,
   trashShown: PropTypes.bool.isRequired,
   showNote: PropTypes.func.isRequired,
@@ -96,7 +94,8 @@ NoteList.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  shownNotes: state.notes.trashShown ? state.notes.trash : state.notes.notes,
+  noteIDs: state.notes.trashShown ? state.notes.trashIDs : state.notes.noteIDs,
+  notesByID: state.notesByID,
   currentNoteID: state.notes.currentNoteID,
   trashShown: state.notes.trashShown,
   listShown: state.ui.listShown,

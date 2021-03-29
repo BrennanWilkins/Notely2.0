@@ -1,14 +1,9 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  notes: {
-    byID: {},
-    allIDs: []
-  },
-  trash: {
-    byID: {},
-    allIDs: []
-  },
+  notesByID: {},
+  noteIDs: [],
+  trashIDs: [],
   pinnedNotes: [],
   currentNoteID: null,
   trashShown: false,
@@ -35,34 +30,27 @@ const reducer = (state  = initialState, action) => {
 
 const login = (state, { payload: { notes, pinnedNotes }}) => {
   const notesByID = {};
-  const notesAllIDs = [];
-  const trashByID = {};
-  const trashAllIDs = [];
+  const noteIDs = [];
+  const trashIDs = [];
 
   for (let note of notes) {
-    const { _id: noteID, isTrash, ...rest } = note;
+    const { _id: noteID, isTrash, __v, ...rest } = note;
     const newNote = { noteID, ...rest };
     if (isTrash) {
-      trashByID[noteID] = newNote;
-      trashAllIDs.push(noteID);
+      trashIDs.push(noteID);
     } else {
-      notesByID[noteID] = newNote;
-      notesAllIDs.push(noteID);
+      noteIDs.push(noteID);
     }
+    notesByID[noteID] = newNote;
   }
 
   return {
     ...state,
-    notes: {
-      byID: notesByID,
-      allIDs: notesAllIDs
-    },
-    trash: {
-      byID: trashByID,
-      allIDs: trashAllIDs
-    },
+    notesByID,
+    trashIDs,
+    noteIDs,
     pinnedNotes,
-    currentNoteID: notesAllIDs[0] || null
+    currentNoteID: noteIDs[0] || null
   };
 };
 
@@ -79,16 +67,8 @@ const createNote = (state, { payload: { note } }) => {
   };
   return {
     ...state,
-    notes: {
-      byID: {
-        ...state.notes.byID,
-        [note._id]: newNote
-      },
-      allIDs: [
-        note._id,
-        ...state.notes.allIDs
-      ]
-    },
+    noteIDs: [note._id, ...state.noteIDs],
+    notesByID: { [note._id]: newNote, ...state.notesByID },
     currentNoteID: note._id,
     changesSaved: true
   };
@@ -96,63 +76,38 @@ const createNote = (state, { payload: { note } }) => {
 
 const updateNote = (state, { payload: { noteID, body } }) => ({
   ...state,
-  notes: noteID in state.notes.byID ?
-    {
-      byID: {
-        ...state.notes.byID,
-        [noteID]: {
-          ...state.notes.byID[noteID],
-          body,
-          updatedAt: String(new Date())
-        }
-      },
-      allIDs: state.notes.allIDs
+  notesByID: {
+    ...state.notesByID,
+    [noteID]: {
+      ...state.notesByID[noteID],
+      body,
+      updatedAt: String(new Date())
     }
-    :
-    state.notes
-  ,
-  trash: noteID in state.trash.byID ?
-    {
-      byID: {
-        ...state.trash.byID,
-        [noteID]: {
-          ...state.trash.byID[noteID],
-          body,
-          updatedAt: String(new Date())
-        }
-      },
-      allIDs: state.trash.allIDs
-    }
-    :
-    state.trash
+  }
 });
 
 const trashNote = (state, { payload: { noteID } }) => {
-  const notesByID = { ...state.notes.byID };
-  const note = { ...notesByID[noteID], updatedAt: String(new Date()) };
-  delete notesByID[noteID];
-
-  const notesAllIDs = state.notes.allIDs.filter(id => id !== noteID);
+  const noteIDs = state.noteIDs.filter(id => id !== noteID);
+  const currentNoteID = (
+    (!state.currentNoteID && state.trashShown) ? noteID :
+    state.currentNoteID !== noteID ? state.currentNoteID :
+    noteIDs[0] || null
+  );
 
   return {
     ...state,
-    notes: {
-      byID: notesByID,
-      allIDs: notesAllIDs
+    notesByID: {
+      ...state.notesByID,
+      [noteID]: {
+        ...state.notesByID[noteID],
+        updatedAt: String(new Date())
+      }
     },
-    trash: {
-      byID: {
-        ...state.trash.byID,
-        [noteID]: note
-      },
-      allIDs: [noteID, ...state.trash.allIDs]
-    },
-    currentNoteID:
-      (!state.currentNoteID && state.trashShown) ? noteID :
-      state.currentNoteID !== noteID ? state.currentNoteID :
-      notesAllIDs[0] || null,
-    changesSaved: true
-  }
+    noteIDs,
+    trashIDs: [noteID, ...state.trashIDs],
+    currentNoteID,
+    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved
+  };
 };
 
 const setShowTrash = (state, action) => {
@@ -160,57 +115,50 @@ const setShowTrash = (state, action) => {
   return {
     ...state,
     trashShown: action.bool,
-    currentNoteID: (action.bool ? state.trash.allIDs[0] : state.notes.allIDs[0]) || null,
+    currentNoteID: (action.bool ? state.trashIDs[0] : state.noteIDs[0]) || null,
     changesSaved: true
   };
 };
 
 const restoreNote = (state, { payload: { noteID } }) => {
-  const trashByID = { ...state.trash.byID };
-  const note = { ...trashByID[noteID], updatedAt: String(new Date()) };
-  const trashAllIDs = state.trash.allIDs.filter(id => id !== noteID);
-  delete trashByID[noteID];
+  const trashIDs = state.trashIDs.filter(id => id !== noteID);
+  const currentNoteID = (
+    (!state.currentNoteID && !state.trashShown) ? noteID :
+    state.currentNoteID !== noteID ? state.currentNoteID :
+    trashIDs[0] || null
+  );
 
   return {
     ...state,
-    trash: {
-      byID: trashByID,
-      allIDs: trashAllIDs
+    trashIDs,
+    noteIDs: [noteID, ...state.noteIDs],
+    notesByID: {
+      ...state.notesByID,
+      [noteID]: { ...state.notesByID[noteID], updatedAt: String(new Date()) }
     },
-    notes: {
-      byID: {
-        ...state.notes.byID,
-        [noteID]: note
-      },
-      allIDs: [noteID, ...state.notes.allIDs]
-    },
-    currentNoteID:
-      (!state.currentNoteID && !state.trashShown) ? noteID :
-      state.currentNoteID !== noteID ? state.currentNoteID :
-      trashAllIDs[0] || null,
-    changesSaved: true
+    currentNoteID,
+    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved
   };
 };
 
 const deleteNote = (state, { payload: { noteID } }) => {
-  const trashByID = { ...state.trash.byID };
-  delete trashByID[noteID];
-  const trashAllIDs = state.trash.allIDs.filter(id => id !== noteID);
+  const notesByID = { ...state.notesByID };
+  delete notesByID[noteID];
+  const trashIDs = state.trashIDs.filter(id => id !== noteID);
+  const currentNoteID = (
+    state.currentNoteID !== noteID ? state.currentNoteID :
+    trashIDs[0] || null
+  );
 
   return {
     ...state,
-    trash: {
-      byID: trashByID,
-      allIDs: trashAllIDs
-    },
+    trashIDs,
     pinnedNotes:
       state.pinnedNotes.includes(noteID) ?
       state.pinnedNotes.filter(id => id !== noteID) :
       state.pinnedNotes,
-    currentNoteID:
-      state.currentNoteID !== noteID ? state.currentNoteID :
-      trashAllIDs[0] || null,
-    changesSaved: true
+    currentNoteID,
+    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved
   };
 };
 

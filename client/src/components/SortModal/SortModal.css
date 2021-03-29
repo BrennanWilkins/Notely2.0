@@ -1,0 +1,36 @@
+.SortModal {
+  position: absolute;
+  top: 50px;
+  left: 15px;
+  width: 220px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 6px -2px rgba(0,0,0,0.15);
+  background: white;
+  z-index: 2;
+  border-radius: 4px;
+  padding-bottom: 5px;
+  border: 1px solid #eee;
+}
+.SortModal__closeBtn {
+  top: 0px;
+  right: 0px;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+.SortModal__title {
+  width: calc(100% - 20px);
+  padding-bottom: 10px;
+  margin: 10px auto 5px;
+  position: relative;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+.SortModal__options div {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14.5px;
+}
+.SortModal__options div:hover {
+  background: rgb(250,250,250);
+}

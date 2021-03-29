@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import './SettingsModal.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { CloseBtn, BackBtn } from '../UI/Buttons';
+import { CloseBtn, BackBtn } from '../UI/Buttons/Buttons';
 import { logout } from '../../store/actions';
 import ChangePass from './ChangePass';
 import DeleteAccnt from './DeleteAccnt';

@@ -8,8 +8,7 @@ import {
   trashIcon,
   shareIcon,
   pinIcon,
-  arrowIcon,
-  checkIcon
+  arrowIcon
 } from '../UI/icons';
 import {
   toggleFullscreen,
@@ -21,7 +20,7 @@ import {
   unpinNote
 } from '../../store/actions';
 import Tooltip from '../UI/Tooltip/Tooltip';
-import { formatDate } from '../../utils/formatDate';
+import NoteStatus from './NoteStatus';
 
 const NoteMenu = props => {
   const pinHandler = () => {
@@ -72,12 +71,7 @@ const NoteMenu = props => {
           )}
         </div>
       </div>
-      {!!props.currentNoteID &&
-        <div className="NoteMenu__info">
-          <div className="NoteMenu__date">Last updated {formatDate(props.updatedAt)}</div>
-          <div className="NoteMenu__status">{checkIcon} All changes saved</div>
-        </div>
-      }
+      {!!props.currentNoteID && <NoteStatus />}
     </div>
   );
 };
@@ -93,18 +87,13 @@ NoteMenu.propTypes = {
   showList: PropTypes.func.isRequired,
   pinNote: PropTypes.func.isRequired,
   unpinNote: PropTypes.func.isRequired,
-  noteIsPinned: PropTypes.bool.isRequired,
-  updatedAt: PropTypes.string
+  noteIsPinned: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   isFullscreen: state.ui.isFullscreen,
   trashShown: state.notes.trashShown,
   currentNoteID: state.notes.currentNoteID,
-  updatedAt:
-    !state.notes.currentNoteID ? null :
-    state.notes.trashShown ? state.notes.trash.byID[state.notes.currentNoteID].updatedAt || null :
-    state.notes.notes.byID[state.notes.currentNoteID].updatedAt || null,
   noteIsPinned: state.notes.pinnedNotes.includes(state.notes.currentNoteID)
 });
 

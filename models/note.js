@@ -8,6 +8,6 @@ const NoteSchema = new Schema({
   nanoID: String,
   isPublished: Boolean,
   isTrash: Boolean
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Note', NoteSchema);

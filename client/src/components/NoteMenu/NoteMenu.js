@@ -1,10 +1,27 @@
 import React from 'react';
 import './NoteMenu.css';
 import PropTypes from 'prop-types';
-import { expandIcon, contractIcon, trashIcon, shareIcon, pinIcon, arrowIcon } from '../UI/icons';
 import { connect } from 'react-redux';
-import { toggleFullscreen, trashNote, restoreNote, deleteNote, setListShown, pinNote, unpinNote } from '../../store/actions';
+import {
+  expandIcon,
+  contractIcon,
+  trashIcon,
+  shareIcon,
+  pinIcon,
+  arrowIcon,
+  checkIcon
+} from '../UI/icons';
+import {
+  toggleFullscreen,
+  trashNote,
+  restoreNote,
+  deleteNote,
+  setListShown,
+  pinNote,
+  unpinNote
+} from '../../store/actions';
 import Tooltip from '../UI/Tooltip/Tooltip';
+import { formatDate } from '../../utils/formatDate';
 
 const NoteMenu = props => {
   const pinHandler = () => {
@@ -55,6 +72,12 @@ const NoteMenu = props => {
           )}
         </div>
       </div>
+      {!!props.currentNoteID &&
+        <div className="NoteMenu__info">
+          <div className="NoteMenu__date">Last updated {formatDate(props.updatedAt)}</div>
+          <div className="NoteMenu__status">{checkIcon} All changes saved</div>
+        </div>
+      }
     </div>
   );
 };
@@ -70,13 +93,18 @@ NoteMenu.propTypes = {
   showList: PropTypes.func.isRequired,
   pinNote: PropTypes.func.isRequired,
   unpinNote: PropTypes.func.isRequired,
-  noteIsPinned: PropTypes.bool.isRequired
+  noteIsPinned: PropTypes.bool.isRequired,
+  updatedAt: PropTypes.string
 };
 
 const mapStateToProps = state => ({
   isFullscreen: state.ui.isFullscreen,
   trashShown: state.notes.trashShown,
   currentNoteID: state.notes.currentNoteID,
+  updatedAt:
+    !state.notes.currentNoteID ? null :
+    state.notes.trashShown ? state.notes.trash.byID[state.notes.currentNoteID].updatedAt || null :
+    state.notes.notes.byID[state.notes.currentNoteID].updatedAt || null,
   noteIsPinned: state.notes.pinnedNotes.includes(state.notes.currentNoteID)
 });
 

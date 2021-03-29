@@ -71,7 +71,9 @@ const createNote = (state, { payload: { note } }) => {
     isPublished: false,
     collaborators: note.collaborators,
     tags: [],
-    nanoID: ''
+    nanoID: '',
+    createdAt: note.createdAt,
+    updatedAt: note.updatedAt
   };
   return {
     ...state,
@@ -97,7 +99,8 @@ const updateNote = (state, { payload: { noteID, body } }) => ({
         ...state.notes.byID,
         [noteID]: {
           ...state.notes.byID[noteID],
-          body
+          body,
+          updatedAt: String(new Date())
         }
       },
       allIDs: state.notes.allIDs
@@ -111,7 +114,8 @@ const updateNote = (state, { payload: { noteID, body } }) => ({
         ...state.trash.byID,
         [noteID]: {
           ...state.trash.byID[noteID],
-          body
+          body,
+          updatedAt: String(new Date())
         }
       },
       allIDs: state.trash.allIDs
@@ -122,7 +126,7 @@ const updateNote = (state, { payload: { noteID, body } }) => ({
 
 const trashNote = (state, { payload: { noteID } }) => {
   const notesByID = { ...state.notes.byID };
-  const note = { ...notesByID[noteID] };
+  const note = { ...notesByID[noteID], updatedAt: String(new Date()) };
   delete notesByID[noteID];
 
   const notesAllIDs = state.notes.allIDs.filter(id => id !== noteID);
@@ -155,7 +159,7 @@ const setShowTrash = (state, action) => {
 
 const restoreNote = (state, { payload: { noteID } }) => {
   const trashByID = { ...state.trash.byID };
-  const note = { ...trashByID[noteID] };
+  const note = { ...trashByID[noteID], updatedAt: String(new Date()) };
   const trashAllIDs = state.trash.allIDs.filter(id => id !== noteID);
   delete trashByID[noteID];
 

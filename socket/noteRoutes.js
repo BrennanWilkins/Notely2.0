@@ -37,6 +37,7 @@ const updateNote = async (socket, data) => {
     const note = await Note.findByIdAndUpdate(noteID, { body });
     if (!note) { throw 'Invalid noteID'; }
     socket.to(noteID).emit('put/note', data);
+    socket.emit('put/note finished');
   } catch (err) {
     socket.emit('note error', 'There was an error while updating your note.');
   }
@@ -97,7 +98,7 @@ const pinNote = async (socket, data) => {
     if (!user) { throw 'No user found'; }
     if (user.pinnedNotes.includes(noteID)) { return; }
     user.pinnedNotes.unshift(noteID);
-    
+
     await user.save();
   } catch (err) {
     socket.emit('note error', 'There was an error while pinning your note.');

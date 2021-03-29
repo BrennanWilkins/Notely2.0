@@ -27,6 +27,10 @@ export const initSocket = () => {
     console.log(errMsg);
   });
 
+  newSocket.on('put/note finished', () => {
+    store.dispatch({ type: 'SET_STATUS', bool: true });
+  });
+
   for (let action in socketMap) {
     newSocket.on(action, data => {
       const payload = JSON.parse(data);

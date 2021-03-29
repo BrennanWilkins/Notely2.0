@@ -3,12 +3,19 @@ import './NoteContent.css';
 import PropTypes from 'prop-types';
 import isHotkey from 'is-hotkey';
 import { Editable, withReact, Slate } from 'slate-react';
-import { Editor, Point, Range, Transforms, createEditor, Element as SlateElement } from 'slate';
+import {
+  Editor,
+  Point,
+  Range,
+  Transforms,
+  createEditor,
+  Element as SlateElement
+} from 'slate';
 import { withHistory } from 'slate-history';
 import Toolbar from './Toolbar';
 import ChecklistItemElement from './ChecklistItem';
 import { connect } from 'react-redux';
-import { updateNote } from '../../store/actions';
+import { updateNote, setStatus } from '../../store/actions';
 import { logo } from '../UI/icons';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
@@ -43,6 +50,7 @@ const NoteContent = props => {
   }, [props.currentBody]);
 
   useEffect(() => {
+    if (value !== props.currentBody) { props.setStatus(); }
     const delay = setTimeout(() => {
       if (!props.currentNoteID || value === props.currentBody) { return; }
       props.updateNote(props.currentNoteID, value);
@@ -209,7 +217,8 @@ const withChecklists = editor => {
 NoteContent.propTypes = {
   currentBody: PropTypes.array.isRequired,
   currentNoteID: PropTypes.string,
-  updateNote: PropTypes.func.isRequired
+  updateNote: PropTypes.func.isRequired,
+  setStatus: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -226,7 +235,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateNote: (noteID, body) => dispatch(updateNote(noteID, body))
+  updateNote: (noteID, body) => dispatch(updateNote(noteID, body)),
+  setStatus: () => dispatch(setStatus(false))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(React.memo(NoteContent));

@@ -49,3 +49,5 @@ export const unpinNote = noteID => dispatch => {
   sendUpdate('put/note/unpin', { noteID });
   dispatch({ type: actionTypes.UNPIN_NOTE, noteID });
 };
+
+export const setStatus = bool => ({ type: actionTypes.SET_STATUS, bool });

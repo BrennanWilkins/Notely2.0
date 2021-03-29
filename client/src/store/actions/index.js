@@ -17,5 +17,6 @@ export {
   showNote,
   setShowTrash,
   pinNote,
-  unpinNote
+  unpinNote,
+  setStatus
 } from './notes';

@@ -11,7 +11,8 @@ const initialState = {
   },
   pinnedNotes: [],
   currentNoteID: null,
-  trashShown: false
+  trashShown: false,
+  changesSaved: true
 };
 
 const reducer = (state  = initialState, action) => {
@@ -26,6 +27,7 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.SET_SHOW_TRASH: return setShowTrash(state, action);
     case actionTypes.PIN_NOTE: return pinNote(state, action);
     case actionTypes.UNPIN_NOTE: return unpinNote(state, action);
+    case actionTypes.SET_STATUS: return setStatus(state, action);
     case actionTypes.LOGOUT: return initialState;
     default: return state;
   }
@@ -87,7 +89,8 @@ const createNote = (state, { payload: { note } }) => {
         ...state.notes.allIDs
       ]
     },
-    currentNoteID: note._id
+    currentNoteID: note._id,
+    changesSaved: true
   };
 };
 
@@ -144,7 +147,11 @@ const trashNote = (state, { payload: { noteID } }) => {
       },
       allIDs: [noteID, ...state.trash.allIDs]
     },
-    currentNoteID: (!state.currentNoteID && state.trashShown) ? noteID : state.currentNoteID !== noteID ? state.currentNoteID : notesAllIDs[0] || null
+    currentNoteID:
+      (!state.currentNoteID && state.trashShown) ? noteID :
+      state.currentNoteID !== noteID ? state.currentNoteID :
+      notesAllIDs[0] || null,
+    changesSaved: true
   }
 };
 
@@ -153,7 +160,8 @@ const setShowTrash = (state, action) => {
   return {
     ...state,
     trashShown: action.bool,
-    currentNoteID: (action.bool ? state.trash.allIDs[0] : state.notes.allIDs[0]) || null
+    currentNoteID: (action.bool ? state.trash.allIDs[0] : state.notes.allIDs[0]) || null,
+    changesSaved: true
   };
 };
 
@@ -176,7 +184,11 @@ const restoreNote = (state, { payload: { noteID } }) => {
       },
       allIDs: [noteID, ...state.notes.allIDs]
     },
-    currentNoteID: (!state.currentNoteID && !state.trashShown) ? noteID : state.currentNoteID !== noteID ? state.currentNoteID : trashAllIDs[0] || null
+    currentNoteID:
+      (!state.currentNoteID && !state.trashShown) ? noteID :
+      state.currentNoteID !== noteID ? state.currentNoteID :
+      trashAllIDs[0] || null,
+    changesSaved: true
   };
 };
 
@@ -191,8 +203,14 @@ const deleteNote = (state, { payload: { noteID } }) => {
       byID: trashByID,
       allIDs: trashAllIDs
     },
-    pinnedNotes: state.pinnedNotes.includes(noteID) ? state.pinnedNotes.filter(id => id !== noteID) : state.pinnedNotes,
-    currentNoteID: state.currentNoteID !== noteID ? state.currentNoteID : trashAllIDs[0] || null
+    pinnedNotes:
+      state.pinnedNotes.includes(noteID) ?
+      state.pinnedNotes.filter(id => id !== noteID) :
+      state.pinnedNotes,
+    currentNoteID:
+      state.currentNoteID !== noteID ? state.currentNoteID :
+      trashAllIDs[0] || null,
+    changesSaved: true
   };
 };
 
@@ -205,5 +223,9 @@ const unpinNote = (state, { noteID }) => ({
   ...state,
   pinnedNotes: state.pinnedNotes.filter(id => id !== noteID)
 });
+
+const setStatus = (state, { bool }) => {
+  return state.changesSaved === bool ? state : { ...state, changesSaved: bool };
+};
 
 export default reducer;

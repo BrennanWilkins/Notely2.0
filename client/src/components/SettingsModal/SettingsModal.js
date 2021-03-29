@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import './SettingsModal.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { xIcon, backIcon } from '../UI/icons';
+import { CloseBtn, BackBtn } from '../UI/Buttons';
 import { logout } from '../../store/actions';
 import ChangePass from './ChangePass';
 import DeleteAccnt from './DeleteAccnt';
@@ -26,8 +26,8 @@ const SettingsModal = props => {
     <div className="SettingsContainer" onClick={clickHandler}>
       <div className="SettingsModal" ref={modalRef}>
         <div className="SettingsModal__title">{showChangePass ? 'Change my password' : showDeleteAccnt ? 'Delete my account' : 'Settings'}</div>
-        <div className="SettingsModal__closeBtn" onClick={props.close}>{xIcon}</div>
-        {(showChangePass || showDeleteAccnt) && <div className="SettingsModal__backBtn" onClick={backHandler}>{backIcon}</div>}
+        <CloseBtn onClick={props.close} />
+        {(showChangePass || showDeleteAccnt) && <BackBtn onClick={backHandler} />}
         {
           showChangePass ?
             <ChangePass />

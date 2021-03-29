@@ -61,40 +61,6 @@
   border-bottom: 1.2px solid #ddd;
   color: rgb(50,50,50);
 }
-.SettingsModal__closeBtn, .SettingsModal__backBtn {
-  position: absolute;
-  cursor: pointer;
-  border-radius: 4px;
-  color: rgb(50,50,50);
-  transition: all 250ms;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: 10px;
-  font-size: 28px;
-  width: 28px;
-  height: 28px;
-}
-.SettingsModal__closeBtn {
-  right: 10px;
-}
-.SettingsModal__backBtn {
-  left: 10px;
-  font-size: 19px;
-  animation: backBtnSlideIn 250ms forwards;
-}
-@keyframes backBtnSlideIn {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-.SettingsModal__closeBtn:hover, .SettingsModal__backBtn:hover {
-  background: rgb(240,240,240);
-  color: black;
-}
 .SettingsModal__subTitle {
   font-size: 15px;
   color: rgb(110,110,110);

@@ -222,7 +222,7 @@ NoteContent.propTypes = {
 
 const mapStateToProps = state => ({
   currentNoteID: state.notes.currentNoteID,
-  currentBody: state.notes.currentNoteID ? state.notesByID[state.notes.currentNoteID].body : []
+  currentBody: state.notes.currentNoteID ? state.notes.notesByID[state.notes.currentNoteID].body : []
 });
 
 const mapDispatchToProps = dispatch => ({

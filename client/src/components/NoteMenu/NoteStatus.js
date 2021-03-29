@@ -18,7 +18,7 @@ const NoteStatus = props => (
 );
 
 const mapStateToProps = state => ({
-  updatedAt: state.notesByID[state.notes.currentNoteID].updatedAt,
+  updatedAt: state.notes.notesByID[state.notes.currentNoteID].updatedAt,
   changesSaved: state.notes.changesSaved
 });
 

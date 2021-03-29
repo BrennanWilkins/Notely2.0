@@ -95,7 +95,7 @@ NoteList.propTypes = {
 
 const mapStateToProps = state => ({
   noteIDs: state.notes.trashShown ? state.notes.trashIDs : state.notes.noteIDs,
-  notesByID: state.notesByID,
+  notesByID: state.notes.notesByID,
   currentNoteID: state.notes.currentNoteID,
   trashShown: state.notes.trashShown,
   listShown: state.ui.listShown,

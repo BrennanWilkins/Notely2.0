@@ -22,4 +22,4 @@ const mapStateToProps = state => ({
   changesSaved: state.notes.changesSaved
 });
 
-export default connect(mapStateToProps)(NoteStatus);
+export default connect(mapStateToProps)(React.memo(NoteStatus));

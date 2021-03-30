@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import './NoteList.css';
 import PropTypes from 'prop-types';
 import { pinIcon } from '../UI/icons';
@@ -11,18 +11,47 @@ const serialize = nodes => {
   let title = (nodes && nodes.length) ? Node.string(nodes[0]) || 'New Note' : 'New Note';
   let txt = (nodes && nodes.length > 1) ? nodes.slice(1).map(n => Node.string(n)).join('\n') : '';
 
-  return (
+  let body = (
     <>
       <div>{title}</div>
       {txt}
     </>
   );
+  return { title, body };
+};
+
+const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType) => {
+  return notes.map(noteID => ({
+    noteID,
+    isPinned: trashShown ? false : pinnedNotes.includes(noteID),
+    ...serialize(notesByID[noteID].body)
+  })).sort((a,b) => {
+    if (a.isPinned && b.isPinned) {
+      return pinnedNotes.indexOf(b) - pinnedNotes.indexOf(a);
+    }
+    if (b.isPinned && !a.isPinned) { return 1; }
+    if (a.isPinned && !b.isPinned) { return -1; }
+
+    switch (sortType) {
+      case 'Created Newest': return new Date(a.createdAt) - new Date(b.createdAt);
+      case 'Created Oldest': return new Date(b.createdAt) - new Date(a.createdAt);
+      case 'Modified Newest': return new Date(a.updatedAt) - new Date(b.updatedAt);
+      case 'Modified Oldest': return new Date(b.updatedAt) - new Date(a.updatedAt);
+      case 'AtoZ': return a.title.localeCompare(b.title);
+      case 'ZtoA': return b.title.localeCompare(a.title);
+      default: return 0;
+    }
+  });
 };
 
 const NoteList = props => {
   const pinHandler = (isPinned, noteID) => {
     isPinned ? props.unpinNote(noteID) : props.pinNote(noteID);
   };
+
+  const formattedNotes = useMemo(() => {
+    return formatAndSort(props.noteIDs, props.pinnedNotes, props.notesByID, props.trashShown, props.sortType);
+  }, [props.noteIDs, props.pinnedNotes, props.notesByID, props.trashShown, props.sortType])
 
   return (
     <div className={`NoteList ${props.listShown ? 'NoteList--show' : 'NoteList--hide'}`}>
@@ -33,29 +62,23 @@ const NoteList = props => {
       />
       <div className="NoteList__notes">
         {props.noteIDs.length ?
-          props.noteIDs.slice().sort((a,b) => (
-            props.pinnedNotes.indexOf(b) - props.pinnedNotes.indexOf(a)
-          )).map(noteID => {
-            const note = props.notesByID[noteID];
-            const isPinned = props.trashShown ? false : props.pinnedNotes.includes(noteID);
-            return (
-              <div
-                key={noteID}
-                className={`NoteList__note ${props.currentNoteID === noteID ? 'NoteList__note--active' : ''}`}
-                onClick={() => props.showNote(noteID)}
-              >
-                {!props.trashShown &&
-                  <span
-                    className={`NoteList__pin ${isPinned ? 'NoteList__pin--hl' : ''}`}
-                    onClick={() => pinHandler(isPinned, noteID)}
-                  >
-                    {pinIcon}
-                  </span>
-                }
-                {serialize(note.body)}
-              </div>
-            );
-          })
+          formattedNotes.map(note => (
+            <div
+              key={note.noteID}
+              className={`NoteList__note ${props.currentNoteID === note.noteID ? 'NoteList__note--active' : ''}`}
+              onClick={() => props.showNote(note.noteID)}
+            >
+              {!props.trashShown &&
+                <span
+                  className={`NoteList__pin ${note.isPinned ? 'NoteList__pin--hl' : ''}`}
+                  onClick={() => pinHandler(note.isPinned, note.noteID)}
+                >
+                  {pinIcon}
+                </span>
+              }
+              {note.body}
+            </div>
+          ))
           :
           <div className="NoteList__noNotes">
             {props.trashShown ? 'Your trash is empty.' : 'No notes'}
@@ -79,7 +102,8 @@ NoteList.propTypes = {
   listShown: PropTypes.bool.isRequired,
   pinnedNotes: PropTypes.array.isRequired,
   pinNote: PropTypes.func.isRequired,
-  unpinNote: PropTypes.func.isRequired
+  unpinNote: PropTypes.func.isRequired,
+  sortType: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -88,7 +112,8 @@ const mapStateToProps = state => ({
   currentNoteID: state.notes.currentNoteID,
   trashShown: state.notes.trashShown,
   listShown: state.ui.listShown,
-  pinnedNotes: state.notes.pinnedNotes
+  pinnedNotes: state.notes.pinnedNotes,
+  sortType: state.ui.sortType
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -34,3 +34,7 @@
 .SortModal__options div:hover {
   background: rgb(250,250,250);
 }
+.SortModal__activeOption {
+  color: rgb(var(--blue));
+  font-weight: 500;
+}

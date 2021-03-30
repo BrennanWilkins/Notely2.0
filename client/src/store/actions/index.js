@@ -6,7 +6,8 @@ export {
 export {
   toggleSideNav,
   toggleFullscreen,
-  setListShown
+  setListShown,
+  setSortType
 } from './ui';
 export {
   createNote,

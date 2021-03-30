@@ -7,6 +7,7 @@ export const LOGIN = 'LOGIN';
 export const TOGGLE_SIDE_NAV = 'TOGGLE_SIDE_NAV';
 export const TOGGLE_FULLSCREEN = 'TOGGLE_FULLSCREEN';
 export const SET_LIST_SHOWN = 'SET_LIST_SHOWN';
+export const SET_SORT_TYPE = 'SET_SORT_TYPE';
 
 // note actionTypes
 export const CREATE_NOTE = 'CREATE_NOTE';

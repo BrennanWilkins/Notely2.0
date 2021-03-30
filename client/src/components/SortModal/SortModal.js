@@ -3,6 +3,17 @@ import './SortModal.css';
 import PropTypes from 'prop-types';
 import { CloseBtn } from '../UI/Buttons/Buttons';
 import { useModalToggle } from '../../utils/customHooks';
+import { connect } from 'react-redux';
+import { setSortType } from '../../store/actions';
+
+const sortTypes = [
+  { type: 'Created Newest', val: 'Date created (newest first)' },
+  { type: 'Created Oldest', val: 'Date created (oldest first)' },
+  { type: 'Modified Newest', val: 'Last updated (newest first)' },
+  { type: 'Modified Oldest', val: 'Last updated (oldest first)' },
+  { type: 'AtoZ', val: 'Alphabetically (A to Z)' },
+  { type: 'ZtoA', val: 'Alphabetically (Z to A)' }
+];
 
 const SortModal = props => {
   const modalRef = useRef();
@@ -15,19 +26,32 @@ const SortModal = props => {
         <CloseBtn className="SortModal__closeBtn" onClick={props.close} />
       </div>
       <div className="SortModal__options">
-        <div>Date created (newest first)</div>
-        <div>Date created (oldest first)</div>
-        <div>Last updated (newest first)</div>
-        <div>Last updated (oldest first)</div>
-        <div>Alphabetically (A to Z)</div>
-        <div>Alphabetically (Z to A)</div>
+        {sortTypes.map(({ type, val }) => (
+          <div
+            key={type}
+            className={props.sortType === type ? 'SortModal__activeOption' : ''}
+            onClick={() => props.setSortType(type)}
+          >
+            {val}
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
 SortModal.propTypes = {
-  close: PropTypes.func.isRequired
+  close: PropTypes.func.isRequired,
+  sortType: PropTypes.string.isRequired,
+  setSortType: PropTypes.func.isRequired
 };
 
-export default SortModal;
+const mapStateToProps = state => ({
+  sortType: state.ui.sortType
+});
+
+const mapDispatchToProps = dispatch => ({
+  setSortType: sortType => dispatch(setSortType(sortType))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SortModal);

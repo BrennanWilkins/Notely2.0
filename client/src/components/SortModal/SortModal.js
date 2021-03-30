@@ -2,19 +2,11 @@ import React, { useRef, useEffect } from 'react';
 import './SortModal.css';
 import PropTypes from 'prop-types';
 import { CloseBtn } from '../UI/Buttons/Buttons';
+import { useModalToggle } from '../../utils/customHooks';
 
 const SortModal = props => {
   const modalRef = useRef();
-
-  useEffect(() => {
-    const clickHandler = e => {
-      if (modalRef.current.contains(e.target)) { return; }
-      props.close();
-    };
-
-    document.addEventListener('mousedown', clickHandler);
-    return () => document.removeEventListener('mousedown', clickHandler);
-  }, []);
+  useModalToggle(modalRef, props.close);
 
   return (
     <div className="SortModal" ref={modalRef}>

@@ -53,11 +53,14 @@ export const unpinNote = noteID => dispatch => {
 export const setStatus = bool => ({ type: actionTypes.SET_STATUS, bool });
 
 export const createTag = (noteID, tag) => dispatch => {
+  if (tag.length > 100) { return; }
   const payload = { noteID, tag };
+  sendUpdate('post/note/tag', payload);
   dispatch({ type: actionTypes.CREATE_TAG, payload });
 };
 
 export const removeTag = (noteID, tag) => dispatch => {
   const payload = { noteID, tag };
+  sendUpdate('delete/note/tag', payload);
   dispatch({ type: actionTypes.REMOVE_TAG, payload });
 };

@@ -1,10 +1,10 @@
 .NoteContent {
   width: 100%;
-  height: calc(100% - 80px);
   padding: 0 15px 12px;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
+  flex-grow: 1;
 }
 .NoteContent--empty {
   display: flex;

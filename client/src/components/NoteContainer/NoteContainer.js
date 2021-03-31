@@ -3,6 +3,7 @@ import './NoteContainer.css';
 import PropTypes from 'prop-types';
 import NoteContent from '../NoteContent/NoteContent';
 import NoteMenu from '../NoteMenu/NoteMenu';
+import NoteTags from '../NoteTags/NoteTags';
 import { connect } from 'react-redux';
 
 const NoteContainer = props => (
@@ -12,6 +13,7 @@ const NoteContainer = props => (
   >
     <NoteMenu />
     <NoteContent />
+    <NoteTags />
   </div>
 );
 

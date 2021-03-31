@@ -51,3 +51,13 @@ export const unpinNote = noteID => dispatch => {
 };
 
 export const setStatus = bool => ({ type: actionTypes.SET_STATUS, bool });
+
+export const createTag = (noteID, tag) => dispatch => {
+  const payload = { noteID, tag };
+  dispatch({ type: actionTypes.CREATE_TAG, payload });
+};
+
+export const removeTag = (noteID, tag) => dispatch => {
+  const payload = { noteID, tag };
+  dispatch({ type: actionTypes.REMOVE_TAG, payload });
+};

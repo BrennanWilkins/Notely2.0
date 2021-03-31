@@ -12,6 +12,7 @@ const initialState = {
 
 const reducer = (state  = initialState, action) => {
   switch (action.type) {
+    case actionTypes.LOGOUT: return initialState;
     case actionTypes.LOGIN: return login(state, action);
     case actionTypes.CREATE_NOTE: return createNote(state, action);
     case actionTypes.UPDATE_NOTE: return updateNote(state, action);
@@ -23,7 +24,8 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.PIN_NOTE: return pinNote(state, action);
     case actionTypes.UNPIN_NOTE: return unpinNote(state, action);
     case actionTypes.SET_STATUS: return setStatus(state, action);
-    case actionTypes.LOGOUT: return initialState;
+    case actionTypes.CREATE_TAG: return createTag(state, action);
+    case actionTypes.REMOVE_TAG: return removeTag(state, action);
     default: return state;
   }
 };
@@ -175,5 +177,30 @@ const unpinNote = (state, { noteID }) => ({
 const setStatus = (state, { bool }) => {
   return state.changesSaved === bool ? state : { ...state, changesSaved: bool };
 };
+
+const createTag = (state, { payload: { noteID, tag } }) => {
+  if (state.notesByID[noteID].tags.includes(tag)) { return state; }
+  return {
+    ...state,
+    notesByID: {
+      ...state.notesByID,
+      [noteID]: {
+        ...state.notesByID[noteID],
+        tags: [...state.notesByID[noteID].tags, tag]
+      }
+    }
+  };
+};
+
+const removeTag = (state, { payload: { noteID, tag } }) => ({
+  ...state,
+  notesByID: {
+    ...state.notesByID,
+    [noteID]: {
+      ...state.notesByID[noteID],
+      tags: state.notesByID[noteID].tags.filter(t => t !== tag)
+    }
+  }
+});
 
 export default reducer;

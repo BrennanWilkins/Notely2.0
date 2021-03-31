@@ -1,6 +1,8 @@
 .NoteContainer {
   height: 100%;
   background: white;
+  display: flex;
+  flex-direction: column;
 }
 .NoteContainer--contract {
   flex-grow: 1;

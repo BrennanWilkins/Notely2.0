@@ -19,5 +19,7 @@ export {
   setShowTrash,
   pinNote,
   unpinNote,
-  setStatus
+  setStatus,
+  createTag,
+  removeTag
 } from './notes';

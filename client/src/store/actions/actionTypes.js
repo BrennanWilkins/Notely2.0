@@ -20,3 +20,5 @@ export const SET_SHOW_TRASH = 'SET_SHOW_TRASH';
 export const PIN_NOTE = 'PIN_NOTE';
 export const UNPIN_NOTE = 'UNPIN_NOTE';
 export const SET_STATUS = 'SET_STATUS';
+export const CREATE_TAG = 'CREATE_TAG';
+export const REMOVE_TAG = 'REMOVE_TAG';

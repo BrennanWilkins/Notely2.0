@@ -116,6 +116,37 @@ const unpinNote = async (socket, data) => {
   }
 };
 
+const createTag = async (socket, data) => {
+  try {
+    const { noteID, tag } = JSON.parse(data);
+    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+    if (!tag) { throw 'No tag received'; }
+    if (tag.length < 1 || tag.length > 100) { throw 'Invalid tag length'; }
+
+    const note = await Note.findById(noteID);
+    if (note.tags.includes(tag)) { return; }
+    note.tags.push(tag);
+
+    await note.save();
+    socket.to(noteID).emit('post/note/tag', data);
+  } catch (err) {
+    socket.emit('note error', 'There was an error while creating your tag.');
+  }
+};
+
+const removeTag = async (socket, data) => {
+  try {
+    const { noteID, tag } = JSON.parse(data);
+    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+    if (!tag) { throw 'No tag received'; }
+
+    await Note.findByIdAndUpdate(noteID, { $pull: { tags: tag } });
+    socket.to(noteID).emit('delete/note/tag', data);
+  } catch (err) {
+    socket.emit('note error', 'There was an error while removing the tag.');
+  }
+};
+
 module.exports = {
   'post/note' : createNote,
   'put/note' : updateNote,
@@ -123,5 +154,7 @@ module.exports = {
   'put/note/restore' : restoreNote,
   'delete/note' : deleteNote,
   'put/note/pin': pinNote,
-  'put/note/unpin': unpinNote
+  'put/note/unpin': unpinNote,
+  'post/note/tag': createTag,
+  'delete/note/tag': removeTag
 };

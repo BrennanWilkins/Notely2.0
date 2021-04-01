@@ -59,6 +59,7 @@ const NoteList = props => {
         createNote={props.createNote}
         trashShown={props.trashShown}
         noteCount={props.noteIDs.length}
+        shownTag={props.shownTag}
       />
       <div className="NoteList__notes">
         {props.noteIDs.length ?
@@ -103,17 +104,22 @@ NoteList.propTypes = {
   pinnedNotes: PropTypes.array.isRequired,
   pinNote: PropTypes.func.isRequired,
   unpinNote: PropTypes.func.isRequired,
-  sortType: PropTypes.string.isRequired
+  sortType: PropTypes.string.isRequired,
+  shownTag: PropTypes.string
 };
 
 const mapStateToProps = state => ({
-  noteIDs: state.notes.trashShown ? state.notes.trashIDs : state.notes.noteIDs,
+  noteIDs: state.notes.shownTag ?
+    state.notes.filteredNoteIDs :
+    state.notes.trashShown ? state.notes.trashIDs :
+    state.notes.noteIDs,
   notesByID: state.notes.notesByID,
   currentNoteID: state.notes.currentNoteID,
   trashShown: state.notes.trashShown,
   listShown: state.ui.listShown,
   pinnedNotes: state.notes.pinnedNotes,
-  sortType: state.ui.sortType
+  sortType: state.ui.sortType,
+  shownTag: state.notes.shownTag
 });
 
 const mapDispatchToProps = dispatch => ({

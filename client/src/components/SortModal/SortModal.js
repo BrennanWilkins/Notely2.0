@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import './SortModal.css';
 import PropTypes from 'prop-types';
 import { CloseBtn } from '../UI/Buttons/Buttons';

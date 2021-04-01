@@ -42,7 +42,9 @@
   font-size: 32px;
   margin-left: 20px;
 }
-.SideNav--contract .SideNav__title div, .SideNav--contract .SideNav__innerLink div {
+.SideNav--contract .SideNav__title div,
+.SideNav--contract .SideNav__innerLink div,
+.SideNav--contract .SideNav__innerLink span {
   display: none;
 }
 .SideNav__link {
@@ -73,6 +75,52 @@
 }
 .SideNav--contract .SideNav__innerLink svg, .SideNav--contract .SideNav__title svg {
   margin: 0;
+}
+.SideNav__toggleTagBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 20px 0 auto;
+}
+.SideNav__toggleTagBtn svg {
+  margin: 0;
+  transform: rotate(180deg);
+  font-size: 18px;
+  transition: transform 250ms;
+}
+.SideNav__toggleTagBtn--rotate svg {
+  transform: rotate(270deg);
+}
+.SideNav__tags {
+  overflow: hidden;
+  transition: max-height 300ms;
+}
+.SideNav__tags--show .SideNav__tag {
+  animation: sideNavTagsAnimShow 1.5s forwards;
+}
+.SideNav__tags--hide .SideNav__tag {
+  background: rgba(var(--gray), 0.3);
+}
+@keyframes sideNavTagsAnimShow {
+  from {
+    background: rgba(var(--gray), 0.3);
+  }
+  to {
+    background: transparent;
+  }
+}
+.SideNav__tag {
+  color: rgb(238, 238, 238);
+  padding: 10px 10px 10px 20px;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.SideNav__tag:hover {
+  background: rgba(var(--gray), 0.25) !important;
 }
 @media (max-width: 900px) {
   .SideNav {

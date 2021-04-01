@@ -18,7 +18,9 @@ const NoteListHeader = props => {
           {sortIcon}
           <Tooltip position="down">Sort Notes</Tooltip>
         </button>
-        {props.trashShown ? 'Trash' : 'All Notes'}
+        <div className="NoteListHeader__titleText">
+          {props.trashShown ? 'Trash' : props.shownTag || 'All Notes'}
+        </div>
         <button
           className="NoteListHeader__addBtn"
           disabled={props.trashShown}
@@ -42,7 +44,8 @@ const NoteListHeader = props => {
 NoteListHeader.propTypes = {
   noteCount: PropTypes.number.isRequired,
   trashShown: PropTypes.bool.isRequired,
-  createNote: PropTypes.func.isRequired
+  createNote: PropTypes.func.isRequired,
+  shownTag: PropTypes.string
 };
 
 export default NoteListHeader;

@@ -1,0 +1,61 @@
+.ShareModal__subTitle {
+  color: rgb(100,100,100);
+  padding: 5px 10px 10px;
+  font-size: 14px;
+  max-width: 430px;
+  margin: 0 auto 10px;
+}
+.ShareModal__input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.ShareModal__input button {
+  border-radius: 3px;
+  border: 0;
+  outline: 0;
+  background: rgb(var(--blue));
+  color: white;
+  cursor: pointer;
+  transition: background 250ms;
+  font-size: 15px;
+  padding: 8px;
+}
+.ShareModal__input button:hover {
+  background: rgb(var(--blue2));
+}
+.ShareModal__input button:active {
+  background: rgb(var(--blue3));
+}
+.ShareModal__input input {
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 2px solid #ddd;
+  padding: 7px;
+  outline: none;
+  transition: border 250ms;
+  margin-right: 5px;
+  width: 250px;
+}
+.ShareModal__input input:hover {
+  background: rgb(252,252,252);
+}
+.ShareModal__input input:focus {
+  background: white;
+  border: 2px solid rgb(var(--blue));
+}
+.ShareModal__input input::placeholder {
+  color: rgb(150,150,150);
+}
+@media (max-width: 420px) {
+  .ShareModal__input {
+    flex-direction: column;
+  }
+  .ShareModal__input input {
+    width: 100%;
+    max-width: 300px;
+    display: block;
+    margin-bottom: 7px;
+  }
+}

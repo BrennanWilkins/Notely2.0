@@ -146,7 +146,13 @@ router.post('/login',
 
       const token = await signToken(user, rememberUser ? '30d' : '7d');
 
-      await user.populate('notes').populate('invites').execPopulate();
+      await user.populate({
+        path: 'notes',
+        populate: {
+          path: 'collaborators',
+          select: 'username email -_id'
+        }
+      }).populate('invites').execPopulate();
 
       res.status(200).json({
         token,

@@ -10,7 +10,13 @@ router.get('/',
   auth,
   async (req, res) => {
     try {
-      const user = await User.findById(req.userID).populate('notes').populate('invites').lean();
+      const user = await User.findById(req.userID).populate({
+        path: 'notes',
+        populate: {
+          path: 'collaborators',
+          select: 'username email -_id'
+        }
+      }).populate('invites').lean();
       if (!user) { throw 'No user found'; }
 
       res.status(200).json({

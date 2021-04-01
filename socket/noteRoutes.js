@@ -1,6 +1,20 @@
 const Note = require('../models/note');
 const User = require('../models/user');
 
+const parseData = (socket, data, options) => {
+  const payload = JSON.parse(data);
+  if (!socket.userNotes[payload.noteID]) { throw 'Unauthorized'; }
+  if (!options) { return payload; }
+  if (options.body && (!payload.body || !Array.isArray(payload.body))) {
+    throw 'Invalid body';
+  }
+  if (options.tag && (!payload.tag || typeof payload.tag !== 'string'
+      || payload.tag.length > 100)) {
+    throw 'Invalid tag';
+  }
+  return payload;
+};
+
 const createNote = async (socket, data) => {
   try {
     const note = new Note({
@@ -31,8 +45,7 @@ const createNote = async (socket, data) => {
 
 const updateNote = async (socket, data) => {
   try {
-    const { noteID, body } = JSON.parse(data);
-    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+    const { noteID, body } = parseData(socket, data, { body: true });
 
     const note = await Note.findByIdAndUpdate(noteID, { body });
     if (!note) { throw 'Invalid noteID'; }
@@ -45,8 +58,7 @@ const updateNote = async (socket, data) => {
 
 const trashNote = async (socket, data) => {
   try {
-    const { noteID } = JSON.parse(data);
-    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+    const { noteID } = parseData(socket, data);
 
     const note = await Note.findByIdAndUpdate(noteID, { isTrash: true });
     if (!note) { throw 'Invalid noteID'; }
@@ -58,8 +70,7 @@ const trashNote = async (socket, data) => {
 
 const restoreNote = async (socket, data) => {
   try {
-    const { noteID } = JSON.parse(data);
-    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+    const { noteID } = parseData(socket, data);
 
     const note = await Note.findByIdAndUpdate(noteID, { isTrash: false });
     if (!note) { throw 'Invalid noteID'; }
@@ -71,8 +82,7 @@ const restoreNote = async (socket, data) => {
 
 const deleteNote = async (socket, data) => {
   try {
-    const { noteID } = JSON.parse(data);
-    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+    const { noteID } = parseData(socket, data);
 
     const [note] = await Promise.all([
       Note.findByIdAndDelete(noteID),
@@ -91,8 +101,7 @@ const deleteNote = async (socket, data) => {
 
 const pinNote = async (socket, data) => {
   try {
-    const { noteID } = JSON.parse(data);
-    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+    const { noteID } = parseData(socket, data);
 
     const user = await User.findById(socket.userID);
     if (!user) { throw 'No user found'; }
@@ -107,8 +116,7 @@ const pinNote = async (socket, data) => {
 
 const unpinNote = async (socket, data) => {
   try {
-    const { noteID } = JSON.parse(data);
-    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
+    const { noteID } = parseData(socket, data);
 
     await User.findByIdAndUpdate(socket.userID, { $pull: { pinnedNotes: noteID } });
   } catch (err) {
@@ -118,10 +126,7 @@ const unpinNote = async (socket, data) => {
 
 const createTag = async (socket, data) => {
   try {
-    const { noteID, tag } = JSON.parse(data);
-    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
-    if (!tag) { throw 'No tag received'; }
-    if (tag.length < 1 || tag.length > 100) { throw 'Invalid tag length'; }
+    const { noteID, tag } = parseData(socket, data, { tag: true });
 
     const note = await Note.findById(noteID);
     if (note.tags.includes(tag)) { return; }
@@ -136,9 +141,7 @@ const createTag = async (socket, data) => {
 
 const removeTag = async (socket, data) => {
   try {
-    const { noteID, tag } = JSON.parse(data);
-    if (!socket.userNotes[noteID]) { throw 'Unauthorized'; }
-    if (!tag) { throw 'No tag received'; }
+    const { noteID, tag } = parseData(socket, data, { tag: true });
 
     await Note.findByIdAndUpdate(noteID, { $pull: { tags: tag } });
     socket.to(noteID).emit('delete/note/tag', data);

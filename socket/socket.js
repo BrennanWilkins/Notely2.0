@@ -12,18 +12,17 @@ const initSocket = server => {
       return next(new Error('Unauthorized'));
     }
     jwt.verify(socket.handshake.query.token, process.env.AUTH_KEY, (err, decoded) => {
-      if (err) { return next(new Error('Unauthorized')); }
+      if (err || !decoded.userID) { return next(new Error('Unauthorized')); }
       socket.userID = decoded.userID;
       next();
     });
   }).use(async (socket, next) => {
     // find all user's notes & set as obj on socket
     try {
-      const notes = await Note.find({ collaborators: socket.userID });
+      const notes = await Note.find({ collaborators: socket.userID }).select('_id').lean();
       if (!notes) { throw 'No notes found'; }
 
-      const userNotes = notes.reduce((obj, curr) => ({ ...obj, [curr._id]: true }), {});
-      socket.userNotes = userNotes;
+      socket.userNotes = notes.reduce((obj, curr) => ({ ...obj, [curr._id]: true }), {});
       next();
     } catch (err) { next(new Error('join error')); }
   }).on('connection', socket => {

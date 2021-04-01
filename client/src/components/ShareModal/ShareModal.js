@@ -3,9 +3,14 @@ import './ShareModal.css';
 import PropTypes from 'prop-types';
 import ModalContainer from '../UI/ModalContainer/ModalContainer';
 import { connect } from 'react-redux';
+import { useDidUpdate } from '../../utils/customHooks';
 
 const ShareModal = props => {
   const [userInput, setUserInput] = useState('');
+
+  useDidUpdate(() => {
+    props.close();
+  }, [props.noteID]);
 
   const sendInviteHandler = () => {
 

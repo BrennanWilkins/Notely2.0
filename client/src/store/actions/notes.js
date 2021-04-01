@@ -64,3 +64,5 @@ export const removeTag = (noteID, tag) => dispatch => {
   sendUpdate('delete/note/tag', payload);
   dispatch({ type: actionTypes.REMOVE_TAG, payload });
 };
+
+export const showNotesByTag = tag => ({ type: actionTypes.SHOW_NOTES_BY_TAG, tag });

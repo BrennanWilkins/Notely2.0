@@ -21,5 +21,6 @@ export {
   unpinNote,
   setStatus,
   createTag,
-  removeTag
+  removeTag,
+  showNotesByTag
 } from './notes';

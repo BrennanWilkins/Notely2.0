@@ -7,7 +7,10 @@ const initialState = {
   pinnedNotes: [],
   currentNoteID: null,
   trashShown: false,
-  changesSaved: true
+  changesSaved: true,
+  allTags: [],
+  filteredNoteIDs: [],
+  shownTag: null
 };
 
 const reducer = (state  = initialState, action) => {
@@ -26,6 +29,7 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.SET_STATUS: return setStatus(state, action);
     case actionTypes.CREATE_TAG: return createTag(state, action);
     case actionTypes.REMOVE_TAG: return removeTag(state, action);
+    case actionTypes.SHOW_NOTES_BY_TAG: return showNotesByTag(state, action);
     default: return state;
   }
 };
@@ -34,6 +38,7 @@ const login = (state, { payload: { notes, pinnedNotes }}) => {
   const notesByID = {};
   const noteIDs = [];
   const trashIDs = [];
+  const allTags = [];
 
   for (let note of notes) {
     const { _id: noteID, isTrash, __v, ...rest } = note;
@@ -43,6 +48,7 @@ const login = (state, { payload: { notes, pinnedNotes }}) => {
     } else {
       noteIDs.push(noteID);
     }
+    note.tags.length && allTags.push(...note.tags);
     notesByID[noteID] = newNote;
   }
 
@@ -52,7 +58,8 @@ const login = (state, { payload: { notes, pinnedNotes }}) => {
     trashIDs,
     noteIDs,
     pinnedNotes,
-    currentNoteID: noteIDs[0] || null
+    currentNoteID: noteIDs[0] || null,
+    allTags: [...new Set(allTags)]
   };
 };
 
@@ -72,7 +79,9 @@ const createNote = (state, { payload: { note } }) => {
     noteIDs: [note._id, ...state.noteIDs],
     notesByID: { [note._id]: newNote, ...state.notesByID },
     currentNoteID: note._id,
-    changesSaved: true
+    changesSaved: true,
+    shownTag: null,
+    filteredNoteIDs: state.filteredNoteIDs.length ? [] : state.filteredNoteIDs
   };
 };
 
@@ -90,9 +99,14 @@ const updateNote = (state, { payload: { noteID, body } }) => ({
 
 const trashNote = (state, { payload: { noteID } }) => {
   const noteIDs = state.noteIDs.filter(id => id !== noteID);
+  const filteredNoteIDs = (state.shownTag && state.filteredNoteIDs.includes(noteID)) ?
+    state.filteredNoteIDs.filter(id => id !== noteID) :
+    state.filteredNoteIDs;
+
   const currentNoteID = (
-    (!state.currentNoteID && state.trashShown) ? noteID :
-    state.currentNoteID !== noteID ? state.currentNoteID :
+    (state.currentNoteID && state.currentNoteID !== noteID) ? state.currentNoteID :
+    (state.trashShown && !state.currentNoteID) ? noteID :
+    (state.shownTag && filteredNoteIDs.length && state.currentNoteID === noteID) ? filteredNoteIDs[0] :
     noteIDs[0] || null
   );
 
@@ -108,25 +122,30 @@ const trashNote = (state, { payload: { noteID } }) => {
     noteIDs,
     trashIDs: [noteID, ...state.trashIDs],
     currentNoteID,
-    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved
+    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved,
+    filteredNoteIDs,
+    shownTag: (state.shownTag && filteredNoteIDs.length) ? state.shownTag : null
   };
 };
 
 const setShowTrash = (state, action) => {
-  if (action.bool === state.trashShown) { return state; }
+  if (action.bool === state.trashShown && !state.shownTag) { return state; }
   return {
     ...state,
     trashShown: action.bool,
     currentNoteID: (action.bool ? state.trashIDs[0] : state.noteIDs[0]) || null,
-    changesSaved: true
+    changesSaved: true,
+    shownTag: null,
+    filteredNoteIDs: state.filteredNoteIDs.length ? [] : state.filteredNoteIDs
   };
 };
 
 const restoreNote = (state, { payload: { noteID } }) => {
   const trashIDs = state.trashIDs.filter(id => id !== noteID);
+
   const currentNoteID = (
-    (!state.currentNoteID && !state.trashShown) ? noteID :
-    state.currentNoteID !== noteID ? state.currentNoteID :
+    (state.currentNoteID && state.currentNoteID !== noteID) ? state.currentNoteID :
+    (!state.currentNoteID && !state.trashShown && !state.shownTag) ? noteID :
     trashIDs[0] || null
   );
 
@@ -136,10 +155,15 @@ const restoreNote = (state, { payload: { noteID } }) => {
     noteIDs: [noteID, ...state.noteIDs],
     notesByID: {
       ...state.notesByID,
-      [noteID]: { ...state.notesByID[noteID], updatedAt: String(new Date()) }
+      [noteID]: {
+        ...state.notesByID[noteID],
+        updatedAt: String(new Date())
+      }
     },
     currentNoteID,
-    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved
+    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved,
+    filteredNoteIDs: (state.shownTag && state.notesByID[noteID].tags.includes(state.shownTag)) ?
+      [noteID, ...state.filteredNoteIDs] : state.filteredNoteIDs
   };
 };
 
@@ -186,21 +210,46 @@ const createTag = (state, { payload: { noteID, tag } }) => {
       ...state.notesByID,
       [noteID]: {
         ...state.notesByID[noteID],
+        updatedAt: String(new Date()),
         tags: [...state.notesByID[noteID].tags, tag]
       }
-    }
+    },
+    allTags: state.allTags.includes(tag) ? state.allTags : [tag, ...state.allTags]
   };
 };
 
-const removeTag = (state, { payload: { noteID, tag } }) => ({
-  ...state,
-  notesByID: {
+const removeTag = (state, { payload: { noteID, tag } }) => {
+  const notesByID = {
     ...state.notesByID,
     [noteID]: {
       ...state.notesByID[noteID],
+      updatedAt: String(new Date()),
       tags: state.notesByID[noteID].tags.filter(t => t !== tag)
     }
-  }
-});
+  };
+
+  const shouldKeepTag = state.noteIDs.find(id => notesByID[id].tags.includes(tag))
+  || state.trashIDs.find(id => notesByID[id].tags.includes(tag));
+
+  return {
+    ...state,
+    notesByID,
+    allTags: shouldKeepTag ? state.allTags : state.allTags.filter(t => t !== tag),
+    shownTag: state.shownTag === tag ? null : state.shownTag
+  };
+};
+
+const showNotesByTag = (state, { tag }) => {
+  if (tag === state.shownTag) { return state; }
+
+  const filteredNoteIDs = state.noteIDs.filter(id => state.notesByID[id].tags.includes(tag));
+  return {
+    ...state,
+    filteredNoteIDs,
+    shownTag: tag,
+    trashShown: false,
+    currentNoteID: filteredNoteIDs[0] || null
+  };
+};
 
 export default reducer;

@@ -1,21 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import './SettingsModal.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { CloseBtn, BackBtn } from '../UI/Buttons/Buttons';
+import { BackBtn } from '../UI/Buttons/Buttons';
 import { logout } from '../../store/actions';
 import ChangePass from './ChangePass';
 import DeleteAccnt from './DeleteAccnt';
+import ModalContainer from '../UI/ModalContainer/ModalContainer';
 
 const SettingsModal = props => {
-  const modalRef = useRef();
   const [showChangePass, setShowChangePass] = useState(false);
   const [showDeleteAccnt, setShowDeleteAccnt] = useState(false);
-
-  const clickHandler = e => {
-    if (modalRef.current.contains(e.target)) { return; }
-    props.close();
-  };
 
   const backHandler = () => {
     setShowChangePass(false);
@@ -23,30 +18,26 @@ const SettingsModal = props => {
   };
 
   return (
-    <div className="SettingsContainer" onClick={clickHandler}>
-      <div className="SettingsModal" ref={modalRef}>
-        <div className="SettingsModal__title">{showChangePass ? 'Change my password' : showDeleteAccnt ? 'Delete my account' : 'Settings'}</div>
-        <CloseBtn onClick={props.close} />
-        {(showChangePass || showDeleteAccnt) && <BackBtn onClick={backHandler} />}
-        {
-          showChangePass ?
-            <ChangePass />
-          :
-          showDeleteAccnt ?
-            <DeleteAccnt logout={props.logout} />
-          :
-            <>
-              <div className="SettingsModal__subTitle">Username</div>
-              <div className="SettingsModal__info">{props.username}</div>
-              <div className="SettingsModal__subTitle">Email</div>
-              <div className="SettingsModal__info">{props.email}</div>
-              <button className="SettingsModal__logoutBtn" onClick={props.logout}>Log Out</button>
-              <div className="SettingsModal__btn" onClick={() => setShowChangePass(true)}>Change my password</div>
-              <div className="SettingsModal__btn" onClick={() => setShowDeleteAccnt(true)}>Delete my account</div>
-            </>
-        }
-      </div>
-    </div>
+    <ModalContainer close={props.close} title={showChangePass ? 'Change my password' : showDeleteAccnt ? 'Delete my account' : 'Settings'}>
+      {(showChangePass || showDeleteAccnt) && <BackBtn onClick={backHandler} />}
+      {
+        showChangePass ?
+          <ChangePass />
+        :
+        showDeleteAccnt ?
+          <DeleteAccnt logout={props.logout} />
+        :
+          <>
+            <div className="SettingsModal__subTitle">Username</div>
+            <div className="SettingsModal__info">{props.username}</div>
+            <div className="SettingsModal__subTitle">Email</div>
+            <div className="SettingsModal__info">{props.email}</div>
+            <button className="SettingsModal__logoutBtn" onClick={props.logout}>Log Out</button>
+            <div className="SettingsModal__btn" onClick={() => setShowChangePass(true)}>Change my password</div>
+            <div className="SettingsModal__btn" onClick={() => setShowDeleteAccnt(true)}>Delete my account</div>
+          </>
+      }
+    </ModalContainer>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import './NoteList.css';
 import PropTypes from 'prop-types';
-import { pinIcon } from '../UI/icons';
+import { pinIcon, tagIcon, trashIcon } from '../UI/icons';
 import { connect } from 'react-redux';
 import { createNote, showNote, pinNote, unpinNote } from '../../store/actions';
 import { Node } from 'slate';
@@ -82,9 +82,25 @@ const NoteList = props => {
           ))
           :
           <div className="NoteList__noNotes">
-            {props.trashShown ? 'Your trash is empty.' : 'No notes'}
-            {!props.trashShown &&
-              <div onClick={props.createNote}>Create a new note</div>
+            {
+              props.shownTag ?
+                <>
+                  {tagIcon}
+                  No notes tagged
+                  <div className="NoteList__noNotesTag">{props.shownTag}</div>
+                </>
+              : props.trashShown ?
+                <>
+                  {trashIcon}
+                  Your trash is empty.
+                </>
+              :
+                <>
+                  No notes
+                  <div className="NoteList__noNotesBtn" onClick={props.createNote}>
+                    Create a new note
+                  </div>
+                </>
             }
           </div>
         }

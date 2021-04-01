@@ -63,13 +63,26 @@
   font-size: 18px;
   font-weight: 500;
 }
-.NoteList__noNotes div {
+.NoteList__noNotes svg {
+  font-size: 30px;
+  color: rgb(130,130,130);
+  margin-bottom: 10px;
+}
+.NoteList__noNotesTag {
+  max-width: 100%;
+  padding: 0 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.NoteList__noNotesBtn {
   color: rgb(var(--blue));
   font-size: 17px;
   margin-top: 5px;
   cursor: pointer;
 }
-.NoteList__noNotes div:hover {
+.NoteList__noNotesBtn:hover {
   text-decoration: underline;
 }
 .NoteList__pin {

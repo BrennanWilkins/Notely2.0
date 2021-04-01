@@ -143,9 +143,12 @@ const setShowTrash = (state, action) => {
 const restoreNote = (state, { payload: { noteID } }) => {
   const trashIDs = state.trashIDs.filter(id => id !== noteID);
 
+  const hasCurrTag = state.shownTag && state.notesByID[noteID].tags.includes(state.shownTag);
+
   const currentNoteID = (
     (state.currentNoteID && state.currentNoteID !== noteID) ? state.currentNoteID :
     (!state.currentNoteID && !state.trashShown && !state.shownTag) ? noteID :
+    (!state.currentNoteID && state.shownTag && hasCurrTag) ? noteID :
     trashIDs[0] || null
   );
 
@@ -162,8 +165,7 @@ const restoreNote = (state, { payload: { noteID } }) => {
     },
     currentNoteID,
     changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved,
-    filteredNoteIDs: (state.shownTag && state.notesByID[noteID].tags.includes(state.shownTag)) ?
-      [noteID, ...state.filteredNoteIDs] : state.filteredNoteIDs
+    filteredNoteIDs: hasCurrTag ? [noteID, ...state.filteredNoteIDs] : state.filteredNoteIDs
   };
 };
 

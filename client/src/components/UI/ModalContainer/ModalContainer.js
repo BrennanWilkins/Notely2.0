@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { createPortal } from 'react-dom';
 import './ModalContainer.css';
 import PropTypes from 'prop-types';
 import { CloseBtn } from '../Buttons/Buttons';
@@ -11,14 +12,15 @@ const ModalContainer = props => {
     props.close();
   };
 
-  return (
+  return createPortal(
     <div className="ModalContainer" onClick={clickHandler}>
       <div className="ModalContainer__modal" ref={modalRef}>
         <div className="ModalContainer__modalTitle">{props.title}</div>
         <CloseBtn onClick={props.close} />
         {props.children}
       </div>
-    </div>
+    </div>,
+    document.getElementById('portal-root')
   );
 };
 

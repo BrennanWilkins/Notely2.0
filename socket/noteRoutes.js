@@ -241,7 +241,7 @@ const previewInvite = async (socket, data) => {
 
     socket.emit('success: get/note/invite', JSON.stringify({ body: note.body }));
   } catch (err) {
-    socket.emit('note error', 'There was an error while retrieving the note preview.');
+    socket.emit('error: get/note/invite');
   }
 };
 

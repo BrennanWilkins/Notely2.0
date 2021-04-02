@@ -59,3 +59,22 @@ export const closeSocket = () => {
   if (!socket) { return; }
   socket.close();
 };
+
+export const sendInvite = (noteID, username, errCB, successCB) => {
+  const socket = sendUpdate('post/note/invite', { noteID, username });
+
+  const removeListeners = () => {
+    socket.off('error: post/note/invite');
+    socket.off('success: post/note/invite');
+  };
+
+  socket.on('error: post/note/invite', errMsg => {
+    removeListeners();
+    errCB(errMsg);
+  });
+
+  socket.on('success: post/note/invite', () => {
+    removeListeners();
+    successCB();
+  });
+};

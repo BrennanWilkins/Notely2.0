@@ -4,37 +4,75 @@ import PropTypes from 'prop-types';
 import ModalContainer from '../UI/ModalContainer/ModalContainer';
 import { connect } from 'react-redux';
 import { useDidUpdate } from '../../utils/customHooks';
+import { sendInvite } from '../../socket';
 
 const ShareModal = props => {
   const [userInput, setUserInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showMsg, setShowMsg] = useState(false);
+  const [msg, setMsg] = useState('');
+  const [showInviteSuccess, setShowInviteSuccess] = useState(false);
 
   useDidUpdate(() => {
     props.close();
   }, [props.noteID]);
 
-  const sendInviteHandler = () => {
+  const inputHandler = e => {
+    setUserInput(e.target.value);
+    if (showMsg) { setShowMsg(false); }
+    if (showInviteSuccess) { setShowInviteSuccess(false); }
+  };
 
+  const msgHandler = errMsg => {
+    setShowMsg(true);
+    setMsg(errMsg);
+    setIsLoading(false);
+    setUserInput('');
+  };
+
+  const successHandler = () => {
+    msgHandler('Your invite was successfully sent.');
+    setShowInviteSuccess(true);
+  };
+
+  const sendInviteHandler = e => {
+    e.preventDefault();
+    if (!userInput) { return; }
+    setIsLoading(true);
+    setShowMsg(false);
+    setShowInviteSuccess(false);
+    sendInvite(props.noteID, userInput, msgHandler, successHandler);
   };
 
   return (
     <ModalContainer close={props.close} title="Share">
       <div className="ShareModal__subTitle">
         Add the username or email of another Notely user to collaborate on this note with them.
-        The user will receive the invite to collaborate and can then choose to accept or decline the invitation.
+        Once they receive the invitation, they can choose to accept or decline it.
       </div>
-      <div className="ShareModal__input">
+      <form onSubmit={sendInviteHandler} className="ShareModal__form">
         <input
           value={userInput}
-          onChange={e => setUserInput(e.target.value)}
+          onChange={inputHandler}
           placeholder="Username or email"
         />
-        <button onClick={sendInviteHandler}>Send Invite</button>
+        <button type="submit" disabled={isLoading}>Send Invite</button>
+      </form>
+      <div
+        className={`
+          ShareModal__msg
+          ${showMsg ? 'ShareModal__msg--show' : 'ShareModal__msg--hide'}
+          ${showInviteSuccess ? 'ShareModal__msg--success' : ''}
+        `}
+      >
+        {msg}
       </div>
       <div className="ShareModal__collabs">
+        <div className="ShareModal__collabsTitle">Collaborators</div>
         {props.collaborators.map(user => (
-          <div key={user.email}>
-            <div>{user.username}</div>
-            <div>{user.email}</div>
+          <div key={user.email} className="ShareModal__collab">
+            <div className="ShareModal__user">{user.username}</div>
+            <div className="ShareModal__email">{user.email}</div>
           </div>
         ))}
       </div>

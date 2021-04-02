@@ -5,13 +5,13 @@
   max-width: 430px;
   margin: 0 auto 10px;
 }
-.ShareModal__input {
+.ShareModal__form {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
 }
-.ShareModal__input button {
+.ShareModal__form button {
   border-radius: 3px;
   border: 0;
   outline: 0;
@@ -22,13 +22,16 @@
   font-size: 15px;
   padding: 8px;
 }
-.ShareModal__input button:hover {
+.ShareModal__form button:hover {
   background: rgb(var(--blue2));
 }
-.ShareModal__input button:active {
+.ShareModal__form button:active {
   background: rgb(var(--blue3));
 }
-.ShareModal__input input {
+.ShareModal__form button:disabled {
+  background: rgb(200,200,200);
+}
+.ShareModal__form input {
   box-sizing: border-box;
   border-radius: 3px;
   border: 2px solid #ddd;
@@ -38,24 +41,71 @@
   margin-right: 5px;
   width: 250px;
 }
-.ShareModal__input input:hover {
+.ShareModal__form input:hover {
   background: rgb(252,252,252);
 }
-.ShareModal__input input:focus {
+.ShareModal__form input:focus {
   background: white;
   border: 2px solid rgb(var(--blue));
 }
-.ShareModal__input input::placeholder {
+.ShareModal__form input::placeholder {
   color: rgb(150,150,150);
 }
 @media (max-width: 420px) {
-  .ShareModal__input {
+  .ShareModal__form {
     flex-direction: column;
   }
-  .ShareModal__input input {
+  .ShareModal__form input {
     width: 100%;
     max-width: 300px;
     display: block;
-    margin-bottom: 7px;
+    margin: 0 auto 7px;
   }
+}
+.ShareModal__collabs {
+  width: 95%;
+  margin: 15px auto 0;
+  max-width: 400px;
+  text-align: left;
+}
+.ShareModal__collabsTitle {
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgb(230,230,230);
+  color: rgb(50,50,50);
+  margin-bottom: 10px;
+}
+.ShareModal__collab {
+  margin-bottom: 5px;
+  text-align: left;
+}
+.ShareModal__user {
+  font-size: 15px;
+  color: rgb(50,50,50);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.ShareModal__email {
+  font-size: 14px;
+  color: rgb(100,100,100);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.ShareModal__msg {
+  font-size: 14px;
+  text-align: center;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  transition: opacity 250ms;
+  color: rgb(50,50,50);
+}
+.ShareModal__msg--show {
+  opacity: 1;
+}
+.ShareModal__msg--hide {
+  opacity: 0;
+}
+.ShareModal__msg--success {
+  color: green;
 }

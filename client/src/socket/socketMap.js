@@ -6,7 +6,8 @@ const socketMap = {
   'put/note/restore' : actionTypes.RESTORE_NOTE,
   'delete/note' : actionTypes.DELETE_NOTE,
   'post/note/tag': actionTypes.CREATE_TAG,
-  'delete/note/tag': actionTypes.REMOVE_TAG
+  'delete/note/tag': actionTypes.REMOVE_TAG,
+  'new invite': actionTypes.ADD_NEW_INVITE
 };
 
 export default socketMap;

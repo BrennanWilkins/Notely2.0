@@ -23,3 +23,6 @@ export const SET_STATUS = 'SET_STATUS';
 export const CREATE_TAG = 'CREATE_TAG';
 export const REMOVE_TAG = 'REMOVE_TAG';
 export const SHOW_NOTES_BY_TAG = 'SHOW_NOTES_BY_TAG';
+
+// user actionTypes
+export const ADD_NEW_INVITE = 'ADD_NEW_INVITE';

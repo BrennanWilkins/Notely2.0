@@ -7,7 +7,7 @@ import { eyeIcon } from '../UI/icons';
 
 const InvitesModal = props => {
   return (
-    <ModalContainer close={props.close} title="Invites">
+    <ModalContainer close={props.close} title="Invites" className="InvitesModalContainer">
       {props.invites.length ?
         <>
           <div className="InvitesModal__title">

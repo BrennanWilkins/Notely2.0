@@ -1,3 +1,9 @@
+.InvitesModalContainer {
+  max-width: 600px;
+  max-height: 630px;
+  left: max(2.5%, calc(50% - 300px));
+  top: max(2.5%, calc(50% - 315px));
+}
 .InvitesModal__title {
   text-align: left;
   padding-bottom: 5px;

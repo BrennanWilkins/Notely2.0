@@ -14,7 +14,7 @@ const ModalContainer = props => {
 
   return createPortal(
     <div className="ModalContainer" onClick={clickHandler}>
-      <div className="ModalContainer__modal" ref={modalRef}>
+      <div className={`ModalContainer__modal ${props.className || ''}`} ref={modalRef}>
         <div className="ModalContainer__modalTitle">{props.title}</div>
         <CloseBtn onClick={props.close} />
         {props.children}

@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './InvitesModal.css';
 import PropTypes from 'prop-types';
 import ModalContainer from '../UI/ModalContainer/ModalContainer';
 import { connect } from 'react-redux';
 import { eyeIcon } from '../UI/icons';
+import NotePreview from '../NotePreview/NotePreview';
 
 const InvitesModal = props => {
+  const [shownPreview, setShownPreview] = useState('');
+
   return (
     <ModalContainer close={props.close} title="Invites" className="InvitesModalContainer">
       {props.invites.length ?
@@ -14,14 +17,19 @@ const InvitesModal = props => {
             Inviter Username
           </div>
           {props.invites.map(({ inviter, noteID }) => (
-            <div key={noteID} className="InvitesModal__invite">
-              <div className="InvitesModal__inviter">{inviter}</div>
-              <div className="InvitesModal__actions">
-                <button className="InvitesModal__accBtn">Accept</button>
-                <button className="InvitesModal__rejBtn">Reject</button>
-                <button className="InvitesModal__prevBtn">Preview Note{eyeIcon}</button>
+            <React.Fragment key={noteID}>
+              <div className="InvitesModal__invite">
+                <div className="InvitesModal__inviter">{inviter}</div>
+                <div className="InvitesModal__actions">
+                  <button className="InvitesModal__accBtn">Accept</button>
+                  <button className="InvitesModal__rejBtn">Reject</button>
+                  <button className="InvitesModal__prevBtn" onClick={() => setShownPreview(noteID)}>
+                    Preview Note{eyeIcon}
+                  </button>
+                </div>
               </div>
-            </div>
+              {shownPreview === noteID && <NotePreview noteID={noteID} close={() => setShownPreview('')} />}
+            </React.Fragment>
           ))}
         </>
         :

@@ -152,7 +152,7 @@ router.post('/login',
           path: 'collaborators',
           select: 'username email -_id'
         }
-      }).populate('invites').execPopulate();
+      }).execPopulate();
 
       res.status(200).json({
         token,

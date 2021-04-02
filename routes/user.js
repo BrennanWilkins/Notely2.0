@@ -16,7 +16,7 @@ router.get('/',
           path: 'collaborators',
           select: 'username email -_id'
         }
-      }).populate('invites').lean();
+      }).lean();
       if (!user) { throw 'No user found'; }
 
       res.status(200).json({

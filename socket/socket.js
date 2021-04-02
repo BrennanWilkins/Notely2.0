@@ -12,8 +12,9 @@ const initSocket = server => {
       return next(new Error('Unauthorized'));
     }
     jwt.verify(socket.handshake.query.token, process.env.AUTH_KEY, (err, decoded) => {
-      if (err || !decoded.userID) { return next(new Error('Unauthorized')); }
+      if (err || !decoded.userID || !decoded.username) { return next(new Error('Unauthorized')); }
       socket.userID = decoded.userID;
+      socket.username = decoded.username;
       next();
     });
   }).use(async (socket, next) => {
@@ -30,8 +31,14 @@ const initSocket = server => {
     for (let noteID in socket.userNotes) {
       socket.join(noteID);
     }
+    
     for (let route in noteRoutes) {
-      socket.on(route, data => noteRoutes[route](socket, data));
+      if (route === 'post/note/invite') {
+        // give io to send invite handler to check if invitee connected to send invite
+        socket.on(route, data => noteRoutes[route](socket, data, io));
+      } else {
+        socket.on(route, data => noteRoutes[route](socket, data));
+      }
     }
 
     socket.on('leave note', noteID => {

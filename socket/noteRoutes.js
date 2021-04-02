@@ -86,8 +86,7 @@ const deleteNote = async (socket, data) => {
 
     const [note] = await Promise.all([
       Note.findByIdAndDelete(noteID),
-      User.updateMany({ notes: noteID }, { $pull: { notes: noteID, pinnedNotes: noteID } }),
-      User.updateMany({ invites: noteID }, { $pull: { invites: noteID } })
+      User.updateMany({ notes: noteID }, { $pull: { notes: noteID, pinnedNotes: noteID } })
     ]);
     if (!note) { throw 'Invalid noteID'; }
 
@@ -150,6 +149,102 @@ const removeTag = async (socket, data) => {
   }
 };
 
+const sendInvite = async (socket, data, io) => {
+  try {
+    const { noteID, username } = parseData(socket, data);
+    // if username includes '@' then search for user by email, else by username
+    const userQuery = username.includes('@') ? { email: username } : { username };
+
+    const user = await User.findOne(userQuery);
+    if (!user) {
+      const errMsg = userQuery.email ? 'No user was found with that email.' :
+      'No user was found with that username.';
+      return socket.emit('error: post/note/invite', errMsg);
+    }
+
+    if (user.notes.includes(noteID)) {
+      return socket.emit('error: post/note/invite', 'That user is already a collaborator on this note.');
+    }
+
+    if (user.invites.find(invite => invite.noteID === noteID)) {
+      return socket.emit('error: post/note/invite', 'You have already invited that user to this note.');
+    }
+    const invite = { inviter: socket.username, noteID };
+    user.invites.push(invite);
+    await user.save();
+
+    const connectedUser = [...io.sockets.sockets].find(([key,val]) => val.userID === String(user._id));
+    if (connectedUser) {
+      io.to(connectedUser.id).emit('new invite', JSON.stringify(invite));
+    }
+
+    socket.emit('success: post/note/invite');
+  } catch (err) {
+    socket.emit('note error', 'There was an error while sending the note invite.');
+  }
+};
+
+const acceptInvite = async (socket, data) => {
+  try {
+    const { noteID } = JSON.parse(data);
+
+    const [user, note] = await Promise.all([
+      User.findById(socket.userID),
+      Note.findById(noteID)
+    ]);
+    if (!user && !note) { throw 'Invalid data'; }
+
+    if (!user.invites.find(invite => invite.noteID === noteID)) {
+      throw 'Invalid noteID';
+    }
+
+    user.invites = user.invites.filter(invite => invite.noteID !== noteID);
+
+    if (!note) {
+      await user.save();
+      return socket.emit('error: put/note/invite/accept', 'That note no longer exists.');
+    }
+
+    user.notes.push(noteID);
+    note.collaborators.push(socket.userID);
+    await Promise.all([user.save(), note.save()]);
+
+    await note.populate('collaborators', 'username email -_id').execPopulate();
+
+    socket.userNotes[noteID] = true;
+    socket.join(noteID);
+    socket.to(noteID).emit('new user', JSON.stringify({ noteID, email: user.email, username: user.username }));
+    socket.emit('success: put/note/invite/accept', JSON.stringify(note));
+  } catch (err) {
+    socket.emit('note error', 'There was an error while joining the note.');
+  }
+};
+
+const rejectInvite = async (socket, data) => {
+  try {
+    const { noteID } = JSON.parse(data);
+    await User.updateOne({ _id: socket.userID }, { $pull: { invites: { noteID } } });
+  } catch (err) {
+    socket.emit('note error', 'There was an error while joining the note.');
+  }
+};
+
+const previewInvite = async (socket, data) => {
+  try {
+    const { noteID } = JSON.parse(data);
+
+    const [hasInvite, note] = await Promise.all([
+      User.exists({ _id: socket.userID, 'invites.noteID': noteID }),
+      Note.findById(noteID).select('body -_id').lean()
+    ]);
+    if (!hasInvite) { throw 'Invalid noteID'; }
+
+    socket.emit('success: get/note/invite', JSON.stringify({ body: note.body }));
+  } catch (err) {
+    socket.emit('note error', 'There was an error while retrieving the note preview.');
+  }
+};
+
 module.exports = {
   'post/note' : createNote,
   'put/note' : updateNote,
@@ -159,5 +254,9 @@ module.exports = {
   'put/note/pin': pinNote,
   'put/note/unpin': unpinNote,
   'post/note/tag': createTag,
-  'delete/note/tag': removeTag
+  'delete/note/tag': removeTag,
+  'post/note/invite': sendInvite,
+  'put/note/invite/accept': acceptInvite,
+  'put/note/invite/reject': rejectInvite,
+  'get/note/invite': previewInvite
 };

@@ -45,7 +45,7 @@ const ShareModal = props => {
 ShareModal.propTypes = {
   close: PropTypes.func.isRequired,
   collaborators: PropTypes.array.isRequired,
-  noteID: PropTypes.string.isRequired
+  noteID: PropTypes.string
 };
 
 const mapStateToProps = state => ({

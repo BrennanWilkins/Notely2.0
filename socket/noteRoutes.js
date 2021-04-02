@@ -175,7 +175,7 @@ const sendInvite = async (socket, data, io) => {
 
     const connectedUser = [...io.sockets.sockets].find(([key,val]) => val.userID === String(user._id));
     if (connectedUser) {
-      io.to(connectedUser.id).emit('new invite', JSON.stringify(invite));
+      io.to(connectedUser[0]).emit('new invite', JSON.stringify(invite));
     }
 
     socket.emit('success: post/note/invite');

@@ -1,0 +1,65 @@
+.InvitesModal__title {
+  text-align: left;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgb(230,230,230);
+  width: 94%;
+  margin: 15px auto 0;
+  color: rgb(110,110,110);
+}
+.InvitesModal__invite {
+  display: flex;
+  align-items: center;
+  width: 94%;
+  margin: 10px auto;
+}
+.InvitesModal__inviter {
+  font-size: 15px;
+  word-wrap: break-word;
+  max-width: calc(100% - 250px);
+}
+.InvitesModal__actions {
+  margin-left: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.InvitesModal__actions button {
+  outline: 0;
+  border: 0;
+  border-radius: 3px;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  font-size: 13.5px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 250ms;
+}
+.InvitesModal__actions button:hover {
+  background: rgb(var(--blue2));
+}
+.InvitesModal__actions button:active {
+  background: rgb(var(--blue3));
+}
+.InvitesModal__accBtn {
+  background: rgb(var(--blue));
+}
+.InvitesModal__rejBtn,
+.InvitesModal__prevBtn {
+  background: rgba(var(--blue), 0.8);
+}
+.InvitesModal__prevBtn svg {
+  margin-left: 5px;
+  font-size: 14px;
+  min-width: 14px;
+}
+.InvitesModal__noInvites {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 20px;
+}

@@ -99,13 +99,17 @@
   box-sizing: border-box;
   transition: opacity 250ms;
   color: rgb(50,50,50);
-}
-.ShareModal__msg--show {
-  opacity: 1;
-}
-.ShareModal__msg--hide {
-  opacity: 0;
+  max-height: 400px;
 }
 .ShareModal__msg--success {
   color: green;
+}
+.ShareModal__msg--show {
+  transition: max-height 350ms ease-in, opacity 300ms ease-out 200ms;
+}
+.ShareModal__msg--hide {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 250ms ease-out, max-height 300ms ease-out 250ms;
 }

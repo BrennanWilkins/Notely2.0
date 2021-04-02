@@ -2,14 +2,16 @@ import React, { useState, useRef, useEffect } from 'react';
 import './SideNav.css';
 import PropTypes from 'prop-types';
 import ToggleSideNavBtn from '../UI/ToggleSideNavBtn/ToggleSideNavBtn';
-import { logo, notesIcon, trashIcon, settingsIcon, tagsIcon, backIcon } from '../UI/icons';
+import { logo, notesIcon, trashIcon, settingsIcon, tagsIcon, backIcon, peopleIcon } from '../UI/icons';
 import { connect } from 'react-redux';
 import { toggleSideNav, setShowTrash, showNotesByTag, setListShown } from '../../store/actions';
 import SettingsModal from '../SettingsModal/SettingsModal';
 import Tooltip from '../UI/Tooltip/Tooltip';
+import InvitesModal from '../InvitesModal/InvitesModal';
 
 const SideNav = props => {
   const [showSettings, setShowSettings] = useState(false);
+  const [showInvitesModal, setShowInvitesModal] = useState(false);
   const [showTags, setShowTags] = useState(false);
   const sideNavRef = useRef();
 
@@ -94,6 +96,13 @@ const SideNav = props => {
             </div>
             {!props.sideNavShown && <Tooltip position="right">Settings</Tooltip>}
           </div>
+          <div className="SideNav__link" onClick={() => setShowInvitesModal(true)}>
+            <div className="SideNav__innerLink">
+              {peopleIcon}
+              <div>Invites</div>
+            </div>
+            {!props.sideNavShown && <Tooltip position="right">Invites</Tooltip>}
+          </div>
           <div className="SideNav__link" onClick={toggleTagsHandler}>
             <div className="SideNav__innerLink">
               {tagsIcon}
@@ -117,6 +126,7 @@ const SideNav = props => {
         </div>
       </div>
       {showSettings && <SettingsModal close={() => setShowSettings(false)} />}
+      {showInvitesModal && <InvitesModal close={() => setShowInvitesModal(false)} />}
     </>
   );
 };

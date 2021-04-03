@@ -3,20 +3,14 @@ import './NoteContent.css';
 import PropTypes from 'prop-types';
 import isHotkey from 'is-hotkey';
 import { Editable, withReact, Slate } from 'slate-react';
-import {
-  Editor,
-  Point,
-  Range,
-  Transforms,
-  createEditor,
-  Element as SlateElement
-} from 'slate';
+import { Editor, Point, Range, Transforms, createEditor, Element as SlateElement } from 'slate';
 import { withHistory } from 'slate-history';
 import Toolbar from './Toolbar';
 import ChecklistItemElement from './ChecklistItem';
 import { connect } from 'react-redux';
 import { updateNote, setStatus } from '../../store/actions';
 import { logo } from '../UI/icons';
+import { sendUpdate } from '../../socket';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 
@@ -49,10 +43,12 @@ const NoteContent = props => {
 
   useEffect(() => {
     if (!props.currentNoteID || value === props.currentBody) { return; }
+    props.updateNote(props.currentNoteID, value);
     props.setStatus();
+    // save changes to DB 700ms after stop typing
     const delay = setTimeout(() => {
       if (!props.currentNoteID) { return; }
-      props.updateNote(props.currentNoteID, value);
+      sendUpdate('put/note/save', { noteID: props.currentNoteID, body: value });
     }, 700);
 
     return () => clearTimeout(delay);

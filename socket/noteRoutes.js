@@ -49,7 +49,6 @@ const updateNote = async (socket, data) => {
 
     const note = await Note.findByIdAndUpdate(noteID, { body });
     if (!note) { throw 'Invalid noteID'; }
-    socket.to(noteID).emit('put/note', data);
     socket.emit('put/note finished');
   } catch (err) {
     socket.emit('note error', 'There was an error while updating your note.');
@@ -251,7 +250,7 @@ const previewInvite = async (socket, data) => {
 
 module.exports = {
   'post/note' : createNote,
-  'put/note' : updateNote,
+  'put/note/save' : updateNote,
   'put/note/trash' : trashNote,
   'put/note/restore' : restoreNote,
   'delete/note' : deleteNote,

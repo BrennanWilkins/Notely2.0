@@ -31,7 +31,7 @@ const initSocket = server => {
     for (let noteID in socket.userNotes) {
       socket.join(noteID);
     }
-    
+
     for (let route in noteRoutes) {
       if (route === 'post/note/invite') {
         // give io to send invite handler to check if invitee connected to send invite
@@ -40,6 +40,13 @@ const initSocket = server => {
         socket.on(route, data => noteRoutes[route](socket, data));
       }
     }
+
+    // send note body update to other collaborators but dont update body in DB
+    socket.on('put/note', data => {
+      const { noteID, body } = JSON.parse(data);
+      if (!noteID || !body || !socket.userNotes[noteID]) { return; }
+      socket.to(noteID).emit('put/note', data);
+    });
 
     socket.on('leave note', noteID => {
       socket.leave(noteID);

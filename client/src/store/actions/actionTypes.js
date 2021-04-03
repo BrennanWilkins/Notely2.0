@@ -23,6 +23,9 @@ export const SET_STATUS = 'SET_STATUS';
 export const CREATE_TAG = 'CREATE_TAG';
 export const REMOVE_TAG = 'REMOVE_TAG';
 export const SHOW_NOTES_BY_TAG = 'SHOW_NOTES_BY_TAG';
+export const ACCEPT_INVITE = 'ACCEPT_INVITE';
+export const REJECT_INVITE = 'REJECT_INVITE';
+export const ADD_COLLABORATOR = 'ADD_COLLABORATOR';
 
 // user actionTypes
 export const ADD_NEW_INVITE = 'ADD_NEW_INVITE';

@@ -30,6 +30,8 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.CREATE_TAG: return createTag(state, action);
     case actionTypes.REMOVE_TAG: return removeTag(state, action);
     case actionTypes.SHOW_NOTES_BY_TAG: return showNotesByTag(state, action);
+    case actionTypes.ACCEPT_INVITE: return acceptInvite(state, action);
+    case actionTypes.ADD_COLLABORATOR: return addCollaborator(state, action);
     default: return state;
   }
 };
@@ -253,5 +255,40 @@ const showNotesByTag = (state, { tag }) => {
     currentNoteID: filteredNoteIDs[0] || null
   };
 };
+
+const acceptInvite = (state, { note }) => {
+  const { _id: noteID, isTrash, __v, ...rest } = note;
+  const newNote = { noteID, ...rest };
+
+  let allTags = state.allTags;
+  if (newNote.tags.length) {
+    allTags = [...new Set([...newNote.tags, state.allTags])];
+  }
+
+  const hasCurrTag = state.shownTag && newNote.tags.includes(state.shownTag);
+
+  return {
+    ...state,
+    notesByID: {
+      ...state.notesByID,
+      [noteID]: newNote
+    },
+    noteIDs: [noteID, ...state.noteIDs],
+    allTags,
+    currentNoteID: (!state.noteIDs.length && !state.trashShown) ? noteID : state.currentNoteID,
+    filteredNoteIDs: hasCurrTag ? [noteID, ...state.filteredNoteIDs] : state.filteredNoteIDs
+  };
+};
+
+const addCollaborator = (state, { payload: { noteID, email, username } }) => ({
+  ...state,
+  notesByID: {
+    ...state.notesByID,
+    [noteID]: {
+      ...state.notesByID[noteID],
+      collaborators: [...state.notesByID[noteID].collaborators, { email, username }]
+    }
+  }
+});
 
 export default reducer;

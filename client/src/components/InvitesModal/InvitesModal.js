@@ -5,6 +5,7 @@ import ModalContainer from '../UI/ModalContainer/ModalContainer';
 import { connect } from 'react-redux';
 import { eyeIcon } from '../UI/icons';
 import NotePreview from '../NotePreview/NotePreview';
+import { acceptInvite, rejectInvite } from '../../store/actions';
 
 const InvitesModal = props => {
   const [shownPreview, setShownPreview] = useState('');
@@ -21,8 +22,8 @@ const InvitesModal = props => {
               <div className="InvitesModal__invite">
                 <div className="InvitesModal__inviter">{inviter}</div>
                 <div className="InvitesModal__actions">
-                  <button className="InvitesModal__accBtn">Accept</button>
-                  <button className="InvitesModal__rejBtn">Reject</button>
+                  <button className="InvitesModal__accBtn" onClick={() => props.acceptInvite(noteID)}>Accept</button>
+                  <button className="InvitesModal__rejBtn" onClick={() => props.rejectInvite(noteID)}>Reject</button>
                   <button className="InvitesModal__prevBtn" onClick={() => setShownPreview(noteID)}>
                     Preview Note{eyeIcon}
                   </button>
@@ -47,7 +48,14 @@ InvitesModal.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  invites: state.user.invites
+  invites: state.user.invites,
+  acceptInvite: PropTypes.func.isRequired,
+  rejectInvite: PropTypes.func.isRequired
 });
 
-export default connect(mapStateToProps)(InvitesModal);
+const mapDispatchToProps = dispatch => ({
+  acceptInvite: noteID => dispatch(acceptInvite(noteID)),
+  rejectInvite: noteID => dispatch(rejectInvite(noteID))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(InvitesModal);

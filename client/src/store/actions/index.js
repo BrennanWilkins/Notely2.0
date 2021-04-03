@@ -22,5 +22,7 @@ export {
   setStatus,
   createTag,
   removeTag,
-  showNotesByTag
+  showNotesByTag,
+  acceptInvite,
+  rejectInvite
 } from './notes';

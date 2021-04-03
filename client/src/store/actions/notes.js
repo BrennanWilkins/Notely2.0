@@ -66,3 +66,28 @@ export const removeTag = (noteID, tag) => dispatch => {
 };
 
 export const showNotesByTag = tag => ({ type: actionTypes.SHOW_NOTES_BY_TAG, tag });
+
+export const acceptInvite = noteID => dispatch => {
+  const socket = sendUpdate('put/note/invite/accept', { noteID });
+
+  const removeListeners = () => {
+    socket.off('error: put/note/invite/accept');
+    socket.off('success: put/note/invite/accept');
+  };
+
+  socket.on('error: put/note/invite/accept', () => {
+    removeListeners();
+    dispatch({ type: actionTypes.REJECT_INVITE, noteID });
+  });
+
+  socket.on('success: put/note/invite/accept', data => {
+    removeListeners();
+    const note = JSON.parse(data);
+    dispatch({ type: actionTypes.ACCEPT_INVITE, note });
+  });
+};
+
+export const rejectInvite = noteID => dispatch => {
+  sendUpdate('put/note/invite/reject', { noteID });
+  dispatch({ type: actionTypes.REJECT_INVITE, noteID });
+};

@@ -155,12 +155,16 @@ const sendInvite = async (socket, data, io) => {
     // if username includes '@' then search for user by email, else by username
     const userQuery = username.includes('@') ? { email: username } : { username };
 
-    const user = await User.findOne(userQuery);
+    const [user, note] = await Promise.all([
+      User.findOne(userQuery),
+      Note.exists({ _id: noteID, isTrash: false })
+    ]);
     if (!user) {
       const errMsg = userQuery.email ? 'No user was found with that email.' :
       'No user was found with that username.';
       return socket.emit('error: post/note/invite', errMsg);
     }
+    if (!note) { throw 'Invalid noteID'; }
 
     if (user.notes.includes(noteID)) {
       return socket.emit('error: post/note/invite', 'That user is already a collaborator on this note.');
@@ -200,9 +204,9 @@ const acceptInvite = async (socket, data) => {
 
     user.invites = user.invites.filter(invite => invite.noteID !== noteID);
 
-    if (!note) {
+    if (!note || note.isTrash) {
       await user.save();
-      return socket.emit('error: put/note/invite/accept', 'That note no longer exists.');
+      return socket.emit('error: put/note/invite/accept');
     }
 
     user.notes.push(noteID);
@@ -213,7 +217,7 @@ const acceptInvite = async (socket, data) => {
 
     socket.userNotes[noteID] = true;
     socket.join(noteID);
-    socket.to(noteID).emit('new user', JSON.stringify({ noteID, email: user.email, username: user.username }));
+    socket.to(noteID).emit('post/note/collaborator', JSON.stringify({ noteID, email: user.email, username: user.username }));
     socket.emit('success: put/note/invite/accept', JSON.stringify(note));
   } catch (err) {
     socket.emit('note error', 'There was an error while joining the note.');
@@ -225,7 +229,7 @@ const rejectInvite = async (socket, data) => {
     const { noteID } = JSON.parse(data);
     await User.updateOne({ _id: socket.userID }, { $pull: { invites: { noteID } } });
   } catch (err) {
-    socket.emit('note error', 'There was an error while joining the note.');
+    socket.emit('note error', 'There was an error while updating your invites.');
   }
 };
 
@@ -235,7 +239,7 @@ const previewInvite = async (socket, data) => {
 
     const [hasInvite, note] = await Promise.all([
       User.exists({ _id: socket.userID, 'invites.noteID': noteID }),
-      Note.findById(noteID).select('body -_id').lean()
+      Note.findById(noteID).select('body').lean()
     ]);
     if (!hasInvite) { throw 'Invalid noteID'; }
 

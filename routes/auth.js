@@ -135,6 +135,11 @@ router.post('/login',
       if (!user) {
         return res.status(400).json({ msg: errMsg });
       }
+
+      if (user.signupID) {
+        return res.status(400).json({ msg: 'Please click on the link sent to your email to finish signing up.' });
+      }
+
       // verify password
       const isValidPass = await bcryptjs.compare(pass, user.password);
       if (!isValidPass) {

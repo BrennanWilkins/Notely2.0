@@ -32,15 +32,14 @@ export const initSocket = () => {
   });
 
   for (let action in socketMap) {
-    newSocket.on(action, data => {
-      const payload = JSON.parse(data);
+    newSocket.on(action, payload => {
       store.dispatch({ type: socketMap[action], payload });
     });
   }
 
   // leave note room on delete
   newSocket.on('delete/note', data => {
-    const { noteID } = JSON.parse(data);
+    const { noteID } = data;
     socket.emit('leave note', noteID);
   });
 
@@ -51,7 +50,7 @@ export const initSocket = () => {
 
 export const sendUpdate = (type, data) => {
   if (!socket) { return; }
-  socket.emit(type, JSON.stringify(data));
+  socket.emit(type, data);
   return socket;
 };
 
@@ -78,3 +77,5 @@ export const sendInvite = (noteID, username, errCB, successCB) => {
     successCB();
   });
 };
+
+export const getSocket = () => socket;

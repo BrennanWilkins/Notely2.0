@@ -1,8 +1,7 @@
 const Note = require('../models/note');
 const User = require('../models/user');
 
-const parseData = (socket, data, options) => {
-  const payload = JSON.parse(data);
+const parseData = (socket, payload, options) => {
   if (!socket.userNotes[payload.noteID]) { throw 'Unauthorized'; }
   if (!options) { return payload; }
   if (options.body && (!payload.body || !Array.isArray(payload.body))) {
@@ -37,7 +36,7 @@ const createNote = async (socket, data) => {
     // auto join user to note room on creation
     socket.userNotes[note._id] = true;
     socket.join(note._id);
-    socket.emit('post/note', JSON.stringify(note));
+    socket.emit('post/note', note);
   } catch (err) {
     socket.emit('note error', 'Your note could not be created.');
   }
@@ -178,7 +177,7 @@ const sendInvite = async (socket, data, io) => {
 
     const connectedUser = [...io.sockets.sockets].find(([key,val]) => val.userID === String(user._id));
     if (connectedUser) {
-      io.to(connectedUser[0]).emit('new invite', JSON.stringify(invite));
+      io.to(connectedUser[0]).emit('new invite', invite);
     }
 
     socket.emit('success: post/note/invite');
@@ -189,7 +188,7 @@ const sendInvite = async (socket, data, io) => {
 
 const acceptInvite = async (socket, data) => {
   try {
-    const { noteID } = JSON.parse(data);
+    const { noteID } = data;
 
     const [user, note] = await Promise.all([
       User.findById(socket.userID),
@@ -216,8 +215,8 @@ const acceptInvite = async (socket, data) => {
 
     socket.userNotes[noteID] = true;
     socket.join(noteID);
-    socket.to(noteID).emit('post/note/collaborator', JSON.stringify({ noteID, email: user.email, username: user.username }));
-    socket.emit('success: put/note/invite/accept', JSON.stringify(note));
+    socket.to(noteID).emit('post/note/collaborator', { noteID, email: user.email, username: user.username });
+    socket.emit('success: put/note/invite/accept', note);
   } catch (err) {
     socket.emit('note error', 'There was an error while joining the note.');
   }
@@ -225,7 +224,7 @@ const acceptInvite = async (socket, data) => {
 
 const rejectInvite = async (socket, data) => {
   try {
-    const { noteID } = JSON.parse(data);
+    const { noteID } = data;
     await User.updateOne({ _id: socket.userID }, { $pull: { invites: { noteID } } });
   } catch (err) {
     socket.emit('note error', 'There was an error while updating your invites.');
@@ -234,7 +233,7 @@ const rejectInvite = async (socket, data) => {
 
 const previewInvite = async (socket, data) => {
   try {
-    const { noteID } = JSON.parse(data);
+    const { noteID } = data;
 
     const [hasInvite, note] = await Promise.all([
       User.exists({ _id: socket.userID, 'invites.noteID': noteID }),
@@ -242,7 +241,7 @@ const previewInvite = async (socket, data) => {
     ]);
     if (!hasInvite) { throw 'Invalid noteID'; }
 
-    socket.emit('success: get/note/invite', JSON.stringify({ body: note.body }));
+    socket.emit('success: get/note/invite', { body: note.body });
   } catch (err) {
     socket.emit('error: get/note/invite');
   }

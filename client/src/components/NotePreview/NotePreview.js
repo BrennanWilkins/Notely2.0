@@ -20,7 +20,7 @@ const NotePreview = props => {
     socket.on('success: get/note/invite', data => {
       socket.off('success: get/note/invite');
       socket.off('error: get/note/invite');
-      const { body } = JSON.parse(data);
+      const { body } = data;
       setValue(body);
       setIsLoading(false);
       setErr(false);

@@ -5,9 +5,9 @@ export const createNote = () => dispatch => {
   const socket = sendUpdate('post/note');
 
   // when creating note wait for response w new note
-  socket.on('post/note', data => {
+  socket.on('post/note', note => {
     socket.off('post/note');
-    const payload = { note: JSON.parse(data) };
+    const payload = { note };
     dispatch({ type: actionTypes.CREATE_NOTE, payload });
   });
 };
@@ -80,9 +80,8 @@ export const acceptInvite = noteID => dispatch => {
     dispatch({ type: actionTypes.REJECT_INVITE, noteID });
   });
 
-  socket.on('success: put/note/invite/accept', data => {
+  socket.on('success: put/note/invite/accept', note => {
     removeListeners();
-    const note = JSON.parse(data);
     dispatch({ type: actionTypes.ACCEPT_INVITE, note });
   });
 };

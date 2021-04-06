@@ -43,7 +43,7 @@ const initSocket = server => {
 
     // send note body update to other collaborators but dont update body in DB
     socket.on('put/note', data => {
-      const { noteID, body } = JSON.parse(data);
+      const { noteID, body } = data;
       if (!noteID || !body || !socket.userNotes[noteID]) { return; }
       socket.to(noteID).emit('put/note', data);
     });

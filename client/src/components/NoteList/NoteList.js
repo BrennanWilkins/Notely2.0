@@ -8,8 +8,15 @@ import { Node } from 'slate';
 import NoteListHeader from '../NoteListHeader/NoteListHeader';
 
 const serialize = nodes => {
-  let title = (nodes && nodes.length) ? Node.string(nodes[0]) || 'New Note' : 'New Note';
-  let txt = (nodes && nodes.length > 1) ? nodes.slice(1).map(n => Node.string(n)).join('\n') : '';
+  let txt, title;
+  if (!nodes || !nodes.length) {
+    txt = '';
+    title = 'New Note';
+  } else {
+    let arr = nodes.map(n => Node.string(n)).filter(n => n !== '');
+    title = arr[0] || 'New Note';
+    txt = arr.slice(1) || '';
+  }
 
   let body = (
     <>

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import './NoteContent.css';
 import PropTypes from 'prop-types';
 import isHotkey from 'is-hotkey';
@@ -10,7 +10,7 @@ import ChecklistItemElement from './ChecklistItem';
 import { connect } from 'react-redux';
 import { updateNote, setStatus } from '../../store/actions';
 import { logo } from '../UI/icons';
-import { sendUpdate } from '../../socket';
+import { sendUpdate, getSocket } from '../../socket';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 
@@ -35,24 +35,68 @@ const NoteContent = props => {
   const renderElement = useCallback(props => <Element {...props} />, []);
   const renderLeaf = useCallback(props => <Leaf {...props} />, []);
   const editor = useMemo(() => withChecklists(withHistory(withReact(createEditor()))), []);
+  const isRemoteChange = useRef(false);
+  const hasChanged = useRef(false);
+  const wasRemote = useRef(false);
 
   useEffect(() => {
-    if (!props.currentNoteID || value === props.currentBody) { return; }
     setValue(props.currentBody);
-  }, [props.currentBody]);
+    editor.history = {
+      redos: [],
+      undos: []
+    };
+
+    const socket = getSocket();
+    if (!socket) { return; }
+    socket.on('send ops: put/note', data => {
+      if (data.noteID !== props.currentNoteID) { return; }
+      console.log('RECEIVING: send ops: put/note');
+      isRemoteChange.current = true;
+      Editor.withoutNormalizing(editor, () => {
+        data.ops.forEach(op => {
+          editor.apply(op);
+        });
+      });
+      isRemoteChange.current = false;
+      hasChanged.current = true;
+      wasRemote.current = true;
+    });
+
+    return () => socket.off('send ops: put/note');
+  }, [props.currentNoteID]);
 
   useEffect(() => {
-    if (!props.currentNoteID || value === props.currentBody) { return; }
+    if (!props.currentNoteID || value === props.currentBody ||
+      isRemoteChange.current || hasChanged.current) { return; }
+    if (wasRemote.current) {
+      return wasRemote.current = false;
+    }
+    console.log('props.updateNote');
     props.updateNote(props.currentNoteID, value);
     props.setStatus();
     // save changes to DB 700ms after stop typing
     const delay = setTimeout(() => {
-      if (!props.currentNoteID) { return; }
+      if (!props.currentNoteID || isRemoteChange.current) { return; }
+      console.log('put/note/save');
       sendUpdate('put/note/save', { noteID: props.currentNoteID, body: value });
     }, 700);
 
     return () => clearTimeout(delay);
   }, [value]);
+
+  const changeHandler = val => {
+    setValue(val);
+    console.log('setValue');
+    const ops = editor.operations;
+    if (props.currentNoteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
+      const sendOps = ops.filter(op => op && op.type !== 'set_selection' && op.type !== 'set_value');
+      if (sendOps.length) {
+        console.log('SEND: send ops: put/note');
+        sendUpdate('send ops: put/note', { noteID: props.currentNoteID, ops: sendOps });
+      }
+    }
+    hasChanged.current = false;
+  };
 
   const keyDownHandler = e => {
     for (const hotkey in MARK_HOTKEYS) {
@@ -72,7 +116,7 @@ const NoteContent = props => {
   return (
     props.currentNoteID ?
       <div className="NoteContent">
-        <Slate editor={editor} value={value} onChange={value => setValue(value)}>
+        <Slate editor={editor} value={value} onChange={changeHandler}>
           <Toolbar />
           <Editable
             renderElement={renderElement}

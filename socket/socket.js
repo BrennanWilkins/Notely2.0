@@ -48,6 +48,11 @@ const initSocket = server => {
       socket.to(noteID).emit('put/note', data);
     });
 
+    socket.on('send ops: put/note', data => {
+      if (!data.noteID || !data.ops || !data.ops.length) { return; }
+      socket.to(data.noteID).emit('send ops: put/note', data);
+    });
+
     socket.on('leave note', noteID => {
       socket.leave(noteID);
       delete socket.userNotes[noteID];

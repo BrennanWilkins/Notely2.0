@@ -24,5 +24,6 @@ export {
   removeTag,
   showNotesByTag,
   acceptInvite,
-  rejectInvite
+  rejectInvite,
+  getConnectedUsers
 } from './notes';

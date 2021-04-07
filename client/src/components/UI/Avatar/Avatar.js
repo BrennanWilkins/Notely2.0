@@ -6,9 +6,7 @@ import Tooltip from '../Tooltip/Tooltip';
 const Avatar = props => (
   <div className="Avatar" style={{ background: props.color }}>
     <div className="Avatar__name">{props.username[0]}</div>
-    {props.status !== 'Offline' &&
-      <div className={`Avatar__symb ${props.status === 'Active' ? 'Avatar__symb--gr' : 'Avatar__symb--or'}`} />
-    }
+    {props.status === 'Inactive' && <div className="Avatar__symb" />}
     <Tooltip position="down">{props.username}<div>Status: {props.status}</div></Tooltip>
   </div>
 );

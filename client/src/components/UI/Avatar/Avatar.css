@@ -13,16 +13,11 @@
 }
 .Avatar__symb {
   position: absolute;
-  width: 7px;
-  height: 6px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  top: -3px;
-  right: -3px;
-}
-.Avatar__symb--gr {
-  background: green;
-}
-.Avatar__symb--or {
+  top: -1px;
+  right: -1px;
   background: orange;
 }
 .Avatar:hover {

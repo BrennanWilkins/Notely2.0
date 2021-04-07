@@ -2,6 +2,7 @@ const socketIO = require('socket.io');
 const jwt = require('jsonwebtoken');
 const Note = require('../models/note');
 const noteRoutes = require('./noteRoutes');
+const randomColor = require('randomcolor');
 
 const initSocket = server => {
   const io = socketIO(server, { cors: true });
@@ -27,11 +28,57 @@ const initSocket = server => {
       next();
     } catch (err) { next(new Error('join error')); }
   }).on('connection', socket => {
-    // auto join user to all of his note's rooms & add event handlers
+    socket.userColor = randomColor({ luminosity: 'light' });
+    socket.activeNoteID = null;
+
+    // auto join user to all of their note's rooms
     for (let noteID in socket.userNotes) {
       socket.join(noteID);
+
+      // notify other users that user is online
+      socket.to(noteID).emit('user online', {
+        username: socket.username,
+        color: socket.userColor
+      });
     }
 
+    // retrieve active users when client is active on a note
+    socket.on('get connected users', noteID => {
+      if (!socket.userNotes[noteID] || noteID === socket.activeNoteID) { return; }
+      const room = io.sockets.adapter.rooms.get(noteID);
+      if (!room) { return; }
+      const users = [...room].map(socketID => {
+        const user = io.sockets.sockets.get(socketID);
+        return {
+          username: user.username,
+          color: user.userColor,
+          noteID: user.activeNoteID === noteID ? user.activeNoteID : null
+        };
+      });
+      socket.emit('receive connected users', users);
+
+      // if user is switching notes tell users in old note they are inactive
+      if (socket.activeNoteID) {
+        socket.to(socket.activeNoteID).emit('user inactive', { username: socket.username });
+      }
+      socket.activeNoteID = noteID;
+      socket.to(noteID).emit('user active', { username: socket.username, noteID });
+    });
+
+    socket.on('send inactive', noteID => {
+      if (!socket.userNotes[noteID] || noteID !== socket.activeNoteID) { return; }
+      socket.activeNoteID = null;
+      socket.to(noteID).emit('user inactive', { username: socket.username });
+    });
+
+    socket.on('disconnect', () => {
+      for (let noteID in socket.userNotes) {
+        // notify other users that user is offline
+        socket.to(noteID).emit('user offline', { username: socket.username });
+      }
+    });
+
+    // add event handlers for note routes
     for (let route in noteRoutes) {
       if (route === 'post/note/invite') {
         // give io to send invite handler to check if invitee connected to send invite

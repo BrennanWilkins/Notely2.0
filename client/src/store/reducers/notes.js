@@ -33,6 +33,11 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.SHOW_NOTES_BY_TAG: return showNotesByTag(state, action);
     case actionTypes.ACCEPT_INVITE: return acceptInvite(state, action);
     case actionTypes.ADD_COLLABORATOR: return addCollaborator(state, action);
+    case actionTypes.SET_CONNECTED_USERS: return setConnectedUsers(state, action);
+    case actionTypes.SET_USER_ONLINE: return setUserOnline(state, action);
+    case actionTypes.SET_USER_OFFLINE: return setUserOffline(state, action);
+    case actionTypes.SET_USER_ACTIVE: return setUserActive(state, action);
+    case actionTypes.SET_USER_INACTIVE: return setUserInactive(state, action);
     default: return state;
   }
 };
@@ -337,5 +342,82 @@ const addCollaborator = (state, { payload: { noteID, email, username } }) => ({
       }
     }
 });
+
+const setConnectedUsers = (state, { users }) => {
+  const collabsByName = { ...state.collabsByName };
+  for (let user of users) {
+    if (!collabsByName[user.username]) { continue; }
+    collabsByName[user.username] = {
+      ...collabsByName[user.username],
+      color: user.color,
+      noteID: user.noteID || null,
+      isOnline: true
+    };
+  }
+
+  return {
+    ...state,
+    collabsByName
+  };
+};
+
+const setUserOnline = (state, { payload: { username, color } }) => {
+  if (!state.collabsByName[username] || state.collabsByName[username].isOnline) { return state; }
+  return {
+    ...state,
+    collabsByName: {
+      ...state.collabsByName,
+      [username]: {
+        ...state.collabsByName[username],
+        isOnline: true,
+        color
+      }
+    }
+  };
+};
+
+const setUserOffline = (state, { payload: { username } }) => {
+  if (!state.collabsByName[username] || !state.collabsByName[username].isOnline) { return state; }
+  return {
+    ...state,
+    collabsByName: {
+      ...state.collabsByName,
+      [username]: {
+        ...state.collabsByName[username],
+        isOnline: false,
+        color: null,
+        noteID: null
+      }
+    }
+  };
+};
+
+const setUserActive = (state, { payload: { username, noteID } }) => {
+  if (!state.collabsByName[username] || state.collabsByName[username].noteID === noteID) { return state; }
+  return {
+    ...state,
+    collabsByName: {
+      ...state.collabsByName,
+      [username]: {
+        ...state.collabsByName[username],
+        noteID
+      }
+    }
+  };
+};
+
+const setUserInactive = (state, { payload: { username } }) => {
+  if (!state.collabsByName[username] || !state.collabsByName[username].noteID) { return state; }
+  return {
+    ...state,
+    collabsByName: {
+      ...state.collabsByName,
+      [username]: {
+        ...state.collabsByName[username],
+        noteID: null
+      }
+    }
+  };
+};
 
 export default reducer;

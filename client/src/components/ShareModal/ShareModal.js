@@ -69,12 +69,15 @@ const ShareModal = props => {
       </div>
       <div className="ShareModal__collabs">
         <div className="ShareModal__collabsTitle">Collaborators</div>
-        {props.collaborators.map(user => (
-          <div key={user.email} className="ShareModal__collab">
-            <div className="ShareModal__user">{user.username}</div>
-            <div className="ShareModal__email">{user.email}</div>
-          </div>
-        ))}
+        {props.collaborators.map(username => {
+          const user = props.collabsByName[username];
+          return (
+            <div key={username} className="ShareModal__collab">
+              <div className="ShareModal__user">{username}</div>
+              <div className="ShareModal__email">{user.email}</div>
+            </div>
+          );
+        })}
       </div>
     </ModalContainer>
   );
@@ -83,11 +86,13 @@ const ShareModal = props => {
 ShareModal.propTypes = {
   close: PropTypes.func.isRequired,
   collaborators: PropTypes.array.isRequired,
-  noteID: PropTypes.string
+  noteID: PropTypes.string,
+  collabsByName: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   collaborators: state.notes.currentNoteID ? state.notes.notesByID[state.notes.currentNoteID].collaborators : [],
+  collabsByName: state.notes.collabsByName,
   noteID: state.notes.currentNoteID
 });
 

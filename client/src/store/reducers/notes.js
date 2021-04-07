@@ -10,7 +10,8 @@ const initialState = {
   changesSaved: true,
   allTags: [],
   filteredNoteIDs: [],
-  shownTag: null
+  shownTag: null,
+  collabsByName: {}
 };
 
 const reducer = (state  = initialState, action) => {
@@ -41,10 +42,15 @@ const login = (state, { payload: { notes, pinnedNotes }}) => {
   const noteIDs = [];
   const trashIDs = [];
   const allTags = [];
+  const collabsByName = {};
 
   for (let note of notes) {
-    const { _id: noteID, isTrash, __v, ...rest } = note;
-    const newNote = { noteID, ...rest };
+    const { _id: noteID, isTrash, __v, collaborators, ...rest } = note;
+    const newNote = {
+      ...rest,
+      noteID,
+      collaborators: collaborators.map(user => user.username)
+    };
     if (isTrash) {
       trashIDs.push(noteID);
     } else {
@@ -52,6 +58,16 @@ const login = (state, { payload: { notes, pinnedNotes }}) => {
     }
     note.tags.length && allTags.push(...note.tags);
     notesByID[noteID] = newNote;
+    collaborators.forEach(user => {
+      if (!collabsByName[user.username]) {
+        collabsByName[user.username] = {
+          ...user,
+          color: null,
+          noteID: null,
+          isOnline: false
+        };
+      }
+    });
   }
 
   return {
@@ -61,16 +77,17 @@ const login = (state, { payload: { notes, pinnedNotes }}) => {
     noteIDs,
     pinnedNotes,
     currentNoteID: noteIDs[0] || null,
-    allTags: [...new Set(allTags)]
+    allTags: [...new Set(allTags)],
+    collabsByName
   };
 };
 
-const createNote = (state, { payload: { note } }) => {
+const createNote = (state, { payload: { note, username } }) => {
   const newNote = {
     noteID: note._id,
     body: note.body,
     isPublished: false,
-    collaborators: note.collaborators,
+    collaborators: [username],
     tags: [],
     nanoID: '',
     createdAt: note.createdAt,
@@ -257,8 +274,24 @@ const showNotesByTag = (state, { tag }) => {
 };
 
 const acceptInvite = (state, { note }) => {
-  const { _id: noteID, isTrash, __v, ...rest } = note;
-  const newNote = { noteID, ...rest };
+  const { _id: noteID, isTrash, __v, collaborators, ...rest } = note;
+  const newNote = {
+    ...rest,
+    noteID,
+    collaborators: collaborators.map(user => user.username)
+  };
+
+  const collabsByName = { ...state.collabsByName };
+  collaborators.forEach(user => {
+    if (!collabsByName[user.username]) {
+      collabsByName[user.username] = {
+        ...user,
+        color: null,
+        isOnline: false,
+        noteID: null
+      };
+    }
+  });
 
   let allTags = state.allTags;
   if (newNote.tags.length) {
@@ -276,7 +309,8 @@ const acceptInvite = (state, { note }) => {
     noteIDs: [noteID, ...state.noteIDs],
     allTags,
     currentNoteID: (!state.noteIDs.length && !state.trashShown) ? noteID : state.currentNoteID,
-    filteredNoteIDs: hasCurrTag ? [noteID, ...state.filteredNoteIDs] : state.filteredNoteIDs
+    filteredNoteIDs: hasCurrTag ? [noteID, ...state.filteredNoteIDs] : state.filteredNoteIDs,
+    collabsByName
   };
 };
 
@@ -286,9 +320,22 @@ const addCollaborator = (state, { payload: { noteID, email, username } }) => ({
     ...state.notesByID,
     [noteID]: {
       ...state.notesByID[noteID],
-      collaborators: [...state.notesByID[noteID].collaborators, { email, username }]
+      collaborators: [...state.notesByID[noteID].collaborators, username]
     }
-  }
+  },
+  collabsByName:
+    state.collabsByName[username] ?
+    state.collabsByName :
+    {
+      ...state.collabsByName,
+      [username]: {
+        username,
+        email,
+        color: null,
+        noteID: null,
+        isOnline: false
+      }
+    }
 });
 
 export default reducer;

@@ -8,6 +8,7 @@ import { toggleFullscreen, trashNote, restoreNote, deleteNote,
 import Tooltip from '../UI/Tooltip/Tooltip';
 import NoteStatus from './NoteStatus';
 import ShareModal from '../ShareModal/ShareModal';
+import Collaborators from './NoteCollaborators';
 
 const NoteMenu = props => {
   const [showShareModal, setShowShareModal] = useState(false);
@@ -62,6 +63,7 @@ const NoteMenu = props => {
           </div>
         </div>
         {!!props.currentNoteID && <NoteStatus />}
+        {props.isCollab && <Collaborators />}
       </div>
       {showShareModal && <ShareModal close={() => setShowShareModal(false)} />}
     </>
@@ -79,14 +81,16 @@ NoteMenu.propTypes = {
   showList: PropTypes.func.isRequired,
   pinNote: PropTypes.func.isRequired,
   unpinNote: PropTypes.func.isRequired,
-  noteIsPinned: PropTypes.bool.isRequired
+  noteIsPinned: PropTypes.bool.isRequired,
+  isCollab: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   isFullscreen: state.ui.isFullscreen,
   trashShown: state.notes.trashShown,
   currentNoteID: state.notes.currentNoteID,
-  noteIsPinned: state.notes.pinnedNotes.includes(state.notes.currentNoteID)
+  noteIsPinned: !state.notes.currentNoteID ? false : state.notes.pinnedNotes.includes(state.notes.currentNoteID),
+  isCollab: !state.notes.currentNoteID ? false : state.notes.notesByID[state.notes.currentNoteID].collaborators.length > 1
 });
 
 const mapDispatchToProps = dispatch => ({

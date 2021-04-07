@@ -50,7 +50,6 @@ const NoteContent = props => {
     if (!socket) { return; }
     socket.on('send ops: put/note', data => {
       if (data.noteID !== props.currentNoteID) { return; }
-      console.log('RECEIVING: send ops: put/note');
       isRemoteChange.current = true;
       Editor.withoutNormalizing(editor, () => {
         data.ops.forEach(op => {
@@ -71,13 +70,11 @@ const NoteContent = props => {
     if (wasRemote.current) {
       return wasRemote.current = false;
     }
-    console.log('props.updateNote');
     props.updateNote(props.currentNoteID, value);
     props.setStatus();
     // save changes to DB 700ms after stop typing
     const delay = setTimeout(() => {
       if (!props.currentNoteID || isRemoteChange.current) { return; }
-      console.log('put/note/save');
       sendUpdate('put/note/save', { noteID: props.currentNoteID, body: value });
     }, 700);
 
@@ -86,12 +83,10 @@ const NoteContent = props => {
 
   const changeHandler = val => {
     setValue(val);
-    console.log('setValue');
     const ops = editor.operations;
     if (props.currentNoteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
       const sendOps = ops.filter(op => op && op.type !== 'set_selection' && op.type !== 'set_value');
       if (sendOps.length) {
-        console.log('SEND: send ops: put/note');
         sendUpdate('send ops: put/note', { noteID: props.currentNoteID, ops: sendOps });
       }
     }

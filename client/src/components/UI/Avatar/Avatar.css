@@ -1,0 +1,36 @@
+.Avatar {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: filter 250ms;
+  cursor: pointer;
+  position: relative;
+  margin: 3px;
+  z-index: 2;
+}
+.Avatar__symb {
+  position: absolute;
+  width: 7px;
+  height: 6px;
+  border-radius: 50%;
+  top: -3px;
+  right: -3px;
+}
+.Avatar__symb--gr {
+  background: green;
+}
+.Avatar__symb--or {
+  background: orange;
+}
+.Avatar:hover {
+  filter: brightness(0.95);
+}
+.Avatar__name {
+  text-transform: capitalize;
+  font-size: 18px;
+  font-weight: 500;
+  color: black;
+}

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import isHotkey from 'is-hotkey';
 import { Editable, withReact, Slate } from 'slate-react';
 import { Editor, Point, Range, Transforms, createEditor, Element as SlateElement } from 'slate';
-import { withHistory } from 'slate-history';
+import { withHistory, HistoryEditor } from 'slate-history';
 import Toolbar from './Toolbar';
 import ChecklistItemElement from './ChecklistItem';
 import { connect } from 'react-redux';
@@ -38,7 +38,9 @@ const OP_TYPES = {
   'move_node': true,
   'remove_node': true,
   'set_node': true,
-  'split_node': true
+  'split_node': true,
+  'set_selection': false,
+  'set_value': false
 };
 
 const NoteContent = props => {
@@ -63,9 +65,11 @@ const NoteContent = props => {
       if (data.noteID !== props.currentNoteID) { return; }
       isRemoteChange.current = true;
       Editor.withoutNormalizing(editor, () => {
-        data.ops.forEach(op => {
-          if (!OP_TYPES[op.type]) { return; }
-          editor.apply(op);
+        HistoryEditor.withoutSaving(editor, () => {
+          data.ops.forEach(op => {
+            if (!OP_TYPES[op.type]) { return; }
+            editor.apply(op);
+          });
         });
       });
       isRemoteChange.current = false;
@@ -97,7 +101,7 @@ const NoteContent = props => {
     setValue(val);
     const ops = editor.operations;
     if (props.currentNoteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
-      const sendOps = ops.filter(op => op && op.type !== 'set_selection' && op.type !== 'set_value');
+      const sendOps = ops.filter(op => op && OP_TYPES[op.type]);
       if (sendOps.length) {
         sendUpdate('send ops: put/note', { noteID: props.currentNoteID, ops: sendOps });
       }

@@ -12,7 +12,9 @@ const socketMap = {
   'user online': actionTypes.SET_USER_ONLINE,
   'user offline': actionTypes.SET_USER_OFFLINE,
   'user active': actionTypes.SET_USER_ACTIVE,
-  'user inactive': actionTypes.SET_USER_INACTIVE
+  'user inactive': actionTypes.SET_USER_INACTIVE,
+  'receive active users': actionTypes.SET_ACTIVE_USERS,
+  'receive connected users': actionTypes.SET_CONNECTED_USERS
 };
 
 export default socketMap;

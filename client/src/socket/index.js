@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 import { instance as axios, baseURL } from '../axios';
 import socketMap from './socketMap';
 import store from '../store';
+import * as actionTypes from '../store/actions/actionTypes';
 
 let socket = null;
 
@@ -28,7 +29,7 @@ export const initSocket = () => {
   });
 
   newSocket.on('put/note finished', () => {
-    store.dispatch({ type: 'SET_STATUS', bool: true });
+    store.dispatch({ type: actionTypes.SET_STATUS, bool: true });
   });
 
   for (let action in socketMap) {
@@ -50,7 +51,7 @@ export const initSocket = () => {
 
 export const sendUpdate = (type, data) => {
   if (!socket) { return; }
-  socket.emit(type, data);
+  data ? socket.emit(type, data) : socket.emit(type);
   return socket;
 };
 
@@ -77,5 +78,3 @@ export const sendInvite = (noteID, username, errCB, successCB) => {
     successCB();
   });
 };
-
-export const getSocket = () => socket;

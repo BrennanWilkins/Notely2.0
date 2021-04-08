@@ -90,12 +90,3 @@ export const rejectInvite = noteID => dispatch => {
   sendUpdate('put/note/invite/reject', { noteID });
   dispatch({ type: actionTypes.REJECT_INVITE, noteID });
 };
-
-export const getConnectedUsers = noteID => dispatch => {
-  const socket = sendUpdate('get connected users', noteID);
-  socket.on('receive connected users', users => {
-    socket.off('receive connected users');
-    if (!users || !users.length) { return; }
-    dispatch({ type: actionTypes.SET_CONNECTED_USERS, users });
-  });
-};

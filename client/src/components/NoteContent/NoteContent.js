@@ -10,38 +10,8 @@ import ChecklistItemElement from './ChecklistItem';
 import { connect } from 'react-redux';
 import { updateNote, setStatus } from '../../store/actions';
 import { logo } from '../UI/icons';
-import { sendUpdate, getSocket } from '../../socket';
-
-const LIST_TYPES = ['numbered-list', 'bulleted-list'];
-
-const MARK_HOTKEYS = {
-  'mod+b': 'bold',
-  'mod+i': 'italic',
-  'mod+u': 'underline',
-  'mod+`': 'code'
-};
-
-const BLOCK_HOTKEYS = {
-  'mod+shift+1': 'heading-one',
-  'mod+shift+2': 'heading-two',
-  'mod+shift+3': 'block-quote',
-  'mod+shift+4': 'numbered-list',
-  'mod+shift+5': 'bulleted-list',
-  'mod+shift+6': 'check-list-item'
-};
-
-const OP_TYPES = {
-  'insert_text': true,
-  'remove_text': true,
-  'insert_node': true,
-  'merge_node': true,
-  'move_node': true,
-  'remove_node': true,
-  'set_node': true,
-  'split_node': true,
-  'set_selection': false,
-  'set_value': false
-};
+import { sendUpdate } from '../../socket';
+import { LIST_TYPES, MARK_HOTKEYS, BLOCK_HOTKEYS, OP_TYPES } from './constants';
 
 const NoteContent = props => {
   const [value, setValue] = useState(props.currentBody);
@@ -51,19 +21,32 @@ const NoteContent = props => {
   const isRemoteChange = useRef(false);
   const hasChanged = useRef(false);
   const wasRemote = useRef(false);
+  const prevNoteID = useRef(null);
 
   useEffect(() => {
     setValue(props.currentBody);
+    // reset history
     editor.history = {
       redos: [],
       undos: []
     };
 
-    const socket = getSocket();
-    if (!socket) { return; }
-    socket.on('send ops: put/note', data => {
-      if (data.noteID !== props.currentNoteID) { return; }
+    // leaving editor, notify collabs user is leaving
+    if (!props.currentNoteID && prevNoteID.current) {
+      const socket = sendUpdate('leave editor');
+      socket.off('receive ops');
+      prevNoteID.current = null;
+      return;
+    }
+
+    const socket = sendUpdate('join editor', props.currentNoteID);
+    prevNoteID.current = props.currentNoteID;
+
+    socket.on('receive ops', data => {
+      if (data.noteID !== props.currentNoteID || !data.ops || !Array.isArray(data.ops)) { return; }
       isRemoteChange.current = true;
+      // prevent normalizing to stop split_node bug
+      // uses withoutSaving to not populate user's history with other users
       Editor.withoutNormalizing(editor, () => {
         HistoryEditor.withoutSaving(editor, () => {
           data.ops.forEach(op => {
@@ -76,8 +59,6 @@ const NoteContent = props => {
       hasChanged.current = true;
       wasRemote.current = true;
     });
-
-    return () => socket.off('send ops: put/note');
   }, [props.currentNoteID]);
 
   useEffect(() => {
@@ -103,7 +84,7 @@ const NoteContent = props => {
     if (props.currentNoteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
       const sendOps = ops.filter(op => op && OP_TYPES[op.type]);
       if (sendOps.length) {
-        sendUpdate('send ops: put/note', { noteID: props.currentNoteID, ops: sendOps });
+        sendUpdate('send ops', { noteID: props.currentNoteID, ops: sendOps });
       }
     }
     hasChanged.current = false;

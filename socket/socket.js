@@ -31,6 +31,8 @@ const initSocket = server => {
     socket.userColor = randomColor({ luminosity: 'light' });
     socket.activeNoteID = null;
 
+    const connectedUsers = {};
+
     // auto join user to all of their note's rooms
     for (let noteID in socket.userNotes) {
       socket.join(noteID);
@@ -40,42 +42,37 @@ const initSocket = server => {
         username: socket.username,
         color: socket.userColor
       });
+
+      // find connected users in room
+      const room = io.sockets.adapter.rooms.get(noteID);
+      room.forEach((userSocket, socketID) => {
+        const user = io.sockets.sockets.get(socketID);
+        if (user && !connectedUsers[user.username]) {
+          connectedUsers[user.username] = user.userColor;
+        }
+      });
     }
 
-    // retrieve active users when client is active on a note
-    socket.on('get connected users', noteID => {
-      if (!socket.userNotes[noteID] || noteID === socket.activeNoteID) { return; }
-      const room = io.sockets.adapter.rooms.get(noteID);
-      if (!room) { return; }
-      const users = [...room].map(socketID => {
-        const user = io.sockets.sockets.get(socketID);
-        return {
-          username: user.username,
-          color: user.userColor,
-          noteID: user.activeNoteID === noteID ? user.activeNoteID : null
-        };
-      });
-      socket.emit('receive connected users', users);
-
-      // if user is switching notes tell users in old note they are inactive
-      if (socket.activeNoteID) {
-        socket.to(socket.activeNoteID).emit('user inactive', { username: socket.username });
-      }
-      socket.activeNoteID = noteID;
-      socket.to(noteID).emit('user active', { username: socket.username, noteID });
-    });
-
-    socket.on('send inactive', noteID => {
-      if (!socket.userNotes[noteID] || noteID !== socket.activeNoteID) { return; }
-      socket.activeNoteID = null;
-      socket.to(noteID).emit('user inactive', { username: socket.username });
-    });
+    // send all connected users to user
+    socket.emit('receive connected users', connectedUsers);
 
     socket.on('disconnect', () => {
       for (let noteID in socket.userNotes) {
         // notify other users that user is offline
         socket.to(noteID).emit('user offline', { username: socket.username });
       }
+    });
+
+    socket.on('leave note', noteID => {
+      socket.leave(noteID);
+      delete socket.userNotes[noteID];
+    });
+
+    // send note body update to other collaborators but dont update body in DB
+    socket.on('put/note', data => {
+      const { noteID, body } = data;
+      if (!noteID || !body || !socket.userNotes[noteID]) { return; }
+      socket.to(noteID).emit('put/note', data);
     });
 
     // add event handlers for note routes
@@ -88,21 +85,52 @@ const initSocket = server => {
       }
     }
 
-    // send note body update to other collaborators but dont update body in DB
-    socket.on('put/note', data => {
-      const { noteID, body } = data;
-      if (!noteID || !body || !socket.userNotes[noteID]) { return; }
-      socket.to(noteID).emit('put/note', data);
+    // separate editor room used for sending editor operations/user activity
+    socket.on('join editor', noteID => {
+      if (!socket.userNotes[noteID] || noteID === socket.activeNoteID) { return; }
+      // if user switching notes tell users in prev editor room they are inactive
+      if (socket.activeNoteID) {
+        const oldRoomName = `editor-${socket.activeNoteID}`;
+        socket.to(oldRoomName).emit('user inactive', {
+          username: socket.username,
+          color: socket.userColor
+        });
+        socket.leave(oldRoomName);
+      }
+
+      const roomName = `editor-${noteID}`;
+      socket.join(roomName);
+      socket.activeNoteID = noteID;
+
+      // send active users in editor room to user
+      const room = io.sockets.adapter.rooms.get(roomName);
+      if (!room) { return; }
+      const users = {};
+      room.forEach((_, socketID) => {
+        const user = io.sockets.sockets.get(socketID);
+        users[user.username] = user.userColor;
+      });
+      socket.emit('receive active users', users);
+
+      socket.to(roomName).emit('user active', {
+        username: socket.username,
+        color: socket.userColor
+      });
     });
 
-    socket.on('send ops: put/note', data => {
-      if (!data.noteID || !data.ops || !data.ops.length) { return; }
-      socket.to(data.noteID).emit('send ops: put/note', data);
+    socket.on('leave editor', () => {
+      if (!socket.activeNoteID) { return; }
+      socket.to(`editor-${socket.activeNoteID}`).emit('user inactive', {
+        username: socket.username,
+        noteID: socket.activeNoteID
+      })
+      socket.activeNoteID = null;
     });
 
-    socket.on('leave note', noteID => {
-      socket.leave(noteID);
-      delete socket.userNotes[noteID];
+    socket.on('send ops', data => {
+      const { noteID, ops } = data;
+      if (!noteID || !ops || !ops.length || noteID !== socket.activeNoteID) { return; }
+      socket.to(`editor-${noteID}`).emit('receive ops', data);
     });
   });
 };

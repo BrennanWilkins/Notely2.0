@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import './NoteContent.css';
 import { useSlate } from 'slate-react';
-import { toggleBlock, toggleMark, isBlockActive, isMarkActive } from './NoteContent';
+import { toggleBlock, toggleMark, isBlockActive, isMarkActive } from './NoteEditor';
 import { boldIcon, italicIcon, underlineIcon, heading1Icon, heading2Icon,
   olIcon, ulIcon, blockQuoteIcon, codeIcon, checklistIcon } from '../UI/icons';
 import Tooltip from '../UI/Tooltip/Tooltip';
@@ -39,13 +39,12 @@ const getFormatInfo = format => {
 
 const BlockButton = ({ format }) => {
   const editor = useSlate();
+  const [icon, text1, text2] = useMemo(() => getFormatInfo(format), [format]);
 
   const clickHandler = e => {
     e.preventDefault();
     toggleBlock(editor, format);
   };
-
-  const [icon, text1, text2] = getFormatInfo(format);
 
   return (
     <div
@@ -60,13 +59,12 @@ const BlockButton = ({ format }) => {
 
 const MarkButton = ({ format }) => {
   const editor = useSlate();
+  const [icon, text1, text2] = useMemo(() => getFormatInfo(format), [format]);
 
   const clickHandler = e => {
     e.preventDefault();
     toggleMark(editor, format);
   };
-
-  const [icon, text1, text2] = getFormatInfo(format);
 
   return (
     <div

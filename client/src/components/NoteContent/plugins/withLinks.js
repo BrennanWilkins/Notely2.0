@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import isUrl from '../../../utils/isUrl';
 import { useSlate } from 'slate-react';
 import { Transforms, Editor, Range, Element as SlateElement } from 'slate';
 import { linkIcon } from '../../UI/icons';
 import Tooltip from '../../UI/Tooltip/Tooltip';
 import isHotkey from 'is-hotkey';
+import { CloseBtn } from '../../UI/Buttons/Buttons';
+import { useModalToggle } from '../../../utils/customHooks';
 
 const withLinks = editor => {
   const { insertData, insertText, isInline } = editor;
@@ -79,24 +81,58 @@ const wrapLink = (editor, url) => {
 
 export const LinkButton = () => {
   const editor = useSlate();
+  const [showModal, setShowModal] = useState(false);
+  const selection = useRef(null);
 
   const clickHandler = e => {
+    selection.current = editor.selection;
     e.preventDefault();
-    const url = window.prompt('Enter the URL of the link:');
+    setShowModal(true);
+  };
+
+  const submitHandler = (e, url) => {
+    e.preventDefault();
+    setShowModal(false);
     if (!url) { return; }
+    editor.selection = selection.current;
+    selection.current = null;
     insertLink(editor, url);
   };
 
   return (
-    <div
-      className={`Toolbar__btn ${isLinkActive(editor) ? 'Toolbar__btn--active' : ''}`}
-      onMouseDown={clickHandler}
-    >
-      {linkIcon}
-      <Tooltip position="down">
-        Insert Link
-        <div>Ctrl+Shift+7</div>
-      </Tooltip>
+    <>
+      <div
+        className={`Toolbar__btn ${isLinkActive(editor) ? 'Toolbar__btn--active' : ''}`}
+        onMouseDown={clickHandler}
+      >
+        {linkIcon}
+        <Tooltip position="down">
+          Insert Link
+          <div>Ctrl+Shift+7</div>
+        </Tooltip>
+      </div>
+      {showModal &&
+        <LinkModal submit={submitHandler} close={() => setShowModal(false)} />
+      }
+    </>
+  );
+};
+
+const LinkModal = ({ submit, close }) => {
+  const modalRef = useRef();
+  const [url, setUrl] = useState('');
+  useModalToggle(modalRef, close);
+
+  return (
+    <div className="InsertLinkModal" ref={modalRef}>
+      <CloseBtn onClick={close} />
+      <form onSubmit={e => submit(e, url)}>
+        <label>
+          Link URL
+          <input value={url} onChange={e => setUrl(e.target.value)} autoFocus />
+        </label>
+        <button className="InsertLinkModal__btn" type="submit">Insert Link</button>
+      </form>
     </div>
   );
 };

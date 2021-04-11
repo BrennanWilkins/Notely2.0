@@ -22,6 +22,7 @@ const NoteContent = props => {
   const wasRemote = useRef(false);
   const prevNoteID = useRef(null);
   const { decorate, cursorHandler, removeCursor, resetCursors } = useCursors();
+  const oldSelection = useRef(null);
 
   useEffect(() => {
     setValue(props.currentBody);
@@ -33,7 +34,7 @@ const NoteContent = props => {
     };
 
     // leaving editor, notify collabs user is leaving
-    if (!props.currentNoteID && prevNoteID.current) {
+    if (!props.noteID && prevNoteID.current) {
       const socket = sendUpdate('leave editor');
       socket.off('receive ops');
       socket.off('receive cursor');
@@ -41,11 +42,11 @@ const NoteContent = props => {
       return;
     }
 
-    const socket = sendUpdate('join editor', props.currentNoteID);
-    prevNoteID.current = props.currentNoteID;
+    const socket = sendUpdate('join editor', props.noteID);
+    prevNoteID.current = props.noteID;
 
     socket.on('receive ops', data => {
-      if (data.noteID !== props.currentNoteID || !data.ops
+      if (data.noteID !== props.noteID || !data.ops
         || !Array.isArray(data.ops)) { return; }
       isRemoteChange.current = true;
       // prevent normalizing to stop split_node bug
@@ -64,26 +65,26 @@ const NoteContent = props => {
     });
 
     socket.on('receive cursor', data => {
-      if (!data.noteID || data.noteID !== props.currentNoteID) { return; }
+      if (!data.noteID || data.noteID !== props.noteID) { return; }
       cursorHandler(data);
     });
 
     socket.on('user inactive', data => removeCursor(data.username));
     socket.on('user offline', data => removeCursor(data.username));
-  }, [props.currentNoteID]);
+  }, [props.noteID]);
 
   useEffect(() => {
-    if (!props.currentNoteID || value === props.currentBody ||
+    if (!props.noteID || value === props.currentBody ||
       isRemoteChange.current || hasChanged.current) { return; }
     if (wasRemote.current) {
       return wasRemote.current = false;
     }
-    props.updateNote(props.currentNoteID, value);
+    props.updateNote(props.noteID, value);
     props.setStatus();
     // save changes to DB 700ms after stop typing
     const delay = setTimeout(() => {
-      if (!props.currentNoteID || isRemoteChange.current) { return; }
-      sendUpdate('put/note/save', { noteID: props.currentNoteID, body: value });
+      if (!props.noteID || isRemoteChange.current) { return; }
+      sendUpdate('put/note/save', { noteID: props.noteID, body: value });
     }, 700);
 
     return () => clearTimeout(delay);
@@ -92,21 +93,21 @@ const NoteContent = props => {
   const changeHandler = val => {
     setValue(val);
     const ops = editor.operations;
-    if (props.isCollab && props.currentNoteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
+    if (props.isCollab && props.noteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
       const sendOps = ops.filter(op => op && OP_TYPES[op.type]);
-      const cursorOps = ops.filter(op => op && op.type === 'set_selection');
       if (sendOps.length) {
-        sendUpdate('send ops', { noteID: props.currentNoteID, ops: sendOps });
-      }
-      if (cursorOps.length) {
-        sendUpdate('send cursor', { noteID: props.currentNoteID, ops: cursorOps });
+        sendUpdate('send ops', { noteID: props.noteID, ops: sendOps });
       }
     }
+    if (props.isCollab && props.noteID && oldSelection.current !== editor.selection) {
+      sendUpdate('send cursor', { noteID: props.noteID, selection: editor.selection });
+    }
     hasChanged.current = false;
+    oldSelection.current = editor.selection;
   };
 
   return (
-    props.currentNoteID ?
+    props.noteID ?
       <div className="NoteContent">
         <Slate editor={editor} value={value} onChange={changeHandler}>
           <Toolbar />
@@ -122,14 +123,14 @@ const NoteContent = props => {
 
 NoteContent.propTypes = {
   currentBody: PropTypes.array.isRequired,
-  currentNoteID: PropTypes.string,
+  noteID: PropTypes.string,
   updateNote: PropTypes.func.isRequired,
   setStatus: PropTypes.func.isRequired,
   isCollab: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
-  currentNoteID: state.notes.currentNoteID,
+  noteID: state.notes.currentNoteID,
   currentBody: state.notes.currentNoteID ? state.notes.notesByID[state.notes.currentNoteID].body : [],
   isCollab: !state.notes.currentNoteID ? false : state.notes.notesByID[state.notes.currentNoteID].collaborators.length > 1
 });

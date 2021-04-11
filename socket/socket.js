@@ -134,12 +134,11 @@ const initSocket = server => {
     });
 
     socket.on('send cursor', data => {
-      const { noteID, ops, selection } = data;
-      if (!noteID || !ops || !ops.length || noteID !== socket.activeNoteID) { return; }
+      const { noteID } = data;
+      if (!noteID || noteID !== socket.activeNoteID) { return; }
 
       const cursorData = {
-        noteID,
-        op: ops[0],
+        ...data,
         username: socket.username,
         color: socket.userColor
       };

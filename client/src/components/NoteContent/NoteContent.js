@@ -13,10 +13,11 @@ import NoteEditor from './NoteEditor';
 import { OP_TYPES } from './constants';
 import withChecklists from './plugins/withChecklists';
 import useCursors from './plugins/useCursors';
+import withLinks from './plugins/withLinks';
 
 const NoteContent = props => {
   const [value, setValue] = useState(props.body);
-  const editor = useMemo(() => withChecklists(withHistory(withReact(createEditor()))), []);
+  const editor = useMemo(() => withLinks(withChecklists(withHistory(withReact(createEditor())))), []);
   const isRemoteChange = useRef(false);
   const hasChanged = useRef(false);
   const wasRemote = useRef(false);

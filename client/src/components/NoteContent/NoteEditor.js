@@ -6,6 +6,7 @@ import { LIST_TYPES, MARK_HOTKEYS, BLOCK_HOTKEYS } from './constants';
 import { Editor, Transforms, Element as SlateElement } from 'slate';
 import { ChecklistItem } from './plugins/withChecklists';
 import { Caret } from './plugins/useCursors';
+import { LinkElement } from './plugins/withLinks';
 
 const NoteEditor = ({ editor, decorate }) => {
   const renderElement = useCallback(props => <Element {...props} />, []);
@@ -101,6 +102,8 @@ const Element = props => {
       return <ol {...attributes}>{children}</ol>;
     case 'check-list-item':
       return <ChecklistItem {...props} />;
+    case 'link':
+      return <LinkElement {...props} />;
     default:
       return <p {...attributes}>{children}</p>;
   }

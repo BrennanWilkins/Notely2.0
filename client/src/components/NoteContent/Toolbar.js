@@ -5,6 +5,7 @@ import { toggleBlock, toggleMark, isBlockActive, isMarkActive } from './NoteEdit
 import { boldIcon, italicIcon, underlineIcon, heading1Icon, heading2Icon,
   olIcon, ulIcon, blockQuoteIcon, codeIcon, checklistIcon } from '../UI/icons';
 import Tooltip from '../UI/Tooltip/Tooltip';
+import { LinkButton } from './plugins/withLinks';
 
 const Toolbar = React.memo(() => (
   <div className="Toolbar">
@@ -18,6 +19,7 @@ const Toolbar = React.memo(() => (
     <BlockButton format="numbered-list" />
     <BlockButton format="bulleted-list" />
     <BlockButton format="check-list-item" />
+    <LinkButton />
   </div>
 ));
 

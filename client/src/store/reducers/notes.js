@@ -23,7 +23,7 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.TRASH_NOTE: return trashNote(state, action);
     case actionTypes.RESTORE_NOTE: return restoreNote(state, action);
     case actionTypes.DELETE_NOTE: return deleteNote(state, action);
-    case actionTypes.SHOW_NOTE: return { ...state, currentNoteID: action.noteID };
+    case actionTypes.SHOW_NOTE: return showNote(state, action);
     case actionTypes.SET_SHOW_TRASH: return setShowTrash(state, action);
     case actionTypes.PIN_NOTE: return pinNote(state, action);
     case actionTypes.UNPIN_NOTE: return unpinNote(state, action);
@@ -263,6 +263,14 @@ const removeTag = (state, { payload: { noteID, tag } }) => {
     notesByID,
     allTags: shouldKeepTag ? state.allTags : state.allTags.filter(t => t !== tag),
     shownTag: state.shownTag === tag ? null : state.shownTag
+  };
+};
+
+const showNote = (state, { noteID }) => {
+  if (state.currentNoteID === noteID) { return state; }
+  return {
+    ...state,
+    currentNoteID: noteID
   };
 };
 

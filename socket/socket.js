@@ -28,7 +28,7 @@ const initSocket = server => {
       next();
     } catch (err) { next(new Error('join error')); }
   }).on('connection', socket => {
-    socket.userColor = randomColor({ luminosity: 'light' });
+    socket.userColor = randomColor({ luminosity: 'dark', format: 'rgba', alpha: 1 });
     socket.activeNoteID = null;
 
     const connectedUsers = {};

@@ -8,8 +8,16 @@ import { connect } from 'react-redux';
 
 const NoteContainer = props => (
   <div
-    className={`NoteContainer ${props.isFullscreen ? 'NoteContainer--expanded' : 'NoteContainer--contract'} ${props.listShown ? 'NoteContainer--hide' : 'NoteContainer--show'}`}
-    style={!props.isFullscreen ? { maxWidth: props.sideNavShown ? 'calc(100% - 541px)' : 'calc(100% - 376px)'} : null}
+    className={`
+      NoteContainer
+      ${props.isFullscreen ? 'NoteContainer--expanded' : 'NoteContainer--contract'}
+      ${props.listShown ? 'NoteContainer--hide' : 'NoteContainer--show'}
+    `}
+    style={
+      !props.isFullscreen ?
+      { maxWidth: props.sideNavShown ? 'calc(100% - 541px)' : 'calc(100% - 376px)'}
+      : null
+    }
   >
     <NoteMenu />
     <NoteContent />

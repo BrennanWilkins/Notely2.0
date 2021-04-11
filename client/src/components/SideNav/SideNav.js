@@ -63,7 +63,9 @@ const SideNav = props => {
   const showNotesByTagHandler = tag => {
     props.showNotesByTag(tag);
     resetListShown();
-    if (props.sideNavShown) { props.toggleSideNav(); }
+    if (props.sideNavShown && window.innerWidth <= 750) {
+      props.toggleSideNav();
+    }
   };
 
   return (

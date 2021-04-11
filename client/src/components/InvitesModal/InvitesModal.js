@@ -44,13 +44,13 @@ const InvitesModal = props => {
 
 InvitesModal.propTypes = {
   close: PropTypes.func.isRequired,
-  invites: PropTypes.array.isRequired
+  invites: PropTypes.array.isRequired,
+  acceptInvite: PropTypes.func.isRequired,
+  rejectInvite: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  invites: state.user.invites,
-  acceptInvite: PropTypes.func.isRequired,
-  rejectInvite: PropTypes.func.isRequired
+  invites: state.user.invites
 });
 
 const mapDispatchToProps = dispatch => ({

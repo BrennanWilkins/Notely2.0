@@ -1,5 +1,4 @@
 import React from 'react';
-import '../NoteContent.css';
 import { useReadOnly, ReactEditor, useSlate } from 'slate-react';
 import { Editor, Point, Range, Transforms, Element as SlateElement } from 'slate';
 

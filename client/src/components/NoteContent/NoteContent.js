@@ -15,7 +15,7 @@ import withChecklists from './plugins/withChecklists';
 import useCursors from './plugins/useCursors';
 
 const NoteContent = props => {
-  const [value, setValue] = useState(props.currentBody);
+  const [value, setValue] = useState(props.body);
   const editor = useMemo(() => withChecklists(withHistory(withReact(createEditor()))), []);
   const isRemoteChange = useRef(false);
   const hasChanged = useRef(false);
@@ -25,7 +25,7 @@ const NoteContent = props => {
   const oldSelection = useRef(null);
 
   useEffect(() => {
-    setValue(props.currentBody);
+    setValue(props.body);
     resetCursors();
     // reset history
     editor.history = {
@@ -74,7 +74,7 @@ const NoteContent = props => {
   }, [props.noteID]);
 
   useEffect(() => {
-    if (!props.noteID || value === props.currentBody ||
+    if (!props.noteID || value === props.body ||
       isRemoteChange.current || hasChanged.current) { return; }
     if (wasRemote.current) {
       return wasRemote.current = false;
@@ -122,7 +122,7 @@ const NoteContent = props => {
 };
 
 NoteContent.propTypes = {
-  currentBody: PropTypes.array.isRequired,
+  body: PropTypes.array.isRequired,
   noteID: PropTypes.string,
   updateNote: PropTypes.func.isRequired,
   setStatus: PropTypes.func.isRequired,
@@ -131,7 +131,7 @@ NoteContent.propTypes = {
 
 const mapStateToProps = state => ({
   noteID: state.notes.currentNoteID,
-  currentBody: state.notes.currentNoteID ? state.notes.notesByID[state.notes.currentNoteID].body : [],
+  body: state.notes.currentNoteID ? state.notes.notesByID[state.notes.currentNoteID].body : [],
   isCollab: !state.notes.currentNoteID ? false : state.notes.notesByID[state.notes.currentNoteID].collaborators.length > 1
 });
 

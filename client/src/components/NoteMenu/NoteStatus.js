@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './NoteMenu.css';
 import { connect } from 'react-redux';
 import { formatDate } from '../../utils/formatDate';
@@ -16,6 +17,11 @@ const NoteStatus = props => (
     </div>
   </div>
 );
+
+NoteStatus.propTypes = {
+  updatedAt: PropTypes.string.isRequired,
+  changesSaved: PropTypes.bool.isRequired
+};
 
 const mapStateToProps = state => ({
   updatedAt: state.notes.notesByID[state.notes.currentNoteID].updatedAt,

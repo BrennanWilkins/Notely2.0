@@ -5,10 +5,11 @@ import isHotkey from 'is-hotkey';
 import { LIST_TYPES, MARK_HOTKEYS, BLOCK_HOTKEYS } from './constants';
 import { Editor, Transforms, Element as SlateElement } from 'slate';
 import { ChecklistItem } from './plugins/withChecklists';
+import { Caret } from './plugins/useCursors';
 
-const NoteEditor = ({ editor }) => {
+const NoteEditor = ({ editor, decorate }) => {
   const renderElement = useCallback(props => <Element {...props} />, []);
-  const renderLeaf = useCallback(props => <Leaf {...props} />, []);
+  const renderLeaf = useCallback(props => <Leaf {...props} />, [decorate]);
 
   const keyDownHandler = e => {
     for (const hotkey in MARK_HOTKEYS) {
@@ -30,9 +31,10 @@ const NoteEditor = ({ editor }) => {
       renderElement={renderElement}
       renderLeaf={renderLeaf}
       placeholder="Start here"
-      spellCheck
+      spellCheck={false}
       autoFocus
       onKeyDown={keyDownHandler}
+      decorate={decorate}
     />
   )
 };
@@ -117,7 +119,15 @@ const Leaf = ({ attributes, children, leaf }) => {
   if (leaf.underline) {
     children = <u>{children}</u>;
   }
-  return <span {...attributes}>{children}</span>;
+  return (
+    <span
+      {...attributes}
+      style={leaf.isCaret ? { position: 'relative', backgroundColor: leaf.alphaColor } : null}
+    >
+      {leaf.isCaret ? <Caret {...leaf} /> : null}
+      {children}
+    </span>
+  );
 };
 
 

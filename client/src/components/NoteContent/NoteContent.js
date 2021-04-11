@@ -12,6 +12,7 @@ import { sendUpdate } from '../../socket';
 import NoteEditor from './NoteEditor';
 import { OP_TYPES } from './constants';
 import withChecklists from './plugins/withChecklists';
+import useCursors from './plugins/useCursors';
 
 const NoteContent = props => {
   const [value, setValue] = useState(props.currentBody);
@@ -20,9 +21,11 @@ const NoteContent = props => {
   const hasChanged = useRef(false);
   const wasRemote = useRef(false);
   const prevNoteID = useRef(null);
+  const { decorate, cursorHandler, removeCursor, resetCursors } = useCursors();
 
   useEffect(() => {
     setValue(props.currentBody);
+    resetCursors();
     // reset history
     editor.history = {
       redos: [],
@@ -33,6 +36,7 @@ const NoteContent = props => {
     if (!props.currentNoteID && prevNoteID.current) {
       const socket = sendUpdate('leave editor');
       socket.off('receive ops');
+      socket.off('receive cursor');
       prevNoteID.current = null;
       return;
     }
@@ -41,7 +45,8 @@ const NoteContent = props => {
     prevNoteID.current = props.currentNoteID;
 
     socket.on('receive ops', data => {
-      if (data.noteID !== props.currentNoteID || !data.ops || !Array.isArray(data.ops)) { return; }
+      if (data.noteID !== props.currentNoteID || !data.ops
+        || !Array.isArray(data.ops)) { return; }
       isRemoteChange.current = true;
       // prevent normalizing to stop split_node bug
       // uses withoutSaving to not populate user's history with other users
@@ -57,6 +62,14 @@ const NoteContent = props => {
       hasChanged.current = true;
       wasRemote.current = true;
     });
+
+    socket.on('receive cursor', data => {
+      if (!data.noteID || data.noteID !== props.currentNoteID) { return; }
+      cursorHandler(data);
+    });
+
+    socket.on('user inactive', data => removeCursor(data.username));
+    socket.on('user offline', data => removeCursor(data.username));
   }, [props.currentNoteID]);
 
   useEffect(() => {
@@ -79,10 +92,14 @@ const NoteContent = props => {
   const changeHandler = val => {
     setValue(val);
     const ops = editor.operations;
-    if (props.currentNoteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
+    if (props.isCollab && props.currentNoteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
       const sendOps = ops.filter(op => op && OP_TYPES[op.type]);
+      const cursorOps = ops.filter(op => op && op.type === 'set_selection');
       if (sendOps.length) {
         sendUpdate('send ops', { noteID: props.currentNoteID, ops: sendOps });
+      }
+      if (cursorOps.length) {
+        sendUpdate('send cursor', { noteID: props.currentNoteID, ops: cursorOps });
       }
     }
     hasChanged.current = false;
@@ -93,7 +110,7 @@ const NoteContent = props => {
       <div className="NoteContent">
         <Slate editor={editor} value={value} onChange={changeHandler}>
           <Toolbar />
-          <NoteEditor editor={editor} />
+          <NoteEditor editor={editor} decorate={decorate} />
         </Slate>
       </div>
     :
@@ -107,12 +124,14 @@ NoteContent.propTypes = {
   currentBody: PropTypes.array.isRequired,
   currentNoteID: PropTypes.string,
   updateNote: PropTypes.func.isRequired,
-  setStatus: PropTypes.func.isRequired
+  setStatus: PropTypes.func.isRequired,
+  isCollab: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   currentNoteID: state.notes.currentNoteID,
-  currentBody: state.notes.currentNoteID ? state.notes.notesByID[state.notes.currentNoteID].body : []
+  currentBody: state.notes.currentNoteID ? state.notes.notesByID[state.notes.currentNoteID].body : [],
+  isCollab: !state.notes.currentNoteID ? false : state.notes.notesByID[state.notes.currentNoteID].collaborators.length > 1
 });
 
 const mapDispatchToProps = dispatch => ({

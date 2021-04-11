@@ -122,7 +122,7 @@ const initSocket = server => {
       if (!socket.activeNoteID) { return; }
       socket.to(`editor-${socket.activeNoteID}`).emit('user inactive', {
         username: socket.username,
-        noteID: socket.activeNoteID
+        color: socket.userColor
       })
       socket.activeNoteID = null;
     });
@@ -131,6 +131,19 @@ const initSocket = server => {
       const { noteID, ops } = data;
       if (!noteID || !ops || !ops.length || noteID !== socket.activeNoteID) { return; }
       socket.to(`editor-${noteID}`).emit('receive ops', data);
+    });
+
+    socket.on('send cursor', data => {
+      const { noteID, ops, selection } = data;
+      if (!noteID || !ops || !ops.length || noteID !== socket.activeNoteID) { return; }
+
+      const cursorData = {
+        noteID,
+        op: ops[0],
+        username: socket.username,
+        color: socket.userColor
+      };
+      socket.to(`editor-${noteID}`).emit('receive cursor', cursorData);
     });
   });
 };

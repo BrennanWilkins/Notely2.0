@@ -81,3 +81,20 @@
   flex-direction: row;
   align-items: center;
 }
+.NoteContent__cursor, .NoteContent__caret {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  background: #ddd;
+}
+.NoteContent__cursor {
+  top: -2px;
+  transform: translateY(-100%);
+  font-size: 10px;
+  color: white;
+  white-space: nowrap;
+}
+.NoteContent__caret {
+  height: 1.4em;
+  width: 2px;
+}

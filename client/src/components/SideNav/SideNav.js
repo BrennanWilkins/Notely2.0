@@ -101,7 +101,10 @@ const SideNav = props => {
           <div className="SideNav__link" onClick={() => setShowInvitesModal(true)}>
             <div className="SideNav__innerLink">
               {peopleIcon}
-              <div>Invites</div>
+              <div>
+                Invites
+                {props.hasInvites && <span className="SideNav__notif" />}
+              </div>
             </div>
             {!props.sideNavShown && <Tooltip position="right">Invites</Tooltip>}
           </div>
@@ -139,12 +142,14 @@ SideNav.propTypes = {
   setShowTrash: PropTypes.func.isRequired,
   tags: PropTypes.array.isRequired,
   showNotesByTag: PropTypes.func.isRequired,
-  setListShown: PropTypes.func.isRequired
+  setListShown: PropTypes.func.isRequired,
+  hasInvites: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   sideNavShown: state.ui.sideNavShown,
-  tags: state.notes.allTags
+  tags: state.notes.allTags,
+  hasInvites: state.user.invites.length > 0
 });
 
 const mapDispatchToProps = dispatch => ({

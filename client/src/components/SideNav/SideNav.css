@@ -130,3 +130,12 @@
     z-index: 10;
   }
 }
+.SideNav__notif {
+  display: inline-block;
+  background: orange;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-left: 8px;
+  vertical-align: middle;
+}

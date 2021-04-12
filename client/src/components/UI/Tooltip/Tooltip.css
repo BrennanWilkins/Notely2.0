@@ -25,7 +25,8 @@
 .NoteListHeader__sortBtn:hover .Tooltip,
 .NoteMenu__btn:hover .Tooltip,
 .NoteMenu__optionBtn:hover .Tooltip,
-.Avatar:hover .Tooltip {
+.Avatar:hover .Tooltip,
+.SearchBar:hover .Tooltip {
   opacity: 1;
   transform: scale(1);
   transition: opacity 250ms 450ms, transform 250ms 450ms;

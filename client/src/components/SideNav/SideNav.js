@@ -8,6 +8,7 @@ import { toggleSideNav, setShowTrash, showNotesByTag, setListShown } from '../..
 import SettingsModal from '../SettingsModal/SettingsModal';
 import Tooltip from '../UI/Tooltip/Tooltip';
 import InvitesModal from '../InvitesModal/InvitesModal';
+import SearchBar from '../SearchBar/SearchBar';
 
 const SideNav = props => {
   const [showSettings, setShowSettings] = useState(false);
@@ -77,6 +78,7 @@ const SideNav = props => {
           <div>Notely</div>
         </div>
         <div className="SideNav__container">
+          <SearchBar sideNavShown={props.sideNavShown} toggleSideNav={props.toggleSideNav} />
           <div className="SideNav__link" onClick={() => toggleTrashHandler(false)}>
             <div className="SideNav__innerLink">
               {notesIcon}

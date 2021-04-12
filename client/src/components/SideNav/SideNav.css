@@ -70,10 +70,12 @@
   font-size: 20px;
   margin-left: 20px;
 }
-.SideNav--contract .SideNav__title, .SideNav--contract .SideNav__innerLink {
+.SideNav--contract .SideNav__title,
+.SideNav--contract .SideNav__innerLink {
   justify-content: center;
 }
-.SideNav--contract .SideNav__innerLink svg, .SideNav--contract .SideNav__title svg {
+.SideNav--contract .SideNav__innerLink svg,
+.SideNav--contract .SideNav__title svg {
   margin: 0;
 }
 .SideNav__toggleTagBtn {

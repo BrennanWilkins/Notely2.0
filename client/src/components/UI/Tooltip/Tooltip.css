@@ -16,13 +16,13 @@
   cursor: default;
   pointer-events: none;
   transition: opacity 250ms, transform 250ms;
-  z-index: 3;
+  z-index: 4;
 }
 .SideNav__link:hover .Tooltip,
 .ToggleSideNavBtn:hover .Tooltip,
 .Toolbar__btn:hover .Tooltip,
-.NoteList__addBtn:hover .Tooltip,
-.NoteList__sortBtn:hover .Tooltip,
+.NoteListHeader__addBtn:hover .Tooltip,
+.NoteListHeader__sortBtn:hover .Tooltip,
 .NoteMenu__btn:hover .Tooltip,
 .NoteMenu__optionBtn:hover .Tooltip,
 .Avatar:hover .Tooltip {

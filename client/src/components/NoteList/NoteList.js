@@ -4,34 +4,14 @@ import PropTypes from 'prop-types';
 import { pinIcon, tagIcon, trashIcon } from '../UI/icons';
 import { connect } from 'react-redux';
 import { createNote, showNote, pinNote, unpinNote } from '../../store/actions';
-import { Node } from 'slate';
 import NoteListHeader from '../NoteListHeader/NoteListHeader';
-
-const serialize = nodes => {
-  let txt, title;
-  if (!nodes || !nodes.length) {
-    txt = '';
-    title = 'New Note';
-  } else {
-    let arr = nodes.map(n => Node.string(n)).filter(n => n !== '');
-    title = arr[0] || 'New Note';
-    txt = arr.slice(1) || '';
-  }
-
-  let body = (
-    <>
-      <div>{title}</div>
-      {txt}
-    </>
-  );
-  return { title, body };
-};
+import { serializeToTitle } from '../../utils/slateHelpers';
 
 const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType) => {
   return notes.map(noteID => ({
     noteID,
     isPinned: trashShown ? false : pinnedNotes.includes(noteID),
-    ...serialize(notesByID[noteID].body)
+    ...serializeToTitle(notesByID[noteID].body)
   })).sort((a,b) => {
     if (a.isPinned && b.isPinned) {
       return pinnedNotes.indexOf(b) - pinnedNotes.indexOf(a);

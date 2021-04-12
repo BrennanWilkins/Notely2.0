@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
+import { serializeToText } from '../../utils/slateHelpers';
 
 const initialState = {
   notesByID: {},
@@ -11,7 +12,8 @@ const initialState = {
   allTags: [],
   filteredNoteIDs: [],
   shownTag: null,
-  collabsByName: {}
+  collabsByName: {},
+  searchQuery: ''
 };
 
 const reducer = (state  = initialState, action) => {
@@ -39,6 +41,7 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.SET_USER_OFFLINE: return setUserOffline(state, action);
     case actionTypes.SET_USER_ACTIVE: return setUserActive(state, action);
     case actionTypes.SET_USER_INACTIVE: return setUserInactive(state, action);
+    case actionTypes.SET_SEARCH_QUERY: return setSearchQuery(state, action);
     default: return state;
   }
 };
@@ -106,7 +109,8 @@ const createNote = (state, { payload: { note, username } }) => {
     currentNoteID: note._id,
     changesSaved: true,
     shownTag: null,
-    filteredNoteIDs: state.filteredNoteIDs.length ? [] : state.filteredNoteIDs
+    filteredNoteIDs: state.filteredNoteIDs.length ? [] : state.filteredNoteIDs,
+    searchQuery: ''
   };
 };
 
@@ -161,7 +165,8 @@ const setShowTrash = (state, action) => {
     currentNoteID: (action.bool ? state.trashIDs[0] : state.noteIDs[0]) || null,
     changesSaved: true,
     shownTag: null,
-    filteredNoteIDs: state.filteredNoteIDs.length ? [] : state.filteredNoteIDs
+    filteredNoteIDs: state.filteredNoteIDs.length ? [] : state.filteredNoteIDs,
+    searchQuery: ''
   };
 };
 
@@ -449,6 +454,38 @@ const setUserInactive = (state, { payload: { username, color } }) => {
         isActive: false
       }
     }
+  };
+};
+
+const setSearchQuery = (state, { query }) => {
+  if (query === state.searchQuery) { return state; }
+
+  if (!query) {
+    return {
+      ...state,
+      searchQuery: '',
+      currentNoteID: (
+        state.shownTag ? state.filteredNoteIDs[0] :
+        state.trashShown ? state.trashIDs[0] :
+        state.noteIDs[0]
+      ) || null
+    };
+  }
+
+  let filteredNoteIDs = (
+    state.shownTag ? state.filteredNoteIDs :
+    state.trashShown ? state.trashIDs
+    : state.noteIDs
+  );
+
+  filteredNoteIDs = filteredNoteIDs.filter(id => (
+    serializeToText(state.notesByID[id].body).includes(query)
+  ));
+
+  return {
+    ...state,
+    searchQuery: query,
+    currentNoteID: filteredNoteIDs[0] || null
   };
 };
 

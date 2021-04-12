@@ -90,3 +90,5 @@ export const rejectInvite = noteID => dispatch => {
   sendUpdate('put/note/invite/reject', { noteID });
   dispatch({ type: actionTypes.REJECT_INVITE, noteID });
 };
+
+export const setSearchQuery = query => ({ type: actionTypes.SET_SEARCH_QUERY, query });

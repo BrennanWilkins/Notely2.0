@@ -32,6 +32,7 @@ export const SET_USER_ONLINE = 'SET_USER_ONLINE';
 export const SET_USER_OFFLINE = 'SET_USER_OFFLINE';
 export const SET_USER_ACTIVE = 'SET_USER_ACTIVE';
 export const SET_USER_INACTIVE = 'SET_USER_INACTIVE';
+export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY';
 
 // user actionTypes
 export const ADD_NEW_INVITE = 'ADD_NEW_INVITE';

@@ -1,17 +1,17 @@
 import React, { useMemo } from 'react';
 import './NoteList.css';
 import PropTypes from 'prop-types';
-import { pinIcon, tagIcon, trashIcon } from '../UI/icons';
+import { pinIcon, tagIcon, trashIcon, searchIcon } from '../UI/icons';
 import { connect } from 'react-redux';
 import { createNote, showNote, pinNote, unpinNote } from '../../store/actions';
 import NoteListHeader from '../NoteListHeader/NoteListHeader';
-import { serializeToTitle } from '../../utils/slateHelpers';
+import { serializeBody } from '../../utils/slateHelpers';
 
-const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType) => {
-  return notes.map(noteID => ({
+const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType, searchQuery) => {
+  let formatted = notes.map(noteID => ({
     noteID,
     isPinned: trashShown ? false : pinnedNotes.includes(noteID),
-    ...serializeToTitle(notesByID[noteID].body)
+    ...serializeBody(notesByID[noteID].body, searchQuery)
   })).sort((a,b) => {
     if (a.isPinned && b.isPinned) {
       return pinnedNotes.indexOf(b) - pinnedNotes.indexOf(a);
@@ -29,6 +29,12 @@ const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType) => {
       default: return 0;
     }
   });
+
+  if (searchQuery) {
+    formatted = formatted.filter(note => note.matchesSearch);
+  }
+
+  return formatted;
 };
 
 const NoteList = props => {
@@ -37,19 +43,24 @@ const NoteList = props => {
   };
 
   const formattedNotes = useMemo(() => {
-    return formatAndSort(props.noteIDs, props.pinnedNotes, props.notesByID, props.trashShown, props.sortType);
-  }, [props.noteIDs, props.pinnedNotes, props.notesByID, props.trashShown, props.sortType])
+    return formatAndSort(props.noteIDs, props.pinnedNotes, props.notesByID, props.trashShown, props.sortType, props.searchQuery);
+  }, [props.noteIDs, props.pinnedNotes, props.notesByID, props.trashShown, props.sortType, props.searchQuery]);
 
   return (
     <div className={`NoteList ${props.listShown ? 'NoteList--show' : 'NoteList--hide'}`}>
       <NoteListHeader
         createNote={props.createNote}
         trashShown={props.trashShown}
-        noteCount={props.noteIDs.length}
+        noteCount={formattedNotes.length}
         shownTag={props.shownTag}
       />
+      {(!!props.searchQuery.length && !!formattedNotes.length) &&
+        <div className="NoteList__searchHeader">
+          {searchIcon} Search results for <div>{props.searchQuery}</div>
+        </div>
+      }
       <div className="NoteList__notes">
-        {props.noteIDs.length ?
+        {formattedNotes.length ?
           formattedNotes.map(note => (
             <div
               key={note.noteID}
@@ -70,11 +81,31 @@ const NoteList = props => {
           :
           <div className="NoteList__noNotes">
             {
-              props.shownTag ?
+              (!!props.searchQuery && props.shownTag) ?
+                <>
+                  {searchIcon}
+                  <div className="NoteList__noNotesText">
+                    No search results found for
+                    <div>{props.searchQuery}</div>
+                    for notes tagged
+                    <div>{props.shownTag}</div>
+                  </div>
+                </>
+              : !!props.searchQuery ?
+                <>
+                  {searchIcon}
+                  <div className="NoteList__noNotesText">
+                    No search results found for
+                    <div>{props.searchQuery}</div>
+                  </div>
+                </>
+              : props.shownTag ?
                 <>
                   {tagIcon}
-                  No notes tagged
-                  <div className="NoteList__noNotesTag">{props.shownTag}</div>
+                  <div className="NoteList__noNotesText">
+                    No notes tagged
+                    <div>{props.shownTag}</div>
+                  </div>
                 </>
               : props.trashShown ?
                 <>
@@ -108,7 +139,8 @@ NoteList.propTypes = {
   pinNote: PropTypes.func.isRequired,
   unpinNote: PropTypes.func.isRequired,
   sortType: PropTypes.string.isRequired,
-  shownTag: PropTypes.string
+  shownTag: PropTypes.string,
+  searchQuery: PropTypes.string
 };
 
 const mapStateToProps = state => ({
@@ -116,6 +148,7 @@ const mapStateToProps = state => ({
     state.notes.filteredNoteIDs :
     state.notes.trashShown ? state.notes.trashIDs :
     state.notes.noteIDs,
+  searchQuery: state.notes.searchQuery,
   notesByID: state.notes.notesByID,
   currentNoteID: state.notes.currentNoteID,
   trashShown: state.notes.trashShown,

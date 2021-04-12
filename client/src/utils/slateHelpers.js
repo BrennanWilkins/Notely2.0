@@ -5,8 +5,9 @@ export const serializeToText = nodes => {
   return nodes.map(n => Node.string(n)).join('');
 };
 
-export const serializeToTitle = nodes => {
+export const serializeBody = (nodes, searchQuery) => {
   let txt, title;
+  let matchesSearch = true;
   if (!nodes || !nodes.length) {
     txt = '';
     title = 'New Note';
@@ -14,6 +15,9 @@ export const serializeToTitle = nodes => {
     let arr = nodes.map(n => Node.string(n)).filter(n => n !== '');
     title = arr[0] || 'New Note';
     txt = arr.slice(1) || '';
+    if (searchQuery) {
+      matchesSearch = arr.join('').includes(searchQuery);
+    }
   }
 
   let body = (
@@ -22,5 +26,5 @@ export const serializeToTitle = nodes => {
       {txt}
     </>
   );
-  return { title, body };
+  return { title, body, matchesSearch };
 };

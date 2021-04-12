@@ -39,6 +39,7 @@
   background: rgb(165,165,165);
   color: black;
   cursor: pointer;
+  margin-left: 4px;
 }
 .SearchBar__clear--active {
   display: flex;

@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './SearchBar.css';
 import PropTypes from 'prop-types';
 import { searchIcon, xIcon } from '../UI/icons';
 import Tooltip from '../UI/Tooltip/Tooltip';
+import { connect } from 'react-redux';
+import { setSearchQuery } from '../../store/actions';
 
 const SearchBar = props => {
   const [searchVal, setSearchVal] = useState('');
@@ -17,7 +19,20 @@ const SearchBar = props => {
 
   const clearSearch = () => {
     setSearchVal('');
+    props.setSearchQuery('');
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      props.setSearchQuery(searchVal);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [searchVal]);
+
+  useEffect(() => {
+    setSearchVal(props.searchQuery);
+  }, [props.searchQuery]);
 
   return (
     <div
@@ -30,7 +45,7 @@ const SearchBar = props => {
         value={searchVal}
         onChange={e => setSearchVal(e.target.value)}
         className="SearchBar__input"
-        placeholder="Search notes or tags"
+        placeholder="Search Notes"
       />
       <div
         className={`SearchBar__clear ${searchVal ? 'SearchBar__clear--active' : ''}`}
@@ -45,7 +60,17 @@ const SearchBar = props => {
 
 SearchBar.propTypes = {
   sideNavShown: PropTypes.bool.isRequired,
-  toggleSideNav: PropTypes.func.isRequired
+  toggleSideNav: PropTypes.func.isRequired,
+  setSearchQuery: PropTypes.func.isRequired,
+  searchQuery: PropTypes.string.isRequired
 };
 
-export default SearchBar;
+const mapStateToProps = state => ({
+  searchQuery: state.notes.searchQuery
+});
+
+const mapDispatchToProps = dispatch => ({
+  setSearchQuery: query => dispatch(setSearchQuery(query))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);

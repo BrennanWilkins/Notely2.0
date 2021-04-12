@@ -11,45 +11,11 @@
   align-items: center;
   margin-bottom: 10px;
 }
-.ShareModal__form button {
-  border-radius: 3px;
-  border: 0;
-  outline: 0;
-  background: rgb(var(--blue));
-  color: white;
-  cursor: pointer;
-  transition: background 250ms;
-  font-size: 15px;
-  padding: 8px;
-}
-.ShareModal__form button:hover {
-  background: rgb(var(--blue2));
-}
-.ShareModal__form button:active {
-  background: rgb(var(--blue3));
-}
-.ShareModal__form button:disabled {
-  background: rgb(200,200,200);
-}
 .ShareModal__form input {
-  box-sizing: border-box;
-  border-radius: 3px;
-  border: 2px solid #ddd;
   padding: 7px;
-  outline: none;
-  transition: border 250ms;
   margin-right: 5px;
   width: 250px;
-}
-.ShareModal__form input:hover {
-  background: rgb(252,252,252);
-}
-.ShareModal__form input:focus {
-  background: white;
-  border: 2px solid rgb(var(--blue));
-}
-.ShareModal__form input::placeholder {
-  color: rgb(150,150,150);
+  font-size: 14px;
 }
 @media (max-width: 420px) {
   .ShareModal__form {

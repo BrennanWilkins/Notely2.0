@@ -39,7 +39,7 @@ const ForgotPage = () => {
       <form onSubmit={submitHandler} className="AuthPages__form">
         <input className="AuthPages__input" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
         <div className={showMsg ? 'AuthPages__msg--show' : 'AuthPages__msg--hide'}>{msg}</div>
-        <button type="Submit" className="AuthPages__submitBtn" disabled={isLoading}>Send Link</button>
+        <button type="Submit" className="Btn BlueBtn AuthPages__submitBtn" disabled={isLoading}>Send Link</button>
       </form>
       <div className="AuthPages__link"><Link to="/login">Back to login</Link></div>
     </AuthContainer>

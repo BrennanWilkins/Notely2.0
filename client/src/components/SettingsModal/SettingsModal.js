@@ -18,7 +18,10 @@ const SettingsModal = props => {
   };
 
   return (
-    <ModalContainer close={props.close} title={showChangePass ? 'Change my password' : showDeleteAccnt ? 'Delete my account' : 'Settings'}>
+    <ModalContainer
+      close={props.close}
+      title={showChangePass ? 'Change my password' : showDeleteAccnt ? 'Delete my account' : 'Settings'}
+    >
       {(showChangePass || showDeleteAccnt) && <BackBtn onClick={backHandler} />}
       {
         showChangePass ?
@@ -32,9 +35,15 @@ const SettingsModal = props => {
             <div className="SettingsModal__info">{props.username}</div>
             <div className="SettingsModal__subTitle">Email</div>
             <div className="SettingsModal__info">{props.email}</div>
-            <button className="SettingsModal__logoutBtn" onClick={props.logout}>Log Out</button>
-            <div className="SettingsModal__btn" onClick={() => setShowChangePass(true)}>Change my password</div>
-            <div className="SettingsModal__btn" onClick={() => setShowDeleteAccnt(true)}>Delete my account</div>
+            <button className="Btn BlueBtn SettingsModal__logoutBtn" onClick={props.logout}>
+              Log Out
+            </button>
+            <div className="SettingsModal__btn" onClick={() => setShowChangePass(true)}>
+              Change my password
+            </div>
+            <div className="SettingsModal__btn" onClick={() => setShowDeleteAccnt(true)}>
+              Delete my account
+            </div>
           </>
       }
     </ModalContainer>

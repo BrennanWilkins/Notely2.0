@@ -52,11 +52,12 @@ const ShareModal = props => {
       </div>
       <form onSubmit={sendInviteHandler} className="ShareModal__form">
         <input
+          className="Input"
           value={userInput}
           onChange={inputHandler}
           placeholder="Username or email"
         />
-        <button type="submit" disabled={isLoading}>Send Invite</button>
+        <button type="submit" disabled={isLoading} className="Btn BlueBtn">Send Invite</button>
       </form>
       <div
         className={`

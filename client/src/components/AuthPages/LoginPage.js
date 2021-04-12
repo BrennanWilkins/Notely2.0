@@ -46,7 +46,7 @@ const LoginPage = props => {
         <input className="AuthPages__input" value={loginName} onChange={e => setLoginName(e.target.value)} placeholder="Username or email" />
         <PassInput className="AuthPages__passInput" value={pass} onChange={e => setPass(e.target.value)} placeholder="Password" />
         <div className={showMsg ? 'AuthPages__msg--show' : 'AuthPages__msg--hide'}>{msg}</div>
-        <button type="Submit" className="AuthPages__submitBtn" disabled={isLoading}>Log in</button>
+        <button type="Submit" className="Btn BlueBtn AuthPages__submitBtn" disabled={isLoading}>Log in</button>
       </form>
       <label className="AuthPages__rememberMe">
         <input type="checkbox" checked={rememberUser} onChange={() => setRememberUser(prev => !prev)} />

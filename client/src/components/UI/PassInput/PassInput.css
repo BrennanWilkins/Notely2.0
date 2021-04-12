@@ -4,22 +4,7 @@
 .PassInput__input {
   display: block;
   width: 100%;
-  box-sizing: border-box;
-  border-radius: 3px;
-  border: 2px solid #ddd;
   padding: 6px 28px 6px 7px;
-  outline: none;
-  transition: border 250ms;
-}
-.PassInput__input:hover {
-  background: rgb(252,252,252);
-}
-.PassInput__input:focus {
-  background: white;
-  border: 2px solid rgb(var(--blue));
-}
-.PassInput__input::placeholder {
-  color: rgb(150,150,150);
 }
 .PassInput__eye {
   position: absolute;

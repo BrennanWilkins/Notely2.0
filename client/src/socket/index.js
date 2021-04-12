@@ -7,7 +7,6 @@ import * as actionTypes from '../store/actions/actionTypes';
 let socket = null;
 
 export const initSocket = () => {
-  if (socket) { return; }
   const newSocket = io(baseURL, {
     query: { token: axios.defaults.headers.common['x-auth-token'] }
   });

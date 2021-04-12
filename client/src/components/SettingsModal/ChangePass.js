@@ -68,8 +68,19 @@ const ChangePass = () => {
           <PassInput value={confirmPass} onChange={confPassHandler} />
         </label>
       </div>
-      <button className="SettingsModal__saveBtn" disabled={isLoading} onClick={changePassHandler}>Save</button>
-      <div className={`SettingsModal__msg ${!showMsg ? 'SettingsModal__msg--hide' : ''}`}>{msg}</div>
+      <button
+        className="Btn BlueBtn SettingsModal__saveBtn"
+        disabled={isLoading}
+        onClick={changePassHandler}
+      >
+        Save
+      </button>
+      <div className={`
+        SettingsModal__msg
+        ${!showMsg ? 'SettingsModal__msg--hide' : ''}
+      `}>
+        {msg}
+      </div>
     </div>
   );
 };

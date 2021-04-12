@@ -22,7 +22,7 @@ const NoteListHeader = props => {
           {props.trashShown ? 'Trash' : props.shownTag || 'All Notes'}
         </div>
         <button
-          className="NoteListHeader__addBtn"
+          className="BlueBtn NoteListHeader__addBtn"
           disabled={props.trashShown}
           onClick={props.createNote}
         >

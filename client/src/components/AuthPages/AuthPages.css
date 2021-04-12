@@ -28,24 +28,6 @@
   width: 100%;
   max-width: 350px;
   margin: 0 auto 20px;
-  padding: 8px;
-  border-radius: 3px;
-  border: 0;
-  outline: 0;
-  background: rgb(var(--blue));
-  color: white;
-  cursor: pointer;
-  transition: background 250ms;
-}
-.AuthPages__submitBtn:hover {
-  background: rgb(var(--blue2));
-}
-.AuthPages__submitBtn:active {
-  background: rgb(var(--blue3));
-}
-.AuthPages__submitBtn:disabled {
-  background: rgb(200,200,200);
-  cursor: default;
 }
 .AuthPages__rememberMe {
   margin: 0 0 30px;

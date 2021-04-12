@@ -10,46 +10,24 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.SettingsModal__saveBtn, .SettingsModal__logoutBtn, .SettingsModal__deleteBtn {
-  display: block;
-  border-radius: 3px;
-  border: 0;
-  outline: 0;
-  background: rgb(var(--blue));
-  color: white;
-  cursor: pointer;
-  transition: background 250ms;
-}
 .SettingsModal__saveBtn {
-  font-size: 15px;
+  display: block;
   margin-top: 15px;
   padding: 8px 12px;
 }
 .SettingsModal__deleteBtn {
-  background: red;
+  display: block;
   margin: auto;
   width: 100%;
   font-size: 14px;
   padding: 8px 12px;
 }
 .SettingsModal__logoutBtn {
+  display: block;
   font-size: 16px;
   width: 100%;
   max-width: 200px;
   margin: 20px auto 30px;
-  padding: 8px 6px;
-}
-.SettingsModal__logoutBtn:hover, .SettingsModal__saveBtn:hover {
-  background: rgb(var(--blue2));
-}
-.SettingsModal__logoutBtn:active, .SettingsModal__saveBtn:active {
-  background: rgb(var(--blue3));
-}
-.SettingsModal__deleteBtn:hover {
-  background: rgb(228, 0, 0);
-}
-.SettingsModal__deleteBtn:active {
-  background: rgb(200, 0, 0);
 }
 .SettingsModal__btn {
   margin: 20px auto;
@@ -81,10 +59,6 @@
   width: 100%;
   margin-left: 2px;
   padding-bottom: 2px;
-}
-.SettingsModal button:disabled {
-  background: rgb(200,200,200);
-  cursor: default;
 }
 .SettingsModal__msg {
   font-size: 15px;

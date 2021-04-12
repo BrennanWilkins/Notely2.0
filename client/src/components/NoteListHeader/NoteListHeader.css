@@ -28,15 +28,8 @@
 .NoteListHeader__addBtn {
   font-size: 30px;
   color: white;
-  background:  rgb(var(--blue));
   padding: 0;
   border-radius: 50%;
-}
-.NoteListHeader__addBtn:hover {
-  background: rgb(var(--blue2));
-}
-.NoteListHeader__addBtn:active {
-  background: rgb(var(--blue3));
 }
 .NoteListHeader__addBtn:disabled {
   background: rgb(210,210,210);

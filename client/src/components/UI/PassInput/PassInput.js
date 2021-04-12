@@ -9,7 +9,7 @@ const PassInput = props => {
   return (
     <div className={`PassInput ${props.className || ''}`}>
       <input
-        className="PassInput__input"
+        className="Input PassInput__input"
         type={showPass ? 'text' : 'password'}
         value={props.value}
         onChange={props.onChange}

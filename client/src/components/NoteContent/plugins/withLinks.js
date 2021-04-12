@@ -143,9 +143,9 @@ const LinkModal = ({ submit, close, btnRef }) => {
       <form onSubmit={e => submit(e, url)}>
         <label>
           Link URL
-          <input value={url} onChange={e => setUrl(e.target.value)} autoFocus />
+          <input className="Input" value={url} onChange={e => setUrl(e.target.value)} autoFocus />
         </label>
-        <button className="InsertLinkModal__btn" type="submit">Insert Link</button>
+        <button type="submit" className="Btn BlueBtn">Insert Link</button>
       </form>
     </div>
   );

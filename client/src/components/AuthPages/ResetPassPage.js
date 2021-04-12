@@ -46,7 +46,7 @@ const ResetPassPage = () => {
         <PassInput className="AuthPages__passInput" value={newPass} onChange={e => setNewPass(e.target.value)} placeholder="Password" />
         <PassInput className="AuthPages__passInput" value={confirmPass} onChange={e => setConfirmPass(e.target.value)} placeholder="Confirm Password" />
         <div className={showMsg ? 'AuthPages__msg--show' : 'AuthPages__msg--hide'}>{msg}</div>
-        <button type="Submit" className="AuthPages__submitBtn" disabled={isLoading}>Reset Password</button>
+        <button type="Submit" className="Btn BlueBtn AuthPages__submitBtn" disabled={isLoading}>Reset Password</button>
       </form>
       <div className="AuthPages__link"><Link to="/login">Back to login</Link></div>
     </AuthContainer>

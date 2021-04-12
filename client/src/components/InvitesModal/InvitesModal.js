@@ -22,9 +22,22 @@ const InvitesModal = props => {
               <div className="InvitesModal__invite">
                 <div className="InvitesModal__inviter">{inviter}</div>
                 <div className="InvitesModal__actions">
-                  <button className="InvitesModal__accBtn" onClick={() => props.acceptInvite(noteID)}>Accept</button>
-                  <button className="InvitesModal__rejBtn" onClick={() => props.rejectInvite(noteID)}>Reject</button>
-                  <button className="InvitesModal__prevBtn" onClick={() => setShownPreview(noteID)}>
+                  <button
+                    className="Btn BlueBtn InvitesModal__accBtn"
+                    onClick={() => props.acceptInvite(noteID)}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="Btn BlueBtn InvitesModal__rejBtn"
+                    onClick={() => props.rejectInvite(noteID)}
+                  >
+                    Reject
+                  </button>
+                  <button
+                    className="Btn BlueBtn InvitesModal__prevBtn"
+                    onClick={() => setShownPreview(noteID)}
+                  >
                     Preview Note{eyeIcon}
                   </button>
                 </div>

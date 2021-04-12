@@ -34,7 +34,13 @@ const DeleteAccnt = props => {
         <div className="SettingsModal__section">
           <PassInput value={pass} onChange={passHandler} />
         </div>
-        <button className="SettingsModal__deleteBtn" disabled={isLoading || !pass} onClick={deleteHandler}>DELETE MY ACCOUNT</button>
+        <button
+          className="Btn RedBtn SettingsModal__deleteBtn"
+          disabled={isLoading || !pass}
+          onClick={deleteHandler}
+        >
+          DELETE MY ACCOUNT
+        </button>
         <div className={`SettingsModal__msg ${!showMsg ? 'SettingsModal__msg--hide' : ''}`}>{msg}</div>
       </div>
     </>

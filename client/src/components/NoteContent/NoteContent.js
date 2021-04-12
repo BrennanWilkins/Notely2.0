@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import './NoteContent.css';
 import PropTypes from 'prop-types';
 import { withReact, Slate } from 'slate-react';
@@ -14,6 +14,7 @@ import { OP_TYPES } from './constants';
 import withChecklists from './plugins/withChecklists';
 import useCursors from './plugins/useCursors';
 import withLinks from './plugins/withLinks';
+import useSearch from './plugins/useSearch';
 
 const NoteContent = props => {
   const [value, setValue] = useState(props.body);
@@ -22,8 +23,13 @@ const NoteContent = props => {
   const hasChanged = useRef(false);
   const wasRemote = useRef(false);
   const prevNoteID = useRef(null);
-  const { decorate, cursorHandler, removeCursor, resetCursors } = useCursors();
+  const { decorate: cursorDecorate, cursorHandler, removeCursor, resetCursors } = useCursors();
   const oldSelection = useRef(null);
+  const { decorate: searchDecorate } = useSearch(props.searchQuery);
+
+  const decorate = useCallback((...args) => {
+    return [...cursorDecorate(...args), ...searchDecorate(...args)];
+  }, [cursorDecorate, searchDecorate]);
 
   useEffect(() => {
     setValue(props.body);
@@ -127,13 +133,15 @@ NoteContent.propTypes = {
   noteID: PropTypes.string,
   updateNote: PropTypes.func.isRequired,
   setStatus: PropTypes.func.isRequired,
-  isCollab: PropTypes.bool.isRequired
+  isCollab: PropTypes.bool.isRequired,
+  searchQuery: PropTypes.string
 };
 
 const mapStateToProps = state => ({
   noteID: state.notes.currentNoteID,
   body: state.notes.currentNoteID ? state.notes.notesByID[state.notes.currentNoteID].body : [],
-  isCollab: !state.notes.currentNoteID ? false : state.notes.notesByID[state.notes.currentNoteID].collaborators.length > 1
+  isCollab: !state.notes.currentNoteID ? false : state.notes.notesByID[state.notes.currentNoteID].collaborators.length > 1,
+  searchQuery: state.notes.searchQuery
 });
 
 const mapDispatchToProps = dispatch => ({

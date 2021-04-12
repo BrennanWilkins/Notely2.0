@@ -3,7 +3,7 @@
   height: 260px;
   position: fixed;
   z-index: 100;
-  top: calc(50vh - 260px);
+  top: max(calc(50vh - 260px), 10px);
   left: calc(50vw - 130px);
 }
 .Spinner__logo {

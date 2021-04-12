@@ -49,6 +49,7 @@
   position: sticky;
   top: 0;
   background: white;
+  z-index: 2;
 }
 .Toolbar__btn {
   padding: 5px;
@@ -99,7 +100,6 @@
   width: 2px;
 }
 .InsertLinkModal {
-  position: absolute;
   background: white;
   width: 300px;
   border-radius: 4px;
@@ -107,10 +107,9 @@
   box-shadow: 0 2px 6px -2px rgba(0,0,0,0.15);
   z-index: 3;
   border: 1px solid rgb(228, 228, 228);
-  top: 60px;
-  left: calc(50% - 150px);
   font-size: 15px;
   padding: 20px 10px 10px;
+  position: fixed;
 }
 .InsertLinkModal .CloseBtn {
   top: 5px;
@@ -139,6 +138,8 @@
 .InsertLinkModal label {
   font-size: 13px;
   font-weight: 500;
+  color: rgb(120,120,120);
+  margin-left: 2px;
 }
 .InsertLinkModal input {
   box-sizing: border-box;
@@ -147,7 +148,7 @@
   padding: 6px;
   outline: none;
   transition: border 250ms;
-  margin: 3px 0 10px;
+  margin: 2px 0 10px;
   width: 250px;
 }
 .InsertLinkModal input:hover {

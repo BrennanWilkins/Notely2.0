@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import isUrl from '../../../utils/isUrl';
 import { useSlate } from 'slate-react';
 import { Transforms, Editor, Range, Element as SlateElement } from 'slate';
@@ -83,6 +83,7 @@ export const LinkButton = () => {
   const editor = useSlate();
   const [showModal, setShowModal] = useState(false);
   const selection = useRef(null);
+  const btnRef = useRef();
 
   const clickHandler = e => {
     selection.current = editor.selection;
@@ -102,6 +103,7 @@ export const LinkButton = () => {
   return (
     <>
       <div
+        ref={btnRef}
         className={`Toolbar__btn ${isLinkActive(editor) ? 'Toolbar__btn--active' : ''}`}
         onMouseDown={clickHandler}
       >
@@ -112,16 +114,28 @@ export const LinkButton = () => {
         </Tooltip>
       </div>
       {showModal &&
-        <LinkModal submit={submitHandler} close={() => setShowModal(false)} />
+        <LinkModal btnRef={btnRef} submit={submitHandler} close={() => setShowModal(false)} />
       }
     </>
   );
 };
 
-const LinkModal = ({ submit, close }) => {
+const LinkModal = ({ submit, close, btnRef }) => {
   const modalRef = useRef();
   const [url, setUrl] = useState('');
   useModalToggle(modalRef, close);
+
+  useLayoutEffect(() => {
+    const btnRect = btnRef.current.getBoundingClientRect();
+    modalRef.current.style.top = btnRect.bottom + 7 + 'px';
+    let right = window.innerWidth - btnRect.right;
+    let left = btnRect.left;
+    if (left <= right) {
+      modalRef.current.style.left = left + 'px';
+    } else {
+      modalRef.current.style.right = right + 'px';
+    }
+  }, []);
 
   return (
     <div className="InsertLinkModal" ref={modalRef}>

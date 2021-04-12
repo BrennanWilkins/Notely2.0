@@ -9,7 +9,7 @@
   cursor: pointer;
   position: relative;
   margin: 3px;
-  z-index: 2;
+  z-index: 3;
 }
 .Avatar__symb {
   position: absolute;

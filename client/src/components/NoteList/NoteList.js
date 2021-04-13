@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { createNote, showNote, pinNote, unpinNote } from '../../store/actions';
 import NoteListHeader from '../NoteListHeader/NoteListHeader';
 import { serializeBody } from '../../utils/slateHelpers';
+import Highlighter from 'react-highlight-words';
 
 const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType, searchQuery) => {
   let formatted = notes.map(noteID => ({
@@ -75,7 +76,29 @@ const NoteList = props => {
                   {pinIcon}
                 </span>
               }
-              {note.body}
+              {(props.searchQuery && note.title)  ?
+                <>
+                  <Highlighter
+                    className="NoteList__noteTitle"
+                    highlightClassName="NoteList__note--hl"
+                    searchWords={[props.searchQuery]}
+                    textToHighlight={note.title}
+                  />
+                  {!!note.txt &&
+                    <Highlighter
+                      className="NoteList__noteSubTitle"
+                      highlightClassName="NoteList__note--hl"
+                      searchWords={[props.searchQuery]}
+                      textToHighlight={note.txt}
+                    />
+                  }
+                </>
+                :
+                <>
+                  <div className="NoteList__noteTitle">{note.title || 'New Note'}</div>
+                  <div className="NoteList__noteSubTitle">{note.txt}</div>
+                </>
+              }
             </div>
           ))
           :

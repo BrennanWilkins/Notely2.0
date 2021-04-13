@@ -6,25 +6,19 @@ export const serializeToText = nodes => {
 };
 
 export const serializeBody = (nodes, searchQuery) => {
-  let txt, title;
-  let matchesSearch = true;
   if (!nodes || !nodes.length) {
-    txt = '';
-    title = 'New Note';
-  } else {
-    let arr = nodes.map(n => Node.string(n)).filter(n => n !== '');
-    title = arr[0] || 'New Note';
-    txt = arr.slice(1) || '';
-    if (searchQuery) {
-      matchesSearch = arr.join('').includes(searchQuery);
-    }
+    return { title: '', txt: '', matchesSearch: false };
   }
 
-  let body = (
-    <>
-      <div>{title}</div>
-      {txt}
-    </>
-  );
-  return { title, body, matchesSearch };
+  let matchesSearch = false;
+  let arr = nodes.map(n => Node.string(n)).filter(n => n !== '');
+  let title = arr[0] || '';
+  let txt = arr.length > 1 ? arr.slice(1).join('') : '';
+  // truncate txt for faster search highlighting
+  txt = txt.length > 200 ? txt.slice(0, 200) : txt;
+  if (searchQuery) {
+    matchesSearch = arr.join('').includes(searchQuery);
+  }
+
+  return { title, txt, matchesSearch };
 };

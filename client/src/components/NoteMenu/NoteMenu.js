@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import './NoteMenu.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { expandIcon, contractIcon, trashIcon, shareIcon, pinIcon, arrowIcon } from '../UI/icons';
+import { expandIcon, contractIcon, trashIcon, shareIcon, pinIcon,
+  arrowIcon, publishIcon } from '../UI/icons';
 import { toggleFullscreen, trashNote, restoreNote, deleteNote,
   setListShown, pinNote, unpinNote } from '../../store/actions';
   import { selectNoteIsPinned, selectIsCollab } from '../../store/selectors';
@@ -10,9 +11,11 @@ import Tooltip from '../UI/Tooltip/Tooltip';
 import NoteStatus from './NoteStatus';
 import ShareModal from '../ShareModal/ShareModal';
 import Collaborators from './NoteCollaborators';
+import PublishModal from '../PublishModal/PublishModal';
 
 const NoteMenu = props => {
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showPublishModal, setShowPublishModal] = useState(false);
 
   const pinHandler = () => {
     props.noteIsPinned ?
@@ -55,6 +58,10 @@ const NoteMenu = props => {
                   {shareIcon}
                   <Tooltip position="down">Share</Tooltip>
                 </button>
+                <button className="NoteMenu__btn NoteMenu__iconBtn" onClick={() => setShowPublishModal(true)}>
+                  {publishIcon}
+                  <Tooltip position="down">Publish</Tooltip>
+                </button>
                 <button className="NoteMenu__btn NoteMenu__iconBtn" onClick={props.trashNote}>
                   {trashIcon}
                   <Tooltip position="down">Send to trash</Tooltip>
@@ -67,6 +74,7 @@ const NoteMenu = props => {
         {props.isCollab && <Collaborators />}
       </div>
       {showShareModal && <ShareModal close={() => setShowShareModal(false)} />}
+      {showPublishModal && <PublishModal close={() => setShowPublishModal(false)} />}
     </>
   );
 };

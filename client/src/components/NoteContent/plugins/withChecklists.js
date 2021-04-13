@@ -20,7 +20,7 @@ const withChecklists = editor => {
         const start = Editor.start(editor, path);
 
         if (Point.equals(selection.anchor, start)) {
-          const newProperties = { type: 'paragraph' };
+          const newProperties = { type: 'paragraph', checked: null };
           Transforms.setNodes(editor, newProperties, {
             match: n =>
               !Editor.isEditor(n) &&

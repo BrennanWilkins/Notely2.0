@@ -18,5 +18,5 @@
   color: rgb(115,115,115);
 }
 .PassInput__eye:hover {
-  color: rgb(50,50,50);
+  color: var(--darkerGray);
 }

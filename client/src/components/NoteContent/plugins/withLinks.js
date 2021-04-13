@@ -4,7 +4,6 @@ import { useSlate } from 'slate-react';
 import { Transforms, Editor, Range, Element as SlateElement } from 'slate';
 import { linkIcon } from '../../UI/icons';
 import Tooltip from '../../UI/Tooltip/Tooltip';
-import isHotkey from 'is-hotkey';
 import { CloseBtn } from '../../UI/Buttons/Buttons';
 import { useModalToggle } from '../../../utils/customHooks';
 
@@ -104,7 +103,7 @@ export const LinkButton = () => {
     <>
       <div
         ref={btnRef}
-        className={`Toolbar__btn ${isLinkActive(editor) ? 'Toolbar__btn--active' : ''}`}
+        className={`Toolbar__btn ${isLinkActive(editor) ? 'Toolbar__btn--hl' : ''}`}
         onMouseDown={clickHandler}
       >
         {linkIcon}

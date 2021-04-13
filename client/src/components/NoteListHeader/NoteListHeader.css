@@ -1,6 +1,6 @@
 .NoteListHeader {
   height: 90px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: var(--grayBorder);
   padding: 15px;
   box-sizing: border-box;
   display: flex;
@@ -51,7 +51,7 @@
 .NoteListHeader__count {
   margin-top: auto;
   font-size: 12.5px;
-  color: rgb(150,150,150);
+  color: var(--darkGray);
 }
 .NoteListHeader__titleText {
   padding: 0 10px;

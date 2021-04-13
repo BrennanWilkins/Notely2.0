@@ -39,7 +39,7 @@
   padding: 8px 0;
 }
 .SettingsModal__btn:hover {
-  background: rgb(240,240,240);
+  background: var(--lighterGray);
 }
 .SettingsModal__container {
   width: 100%;

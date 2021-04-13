@@ -51,7 +51,7 @@ const BlockButton = ({ format }) => {
   return (
     <div
       onMouseDown={clickHandler}
-      className={`Toolbar__btn ${isBlockActive(editor, format) ? 'Toolbar__btn--active' : ''}`}
+      className={`Toolbar__btn ${isBlockActive(editor, format) ? 'Toolbar__btn--hl' : ''}`}
     >
       {icon}
       <Tooltip position="down">{text1}<div>{text2}</div></Tooltip>
@@ -71,7 +71,7 @@ const MarkButton = ({ format }) => {
   return (
     <div
       onMouseDown={clickHandler}
-      className={`Toolbar__btn ${isMarkActive(editor, format) ? 'Toolbar__btn--active' : ''}`}
+      className={`Toolbar__btn ${isMarkActive(editor, format) ? 'Toolbar__btn--hl' : ''}`}
     >
       {icon}
       <Tooltip position="down">{text1}<div>{text2}</div></Tooltip>

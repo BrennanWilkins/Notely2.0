@@ -23,18 +23,18 @@
   word-wrap: break-word;
   max-width: calc(100% - 250px);
 }
-.InvitesModal__actions {
-  margin-left: auto;
+.InvitesModal__actions,
+.InvitesModal__actions button {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+.InvitesModal__actions {
+  margin-left: auto;
+}
 .InvitesModal__actions button {
   padding: 6px 8px;
   font-size: 13.5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   margin-left: 5px;
   white-space: nowrap;
 }

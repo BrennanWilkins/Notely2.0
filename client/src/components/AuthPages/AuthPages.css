@@ -9,7 +9,7 @@
   text-align: center;
 }
 .AuthContainer--dark {
-  background: rgb(245,245,245);
+  background: var(--lighterGray);
 }
 .AuthContainer__logo {
   font-size: 150px;
@@ -48,7 +48,7 @@
   color: rgb(var(--blue));
 }
 .AuthPages__link a:hover {
-  color: rgb(68, 106, 244);
+  color: rgb(var(--blue3));
 }
 .AuthPages__msg--show, .AuthPages__msg--hide {
   width: 100%;
@@ -72,7 +72,7 @@
   margin: 40px 0;
 }
 .SignupSuccess__mailIcon {
-  color: rgb(150,150,150);
+  color: var(--darkGray);
   font-size: 50px;
   display: flex;
   justify-content: center;
@@ -103,7 +103,7 @@
   box-shadow: 0 0 3px 0.5px rgba(var(--blue), 0.4);
 }
 .AuthPages__input::placeholder {
-  color: rgb(150,150,150);
+  color: var(--darkGray);
 }
 .AuthPages__passInput input {
   width: 100%;

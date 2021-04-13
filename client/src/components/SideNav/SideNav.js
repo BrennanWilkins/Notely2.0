@@ -120,16 +120,16 @@ const SideNav = props => {
             </div>
             {!props.sideNavShown && <Tooltip position="right">Tags</Tooltip>}
           </div>
-        </div>
-        <div
-          className={`SideNav__tags ${showTags ? 'SideNav__tags--show' : 'SideNav__tags--hide'}`}
-          style={{ maxHeight: showTags ? props.tags.length * 42 + 'px' : '0' }}
-        >
-          {props.tags.map(tag => (
-            <div className="SideNav__tag" key={tag} onClick={() => showNotesByTagHandler(tag)}>
-              {tag}
-            </div>
-          ))}
+          <div
+            className={`SideNav__tags ${showTags ? 'SideNav__tags--show' : 'SideNav__tags--hide'}`}
+            style={{ maxHeight: showTags ? props.tags.length * 42 + 'px' : '0' }}
+          >
+            {props.tags.map(tag => (
+              <div className="SideNav__tag" key={tag} onClick={() => showNotesByTagHandler(tag)}>
+                {tag}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       {showSettings && <SettingsModal close={() => setShowSettings(false)} />}

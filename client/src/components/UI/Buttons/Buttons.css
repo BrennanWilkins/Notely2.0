@@ -2,7 +2,7 @@
   position: absolute;
   cursor: pointer;
   border-radius: 4px;
-  color: rgb(50,50,50);
+  color: var(--darkerGray);
   transition: all 250ms;
   display: flex;
   justify-content: center;

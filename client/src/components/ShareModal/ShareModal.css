@@ -37,26 +37,25 @@
 .ShareModal__collabsTitle {
   padding-bottom: 5px;
   border-bottom: 1px solid rgb(230,230,230);
-  color: rgb(50,50,50);
+  color: var(--darkerGray);
   margin-bottom: 10px;
 }
 .ShareModal__collab {
   margin-bottom: 10px;
   text-align: left;
 }
+.ShareModal__user, .ShareModal__email {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .ShareModal__user {
   font-size: 15px;
-  color: rgb(50,50,50);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+  color: var(--darkerGray);
 }
 .ShareModal__email {
   font-size: 14px;
   color: rgb(100,100,100);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
 }
 .ShareModal__msg {
   font-size: 14px;
@@ -64,7 +63,7 @@
   padding: 5px 10px;
   box-sizing: border-box;
   transition: opacity 250ms;
-  color: rgb(50,50,50);
+  color: var(--darkerGray);
   max-height: 400px;
 }
 .ShareModal__msg--success {

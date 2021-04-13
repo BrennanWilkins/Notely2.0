@@ -2,7 +2,7 @@
   width: 100%;
   min-height: 90px;
   padding: 15px 15px 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: var(--grayBorder);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -73,7 +73,7 @@
   align-items: center;
   justify-content: space-between;
   font-size: 13px;
-  color: rgb(150,150,150);
+  color: var(--darkGray);
 }
 .NoteMenu__status {
   display: flex;

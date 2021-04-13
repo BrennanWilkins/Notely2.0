@@ -1,6 +1,6 @@
 .NoteListNote {
   height: 65px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: var(--grayBorder);
   box-sizing: border-box;
   cursor: pointer;
   position: relative;

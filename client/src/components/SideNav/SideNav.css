@@ -14,14 +14,13 @@
   overflow-y: auto;
   max-height: calc(100% - 95px);
 }
-.SideNav__container::-webkit-scrollbar-track {
+.SideNav__container::-webkit-scrollbar-track,
+.SideNav__container::-webkit-scrollbar {
   border-radius: 15px;
   background: rgb(59, 59, 59);
 }
 .SideNav__container::-webkit-scrollbar {
   width: 10px;
-  border-radius: 15px;
-  background: rgb(59, 59, 59);
 }
 .SideNav__container::-webkit-scrollbar-thumb {
   border-radius: 15px;
@@ -51,7 +50,7 @@
   position: relative;
 }
 .SideNav__innerLink {
-  color: rgb(238, 238, 238);
+  color: var(--lighterGray2);
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -112,7 +111,7 @@
   }
 }
 .SideNav__tag {
-  color: rgb(238, 238, 238);
+  color: var(--lighterGray2);
   padding: 10px 10px 10px 20px;
   max-width: 100%;
   box-sizing: border-box;

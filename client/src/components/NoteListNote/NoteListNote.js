@@ -43,8 +43,12 @@ const NoteListNote = props => {
         </>
         :
         <>
-          <div className="NoteListNote__title">{props.title || 'New Note'}</div>
-          <div className="NoteListNote__txt">{props.txt}</div>
+          <div className="NoteListNote__title">
+            {props.title || 'New Note'}
+          </div>
+          <div className="NoteListNote__txt">
+            {props.txt}
+          </div>
         </>
       }
     </div>

@@ -2,7 +2,7 @@
   width: 100%;
   box-sizing: border-box;
   background: rgb(252,252,252);
-  border-top: 1px solid rgb(240,240,240);
+  border-top: 1px solid var(--lighterGray2);
   padding: 15px;
 }
 .NoteTags__input {
@@ -48,7 +48,7 @@
   min-width: 20px;
   visibility: hidden;
   border-radius: 50%;
-  background: rgb(200,200,200);
+  background: var(--lightGray);
   cursor: pointer;
 }
 .NoteTags__tag:hover .NoteTags__deleteBtn {

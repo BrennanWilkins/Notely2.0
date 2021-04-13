@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import './NoteList.css';
 import PropTypes from 'prop-types';
-import { pinIcon, tagIcon, trashIcon, searchIcon } from '../UI/icons';
+import { tagIcon, trashIcon, searchIcon } from '../UI/icons';
 import { connect } from 'react-redux';
-import { createNote, showNote, pinNote, unpinNote } from '../../store/actions';
+import { createNote } from '../../store/actions';
 import NoteListHeader from '../NoteListHeader/NoteListHeader';
 import { serializeBody } from '../../utils/slateHelpers';
-import Highlighter from 'react-highlight-words';
+import NoteListNote from '../NoteListNote/NoteListNote';
 
 const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType, searchQuery) => {
   let formatted = notes.map(noteID => ({
@@ -39,10 +39,6 @@ const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType, sear
 };
 
 const NoteList = props => {
-  const pinHandler = (isPinned, noteID) => {
-    isPinned ? props.unpinNote(noteID) : props.pinNote(noteID);
-  };
-
   const formattedNotes = useMemo(() => {
     return formatAndSort(props.noteIDs, props.pinnedNotes, props.notesByID, props.trashShown, props.sortType, props.searchQuery);
   }, [props.noteIDs, props.pinnedNotes, props.notesByID, props.trashShown, props.sortType, props.searchQuery]);
@@ -62,45 +58,7 @@ const NoteList = props => {
       }
       <div className="NoteList__notes">
         {formattedNotes.length ?
-          formattedNotes.map(note => (
-            <div
-              key={note.noteID}
-              className={`NoteList__note ${props.currentNoteID === note.noteID ? 'NoteList__note--active' : ''}`}
-              onClick={() => props.showNote(note.noteID)}
-            >
-              {!props.trashShown &&
-                <span
-                  className={`NoteList__pin ${note.isPinned ? 'NoteList__pin--hl' : ''}`}
-                  onClick={() => pinHandler(note.isPinned, note.noteID)}
-                >
-                  {pinIcon}
-                </span>
-              }
-              {(props.searchQuery && note.title)  ?
-                <>
-                  <Highlighter
-                    className="NoteList__noteTitle"
-                    highlightClassName="NoteList__note--hl"
-                    searchWords={[props.searchQuery]}
-                    textToHighlight={note.title}
-                  />
-                  {!!note.txt &&
-                    <Highlighter
-                      className="NoteList__noteSubTitle"
-                      highlightClassName="NoteList__note--hl"
-                      searchWords={[props.searchQuery]}
-                      textToHighlight={note.txt}
-                    />
-                  }
-                </>
-                :
-                <>
-                  <div className="NoteList__noteTitle">{note.title || 'New Note'}</div>
-                  <div className="NoteList__noteSubTitle">{note.txt}</div>
-                </>
-              }
-            </div>
-          ))
+          formattedNotes.map(note => <NoteListNote key={note.noteID} {...note} />)
           :
           <div className="NoteList__noNotes">
             {
@@ -153,14 +111,10 @@ const NoteList = props => {
 NoteList.propTypes = {
   noteIDs: PropTypes.array.isRequired,
   notesByID: PropTypes.object.isRequired,
-  currentNoteID: PropTypes.string,
   trashShown: PropTypes.bool.isRequired,
-  showNote: PropTypes.func.isRequired,
   createNote: PropTypes.func.isRequired,
   listShown: PropTypes.bool.isRequired,
   pinnedNotes: PropTypes.array.isRequired,
-  pinNote: PropTypes.func.isRequired,
-  unpinNote: PropTypes.func.isRequired,
   sortType: PropTypes.string.isRequired,
   shownTag: PropTypes.string,
   searchQuery: PropTypes.string
@@ -173,7 +127,6 @@ const mapStateToProps = state => ({
     state.notes.noteIDs,
   searchQuery: state.notes.searchQuery,
   notesByID: state.notes.notesByID,
-  currentNoteID: state.notes.currentNoteID,
   trashShown: state.notes.trashShown,
   listShown: state.ui.listShown,
   pinnedNotes: state.notes.pinnedNotes,
@@ -182,10 +135,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  createNote: () => dispatch(createNote()),
-  showNote: noteID => dispatch(showNote(noteID)),
-  pinNote: noteID => dispatch(pinNote(noteID)),
-  unpinNote: noteID => dispatch(unpinNote(noteID))
+  createNote: () => dispatch(createNote())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NoteList);

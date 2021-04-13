@@ -1,0 +1,47 @@
+.NoteListNote {
+  height: 65px;
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+  padding: 10px 8px 10px 30px;
+}
+.NoteListNote:hover {
+  background: rgb(241,241,241);
+}
+.NoteListNote--active {
+  background: rgba(var(--blue), 0.12);
+}
+.NoteListNote--active:hover {
+  background: rgba(var(--blue), 0.15);
+}
+.NoteListNote__title, .NoteListNote__txt {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+}
+.NoteListNote__title {
+  font-weight: 500;
+  font-size: 15.5px;
+}
+.NoteListNote__txt {
+  font-size: 14px;
+}
+.NoteListNote__txt--hl {
+  background: rgba(var(--blue), 0.4);
+}
+.NoteListNote__pin {
+  font-size: 17px;
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  opacity: 0;
+}
+.NoteListNote:hover .NoteListNote__pin {
+  opacity: 1;
+}
+.NoteListNote__pin--hl {
+  color: rgb(var(--blue));
+  opacity: 1;
+}

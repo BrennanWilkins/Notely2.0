@@ -15,6 +15,7 @@ import withChecklists from './plugins/withChecklists';
 import useCursors from './plugins/useCursors';
 import withLinks from './plugins/withLinks';
 import useSearch from './plugins/useSearch';
+import { selectIsCollab, selectCurrBody } from '../../store/selectors';
 
 const NoteContent = props => {
   const [value, setValue] = useState(props.body);
@@ -139,8 +140,8 @@ NoteContent.propTypes = {
 
 const mapStateToProps = state => ({
   noteID: state.notes.currentNoteID,
-  body: state.notes.currentNoteID ? state.notes.notesByID[state.notes.currentNoteID].body : [],
-  isCollab: !state.notes.currentNoteID ? false : state.notes.notesByID[state.notes.currentNoteID].collaborators.length > 1,
+  body: selectCurrBody(state),
+  isCollab: selectIsCollab(state),
   searchQuery: state.notes.searchQuery
 });
 

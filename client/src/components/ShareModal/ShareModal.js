@@ -5,6 +5,7 @@ import ModalContainer from '../UI/ModalContainer/ModalContainer';
 import { connect } from 'react-redux';
 import { useDidUpdate } from '../../utils/customHooks';
 import { sendInvite } from '../../socket';
+import { selectCurrCollabs } from '../../store/selectors';
 
 const ShareModal = props => {
   const [userInput, setUserInput] = useState('');
@@ -92,7 +93,7 @@ ShareModal.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  collaborators: state.notes.currentNoteID ? state.notes.notesByID[state.notes.currentNoteID].collaborators : [],
+  collaborators: selectCurrCollabs(state),
   collabsByName: state.notes.collabsByName,
   noteID: state.notes.currentNoteID
 });

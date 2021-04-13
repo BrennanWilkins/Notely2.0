@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { expandIcon, contractIcon, trashIcon, shareIcon, pinIcon, arrowIcon } from '../UI/icons';
 import { toggleFullscreen, trashNote, restoreNote, deleteNote,
   setListShown, pinNote, unpinNote } from '../../store/actions';
+  import { selectNoteIsPinned, selectIsCollab } from '../../store/selectors';
 import Tooltip from '../UI/Tooltip/Tooltip';
 import NoteStatus from './NoteStatus';
 import ShareModal from '../ShareModal/ShareModal';
@@ -15,8 +16,8 @@ const NoteMenu = props => {
 
   const pinHandler = () => {
     props.noteIsPinned ?
-    props.unpinNote(props.currentNoteID) :
-    props.pinNote(props.currentNoteID);
+    props.unpinNote(props.noteID) :
+    props.pinNote(props.noteID);
   };
 
   return (
@@ -32,7 +33,7 @@ const NoteMenu = props => {
             <Tooltip position="down">Back<div>Ctrl+Shift+B</div></Tooltip>
           </button>
           <div className="NoteMenu__options">
-            {!!props.currentNoteID && (props.trashShown ?
+            {!!props.noteID && (props.trashShown ?
               <>
                 <button className="NoteMenu__btn NoteMenu__trashBtn" onClick={props.restoreNote}>
                   Restore
@@ -62,7 +63,7 @@ const NoteMenu = props => {
             )}
           </div>
         </div>
-        {!!props.currentNoteID && <NoteStatus />}
+        {!!props.noteID && <NoteStatus />}
         {props.isCollab && <Collaborators />}
       </div>
       {showShareModal && <ShareModal close={() => setShowShareModal(false)} />}
@@ -77,7 +78,7 @@ NoteMenu.propTypes = {
   trashShown: PropTypes.bool.isRequired,
   restoreNote: PropTypes.func.isRequired,
   deleteNote: PropTypes.func.isRequired,
-  currentNoteID: PropTypes.string,
+  noteID: PropTypes.string,
   showList: PropTypes.func.isRequired,
   pinNote: PropTypes.func.isRequired,
   unpinNote: PropTypes.func.isRequired,
@@ -88,9 +89,9 @@ NoteMenu.propTypes = {
 const mapStateToProps = state => ({
   isFullscreen: state.ui.isFullscreen,
   trashShown: state.notes.trashShown,
-  currentNoteID: state.notes.currentNoteID,
-  noteIsPinned: !state.notes.currentNoteID ? false : state.notes.pinnedNotes.includes(state.notes.currentNoteID),
-  isCollab: !state.notes.currentNoteID ? false : state.notes.notesByID[state.notes.currentNoteID].collaborators.length > 1
+  noteID: state.notes.currentNoteID,
+  noteIsPinned: selectNoteIsPinned(state),
+  isCollab: selectIsCollab(state)
 });
 
 const mapDispatchToProps = dispatch => ({

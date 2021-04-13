@@ -1,22 +1,27 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import './NoteMenu.css';
 import { connect } from 'react-redux';
 import { formatDate } from '../../utils/formatDate';
 import { arrowRepeatIcon, checkIcon } from '../UI/icons';
+import { selectCurrUpdatedAt } from '../../store/selectors';
 
-const NoteStatus = props => (
-  <div className="NoteMenu__info">
-    <div className="NoteMenu__date">Last updated {formatDate(props.updatedAt)}</div>
-    <div className={`NoteMenu__status ${!props.changesSaved ? 'NoteMenu__status--anim' : ''}`}>
-      {
-        props.changesSaved ?
-        <>{checkIcon}All changes saved</> :
-        <>{arrowRepeatIcon}Saving changes</>
-      }
+const NoteStatus = props => {
+  const formattedDate = useMemo(() => formatDate(props.updatedAt), [props.updatedAt]);
+
+  return (
+    <div className="NoteMenu__info">
+      <div className="NoteMenu__date">Last updated {formattedDate}</div>
+      <div className={`NoteMenu__status ${!props.changesSaved ? 'NoteMenu__status--anim' : ''}`}>
+        {
+          props.changesSaved ?
+          <>{checkIcon}All changes saved</> :
+          <>{arrowRepeatIcon}Saving changes</>
+        }
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 NoteStatus.propTypes = {
   updatedAt: PropTypes.string.isRequired,
@@ -24,7 +29,7 @@ NoteStatus.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  updatedAt: state.notes.notesByID[state.notes.currentNoteID].updatedAt,
+  updatedAt: selectCurrUpdatedAt(state),
   changesSaved: state.notes.changesSaved
 });
 

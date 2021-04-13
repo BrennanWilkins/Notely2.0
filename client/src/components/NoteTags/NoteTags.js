@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { xIcon } from '../UI/icons';
 import { createTag, removeTag } from '../../store/actions';
+import { selectCurrTags } from '../../store/selectors';
 
 const NoteTags = props => {
   const [newTag, setNewTag] = useState('');
@@ -52,7 +53,7 @@ NoteTags.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  tags: state.notes.currentNoteID ? state.notes.notesByID[state.notes.currentNoteID].tags : [],
+  tags: selectCurrTags(state),
   noteID: state.notes.currentNoteID
 });
 

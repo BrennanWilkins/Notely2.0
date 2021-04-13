@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { tagIcon, trashIcon, searchIcon } from '../UI/icons';
 import { connect } from 'react-redux';
 import { createNote } from '../../store/actions';
+import { selectCurrNoteIDs } from '../../store/selectors';
 import NoteListHeader from '../NoteListHeader/NoteListHeader';
 import { serializeBody } from '../../utils/slateHelpers';
 import NoteListNote from '../NoteListNote/NoteListNote';
@@ -121,10 +122,7 @@ NoteList.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  noteIDs: state.notes.shownTag ?
-    state.notes.filteredNoteIDs :
-    state.notes.trashShown ? state.notes.trashIDs :
-    state.notes.noteIDs,
+  noteIDs: selectCurrNoteIDs(state),
   searchQuery: state.notes.searchQuery,
   notesByID: state.notes.notesByID,
   trashShown: state.notes.trashShown,

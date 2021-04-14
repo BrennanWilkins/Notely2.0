@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { useDidUpdate } from '../../utils/customHooks';
 import { selectPublishID } from '../../store/selectors';
 import { publishNote, unpublishNote } from '../../store/actions';
+import { baseURL } from '../../axios';
 
 const PublishModal = props => {
   const [isLoading, setIsLoading] = useState(false);
@@ -64,7 +65,7 @@ const PublishModal = props => {
             className="Input"
             readOnly
             onFocus={e => e.target.select()}
-            value={`localhost:3000/n/${props.publishID}`}
+            value={`${baseURL}/n/${props.publishID}`}
           />
         </label>
       }

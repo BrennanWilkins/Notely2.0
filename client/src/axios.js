@@ -2,7 +2,9 @@ import axios from 'axios';
 import { logout } from './store/actions';
 import store from './store';
 
-export const baseURL = 'http://localhost:4000';
+export const baseURL = process.env.NODE_ENV === 'development' ?
+'http://localhost:4000':
+'https://notely-app.herokuapp.com';
 
 export const instance = axios.create({ baseURL: baseURL + '/api' });
 

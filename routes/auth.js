@@ -15,6 +15,10 @@ const signToken = async (user, expiration) => {
   return token;
 };
 
+const baseURL = process.env.NODE_ENV === 'production' ?
+'https://notely-app.herokuapp.com' :
+'http://localhost:3000';
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   secure: false,
@@ -62,7 +66,7 @@ router.post('/signup',
       await user.save();
 
       // send link to provided email with hash to finish signup
-      const hRef = `http://localhost:3000/finish-signup?token=${signupID}`;
+      const hRef = `${baseURL}/finish-signup?token=${signupID}`;
       const mailOptions = {
         from: process.env.NOTELY_EMAIL,
         to: email,
@@ -213,7 +217,7 @@ router.post('/forgotPass',
       await user.save();
 
       // send email to user with link to reset password
-      const hRef = `http://localhost:3000/reset-password?token=${recoverPassID}`;
+      const hRef = `${baseURL}/reset-password?token=${recoverPassID}`;
       const mailOptions = {
         from: process.env.NOTELY_EMAIL,
         to: email,

@@ -84,7 +84,8 @@ const deleteNote = async (socket, data) => {
 
     const [note] = await Promise.all([
       Note.findByIdAndDelete(noteID),
-      User.updateMany({ notes: noteID }, { $pull: { notes: noteID, pinnedNotes: noteID } })
+      User.updateMany({ notes: noteID }, { $pull: { notes: noteID, pinnedNotes: noteID } }),
+      User.updateMany({ 'invites.noteID': noteID }, { $pull: { invites: { noteID } } })
     ]);
     if (!note) { throw 'Invalid noteID'; }
 
@@ -239,7 +240,7 @@ const previewInvite = async (socket, data) => {
       User.exists({ _id: socket.userID, 'invites.noteID': noteID }),
       Note.findById(noteID).select('body').lean()
     ]);
-    if (!hasInvite) { throw 'Invalid noteID'; }
+    if (!hasInvite || !note) { throw 'Invalid noteID'; }
 
     socket.emit('success: get/note/invite', { body: note.body });
   } catch (err) {

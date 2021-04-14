@@ -35,3 +35,9 @@ export const selectCurrBody = state => (
 export const selectCurrUpdatedAt = state => (
   state.notes.notesByID[state.notes.currentNoteID].updatedAt
 );
+
+export const selectPublishID = state => (
+  state.notes.currentNoteID ?
+  state.notes.notesByID[state.notes.currentNoteID].publishID
+  : null
+);

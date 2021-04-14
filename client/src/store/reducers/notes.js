@@ -42,6 +42,8 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.SET_USER_ACTIVE: return setUserActive(state, action);
     case actionTypes.SET_USER_INACTIVE: return setUserInactive(state, action);
     case actionTypes.SET_SEARCH_QUERY: return setSearchQuery(state, action);
+    case actionTypes.PUBLISH_NOTE: return publishNote(state, action);
+    case actionTypes.UNPUBLISH_NOTE: return unpublishNote(state, action);
     default: return state;
   }
 };
@@ -487,5 +489,27 @@ const setSearchQuery = (state, { query }) => {
     currentNoteID: filteredNoteIDs[0] || null
   };
 };
+
+const publishNote = (state, { payload: { noteID, publishID } }) => ({
+  ...state,
+  notesByID: {
+    ...state.notesByID,
+    [noteID]: {
+      ...state.notesByID[noteID],
+      publishID
+    }
+  }
+});
+
+const unpublishNote = (state, { payload: { noteID } }) => ({
+  ...state,
+  notesByID: {
+    ...state.notesByID,
+    [noteID]: {
+      ...state.notesByID[noteID],
+      publishID: null
+    }
+  }
+});
 
 export default reducer;

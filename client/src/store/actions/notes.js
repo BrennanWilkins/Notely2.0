@@ -92,3 +92,11 @@ export const rejectInvite = noteID => dispatch => {
 };
 
 export const setSearchQuery = query => ({ type: actionTypes.SET_SEARCH_QUERY, query });
+
+export const publishNote = payload => ({ type: actionTypes.PUBLISH_NOTE, payload });
+
+export const unpublishNote = noteID => dispatch => {
+  const payload = { noteID };
+  sendUpdate('put/note/unpublish', payload);
+  dispatch({ type: actionTypes.UNPUBLISH_NOTE, payload });
+};

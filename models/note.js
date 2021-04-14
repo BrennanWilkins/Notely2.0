@@ -5,8 +5,7 @@ const NoteSchema = new Schema({
   body: [],
   tags: [String],
   collaborators: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  nanoID: String,
-  isPublished: Boolean,
+  publishID: String,
   isTrash: Boolean
 }, { timestamps: true });
 

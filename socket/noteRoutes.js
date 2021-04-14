@@ -20,8 +20,7 @@ const createNote = async (socket, data) => {
       body: [{ type: 'paragraph', children: [{ text: '' }]}],
       tags: [],
       collaborators: [socket.userID],
-      nanoID: '',
-      isPublished: false,
+      publishID: null,
       isTrash: false
     });
 

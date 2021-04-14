@@ -95,10 +95,9 @@ const createNote = (state, { payload: { note, username } }) => {
   const newNote = {
     noteID: note._id,
     body: note.body,
-    isPublished: false,
     collaborators: [username],
     tags: [],
-    nanoID: '',
+    publishID: null,
     createdAt: note.createdAt,
     updatedAt: note.updatedAt
   };

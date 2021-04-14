@@ -103,8 +103,7 @@ router.get('/finishSignup/:signupID',
           body: [{ type: 'paragraph', children: [{ text: 'Welcome to Notely!' }]}],
           tags: [],
           collaborators: [user._id],
-          nanoID: '',
-          isPublished: false,
+          publishID: null,
           isTrash: false
         });
         await firstNote.save();

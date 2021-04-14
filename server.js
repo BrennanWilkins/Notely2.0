@@ -6,6 +6,7 @@ require('dotenv').config();
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 const initSocket = require('./socket/socket');
+const publishHandler = require('./publish');
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+
+app.get('/n/:publishID', publishHandler);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));

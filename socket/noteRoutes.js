@@ -1,5 +1,6 @@
 const Note = require('../models/note');
 const User = require('../models/user');
+const { nanoid } = require('nanoid');
 
 const parseData = (socket, payload, options) => {
   if (!socket.userNotes[payload.noteID]) { throw 'Unauthorized'; }
@@ -247,6 +248,45 @@ const previewInvite = async (socket, data) => {
   }
 };
 
+const publishNote = async (socket, data) => {
+  try {
+    const { noteID } = parseData(socket, data);
+
+    const note = await Note.findById(noteID);
+    if (!note) { throw 'Invalid noteID'; }
+    if (note.publishID) { throw 'Already published'; }
+
+    let publishID = nanoid(7);
+    // verify publishID is unique
+    let exists = await Note.exists({ publishID });
+    while (exists) {
+      publishID = nanoid(7);
+      exists = await Note.exists({ publishID });
+    }
+    note.publishID = publishID;
+    await note.save();
+
+    socket.emit('success: put/note/publish', { publishID });
+    socket.to(noteID).emit('put/note/publish', { noteID, publishID });
+  } catch (err) {
+    console.log(err);
+    socket.emit('error: put/note/publish');
+  }
+};
+
+const unpublishNote = async (socket, data) => {
+  try {
+    const { noteID } = parseData(socket, data);
+
+    const note = await Note.findByIdAndUpdate(noteID, { publishID: null });
+    if (!note) { throw 'Invalid noteID'; }
+
+    socket.to(noteID).emit('put/note/unpublish', { noteID });
+  } catch (err) {
+    socket.emit('note error', 'There was an error while unpublishing your note.');
+  }
+};
+
 module.exports = {
   'post/note' : createNote,
   'put/note/save' : updateNote,
@@ -260,5 +300,7 @@ module.exports = {
   'post/note/invite': sendInvite,
   'put/note/invite/accept': acceptInvite,
   'put/note/invite/reject': rejectInvite,
-  'get/note/invite': previewInvite
+  'get/note/invite': previewInvite,
+  'put/note/publish': publishNote,
+  'put/note/unpublish': unpublishNote
 };

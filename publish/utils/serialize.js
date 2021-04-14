@@ -67,7 +67,15 @@ const stringifyNode = node => {
 
 const serialize = body => {
   const htmlStr = body.map(node => serializeBody(node)).join('');
-  const title = body.map(node => stringifyNode(node)).join('').slice(0, 20) || 'Untitled Note';
+
+  let title = 'Untitled Note';
+  for (let node of body) {
+    let str = stringifyNode(node);
+    if (str.length) {
+      title = str;
+      break;
+    }
+  }
 
   return getHtml(htmlStr, title);
 };

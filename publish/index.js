@@ -15,7 +15,6 @@ const publishHandler = async (req, res) => {
     const html = serialize(note.body);
     res.send(html);
   } catch (err) {
-    console.log(err);
     res.redirect(redirectURL);
   }
 };

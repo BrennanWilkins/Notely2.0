@@ -29,7 +29,7 @@ const NoteListHeader = props => {
           {plusIcon}
           <Tooltip position="down">
             New Note
-            <div>Ctrl+Shift+N</div>
+            <div>Alt+Shift+N</div>
           </Tooltip>
         </button>
       </div>

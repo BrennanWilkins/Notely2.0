@@ -11,18 +11,18 @@ import isHotkey from 'is-hotkey';
 const NotelyContainer = props => {
   useEffect(() => {
     const shortcutHandler = e => {
-      // ctrl + shift + m opens side nav
-      if (isHotkey('ctrl+shift+m', e)) {
+      // alt + shift + m opens side nav
+      if (isHotkey('alt+shift+m', e)) {
         e.preventDefault();
         props.toggleSideNav();
       }
-      // ctrl + shift + f toggles fullscreen
-      if (isHotkey('ctrl+shift+f', e)) {
+      // alt + shift + f toggles fullscreen
+      if (isHotkey('alt+shift+f', e)) {
         e.preventDefault();
         props.toggleFullscreen();
       }
-      // ctrl + shift + b opens note list on < 750px width screen
-      if (window.innerWidth <= 750 && isHotkey('ctrl+shift+b', e)) {
+      // alt + shift + b opens note list on < 750px width screen
+      if (window.innerWidth <= 750 && isHotkey('alt+shift+b', e)) {
         e.preventDefault();
         props.showList();
       }

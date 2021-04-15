@@ -29,11 +29,11 @@ const NoteMenu = props => {
         <div className="NoteMenu__btns">
           <button className="NoteMenu__btn NoteMenu__fsBtn" onClick={props.toggleFullscreen}>
             {props.isFullscreen ? contractIcon : expandIcon}
-            <Tooltip position="down">Fullscreen<div>Ctrl+Shift+F</div></Tooltip>
+            <Tooltip position="down">Fullscreen<div>Alt+Shift+F</div></Tooltip>
           </button>
           <button className="NoteMenu__btn NoteMenu__backBtn" onClick={props.showList}>
             {arrowIcon}
-            <Tooltip position="down">Back<div>Ctrl+Shift+B</div></Tooltip>
+            <Tooltip position="down">Back<div>Alt+Shift+B</div></Tooltip>
           </button>
           <div className="NoteMenu__options">
             {!!props.noteID && (props.trashShown ?

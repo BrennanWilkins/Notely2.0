@@ -10,11 +10,16 @@ import { serializeBody } from '../../utils/slateHelpers';
 import NoteListNote from '../NoteListNote/NoteListNote';
 
 const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType, searchQuery) => {
-  let formatted = notes.map(noteID => ({
-    noteID,
-    isPinned: trashShown ? false : pinnedNotes.includes(noteID),
-    ...serializeBody(notesByID[noteID].body, searchQuery)
-  })).sort((a,b) => {
+  let formatted = notes.map(noteID => {
+    const { updatedAt, createdAt } = notesByID[noteID];
+    return {
+      noteID,
+      updatedAt,
+      createdAt,
+      isPinned: trashShown ? false : pinnedNotes.includes(noteID),
+      ...serializeBody(notesByID[noteID].body, searchQuery)
+    };
+  }).sort((a,b) => {
     if (a.isPinned && b.isPinned) {
       return pinnedNotes.indexOf(b) - pinnedNotes.indexOf(a);
     }
@@ -22,10 +27,10 @@ const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType, sear
     if (a.isPinned && !b.isPinned) { return -1; }
 
     switch (sortType) {
-      case 'Created Newest': return new Date(a.createdAt) - new Date(b.createdAt);
-      case 'Created Oldest': return new Date(b.createdAt) - new Date(a.createdAt);
-      case 'Modified Newest': return new Date(a.updatedAt) - new Date(b.updatedAt);
-      case 'Modified Oldest': return new Date(b.updatedAt) - new Date(a.updatedAt);
+      case 'Created Newest': return new Date(b.createdAt) - new Date(a.createdAt);
+      case 'Created Oldest': return new Date(a.createdAt) - new Date(b.createdAt);
+      case 'Modified Newest': return new Date(b.updatedAt) - new Date(a.updatedAt);
+      case 'Modified Oldest': return new Date(a.updatedAt) - new Date(b.updatedAt);
       case 'AtoZ': return a.title.localeCompare(b.title);
       case 'ZtoA': return b.title.localeCompare(a.title);
       default: return 0;

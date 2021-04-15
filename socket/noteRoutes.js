@@ -288,6 +288,33 @@ const unpublishNote = async (socket, data) => {
   }
 };
 
+const emptyUserTrash = async (socket, data) => {
+  try {
+    const user = await User.findById(socket.userID);
+    if (!user) { throw 'Unauthorized'; }
+
+    const trashNotes = await Note.find({ _id: { $in: user.notes }, isTrash: true }).select('_id').lean();
+    if (!trashNotes || !trashNotes.length) { return; }
+    const trashIDs = trashNotes.map(note => String(note._id));
+
+    await Promise.all([
+      Note.deleteMany({ _id: { $in: trashIDs } }),
+      User.updateMany({ notes: { $in: trashIDs } }, { $pull: { notes: { $in: trashIDs }, pinnedNotes: { $in: trashIDs } } }),
+      User.updateMany({ 'invites.noteID': { $in: trashIDs } }, { $pull: { invites: { noteID: { $in: trashIDs } } } })
+    ]);
+
+    for (let noteID of trashIDs) {
+      socket.to(noteID).emit('delete/note', { noteID });
+      socket.leave(noteID);
+      socket.leave(`editor-${noteID}`);
+      delete socket.userNotes[noteID];
+    }
+
+  } catch (err) {
+    socket.emit('note error', 'There was an error while emptying your trash.');
+  }
+};
+
 module.exports = {
   'post/note' : createNote,
   'put/note/save' : updateNote,
@@ -303,5 +330,6 @@ module.exports = {
   'put/note/invite/reject': rejectInvite,
   'get/note/invite': previewInvite,
   'put/note/publish': publishNote,
-  'put/note/unpublish': unpublishNote
+  'put/note/unpublish': unpublishNote,
+  'put/user/emptyTrash': emptyUserTrash
 };

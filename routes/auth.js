@@ -4,7 +4,7 @@ const Note = require('../models/note');
 const { body, param } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
-const validate = require('../middleware/validate');
+const { validate, passwordRE } = require('../middleware/validate');
 const nodemailer = require('nodemailer');
 const auth = require('../middleware/auth');
 
@@ -33,7 +33,7 @@ router.post('/signup',
   validate(
     [body('email').isEmail(),
     body('username').isAlphanumeric().isLength({ min: 1, max: 50 }),
-    body('pass').matches(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%&*?])[\w\d#$@!%&*?]{8,70}$/),
+    body('pass').matches(passwordRE),
     body('rememberUser').isBoolean()]
   ),
   async (req, res) => {
@@ -126,7 +126,11 @@ router.get('/finishSignup/:signupID',
 );
 
 router.post('/login',
-  validate([body('loginName').notEmpty(), body('pass').notEmpty(), body('rememberUser').isBoolean()]),
+  validate([
+    body('loginName').notEmpty(),
+    body('pass').notEmpty(),
+    body('rememberUser').isBoolean()
+  ]),
   async (req, res) => {
     try {
       const { loginName, pass, rememberUser } = req.body;
@@ -177,7 +181,7 @@ router.post('/login',
 router.post('/resetPass',
   validate([
     body('recoverPassID').notEmpty(),
-    body('newPass').matches(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%&*?])[\w\d#$@!%&*?]{8,70}$/),
+    body('newPass').matches(passwordRE),
   ]),
   async (req, res) => {
     try {
@@ -233,7 +237,10 @@ router.post('/forgotPass',
 
 router.post('/changePass',
   auth,
-  validate([body('oldPass').notEmpty(), body('newPass').matches(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%&*?])[\w\d#$@!%&*?]{8,70}$/)]),
+  validate([
+    body('oldPass').notEmpty(),
+    body('newPass').matches(passwordRE)
+  ]),
   async (req, res) => {
     try {
       const { oldPass, newPass } = req.body;

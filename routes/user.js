@@ -3,7 +3,7 @@ const auth = require('../middleware/auth');
 const User = require('../models/user');
 const Note = require('../models/note');
 const bcryptjs = require('bcryptjs');
-const validate = require('../middleware/validate');
+const { validate } = require('../middleware/validate');
 const { param } = require('express-validator');
 
 router.get('/',

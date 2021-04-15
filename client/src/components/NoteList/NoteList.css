@@ -3,11 +3,13 @@
   height: 100%;
   border-right: var(--grayBorder);
   background: var(--lighterGray);
+  display: flex;
+  flex-direction: column;
 }
 .NoteList__notes {
-  height: calc(100% - 80px);
   overflow-x: hidden;
   overflow-y: auto;
+  flex-grow: 1;
 }
 .NoteList__notes::-webkit-scrollbar-track,
 .NoteList__notes::-webkit-scrollbar {
@@ -23,7 +25,6 @@
 }
 .NoteList__noNotes {
   width: 100%;
-  height: 100%;
   text-align: center;
   display: flex;
   justify-content: flex-start;
@@ -32,12 +33,13 @@
   box-sizing: border-box;
   font-size: 18px;
   font-weight: 500;
-  padding: 100px 10px 0;
+  padding: 100px 10px 10px;
 }
 .NoteList__noNotes svg {
   font-size: 30px;
   color: rgb(130,130,130);
   margin-bottom: 10px;
+  min-height: 30px;
 }
 .NoteList__noNotesText {
   display: flex;
@@ -81,6 +83,11 @@
   }
   .NoteList--hide {
     z-index: 2;
+  }
+}
+@media (max-height: 300px) {
+  .NoteList__noNotes {
+    padding-top: 30px;
   }
 }
 .NoteList__searchHeader {

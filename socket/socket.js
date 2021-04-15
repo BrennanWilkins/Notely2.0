@@ -24,7 +24,7 @@ const initSocket = server => {
       const notes = await Note.find({ collaborators: socket.userID }).select('_id').lean();
       if (!notes) { throw 'No notes found'; }
 
-      socket.userNotes = notes.reduce((obj, curr) => ({ ...obj, [curr._id]: true }), {});
+      socket.userNotes = notes.reduce((obj, curr) => ({ ...obj, [String(curr._id)]: true }), {});
       next();
     } catch (err) { next(new Error('join error')); }
   }).on('connection', socket => {
@@ -65,6 +65,7 @@ const initSocket = server => {
 
     socket.on('leave note', noteID => {
       socket.leave(noteID);
+      socket.leave(`editor-${noteID}`);
       delete socket.userNotes[noteID];
     });
 

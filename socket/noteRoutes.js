@@ -34,8 +34,9 @@ const createNote = async (socket, data) => {
     ]);
 
     // auto join user to note room on creation
-    socket.userNotes[note._id] = true;
-    socket.join(note._id);
+    const noteID = String(note._id);
+    socket.userNotes[noteID] = true;
+    socket.join(noteID);
     socket.emit('post/note', note);
   } catch (err) {
     socket.emit('note error', 'Your note could not be created.');
@@ -91,6 +92,7 @@ const deleteNote = async (socket, data) => {
 
     socket.to(noteID).emit('delete/note', data);
     socket.leave(noteID);
+    socket.leave(`editor-${noteID}`);
     delete socket.userNotes[noteID];
   } catch (err) {
     socket.emit('note error', 'There was an error while deleting your note.');
@@ -269,7 +271,6 @@ const publishNote = async (socket, data) => {
     socket.emit('success: put/note/publish', { publishID });
     socket.to(noteID).emit('put/note/publish', { noteID, publishID });
   } catch (err) {
-    console.log(err);
     socket.emit('error: put/note/publish');
   }
 };

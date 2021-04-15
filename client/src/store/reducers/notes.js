@@ -44,6 +44,7 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.SET_SEARCH_QUERY: return setSearchQuery(state, action);
     case actionTypes.PUBLISH_NOTE: return publishNote(state, action);
     case actionTypes.UNPUBLISH_NOTE: return unpublishNote(state, action);
+    case actionTypes.EMPTY_TRASH: return emptyTrash(state, action);
     default: return state;
   }
 };
@@ -512,5 +513,23 @@ const unpublishNote = (state, { payload: { noteID } }) => ({
     }
   }
 });
+
+const emptyTrash = (state, action) => {
+  if (!state.trashIDs.length) { return state; }
+
+  const notesByID = { ...state.notesByID };
+  state.trashIDs.forEach(noteID => {
+    delete notesByID[noteID];
+  });
+
+  return {
+    ...state,
+    trashIDs: [],
+    notesByID,
+    currentNoteID: null,
+    pinnedNotes: state.pinnedNotes.filter(noteID => !state.trashIDs.includes(noteID)),
+    changesSaved: true
+  };
+};
 
 export default reducer;

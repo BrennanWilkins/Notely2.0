@@ -90,15 +90,16 @@
     padding-top: 30px;
   }
 }
-.NoteList__searchHeader {
+.NoteList__searchHeader,
+.NoteList__emptyTrash {
   display: flex;
   align-items: center;
   padding: 10px 8px 10px 10px;
   border-bottom: var(--grayBorder);
   width: 100%;
   box-sizing: border-box;
-  white-space: nowrap;
   color: var(--darkerGray);
+  white-space: nowrap;
 }
 .NoteList__searchHeader div {
   padding-left: 5px;
@@ -109,4 +110,23 @@
   font-size: 16px;
   min-width: 16px;
   margin: 0 7px 0 5px;
+}
+.NoteList__emptyTrash {
+  justify-content: center;
+}
+.NoteList__emptyTrash div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 250ms;
+}
+.NoteList__emptyTrash div:hover {
+  color: rgb(var(--blue3));
+}
+.NoteList__emptyTrash svg {
+  font-size: 17px;
+  min-width: 17px;
+  margin-right: 7px;
 }

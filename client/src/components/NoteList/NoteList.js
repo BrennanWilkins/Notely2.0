@@ -3,7 +3,7 @@ import './NoteList.css';
 import PropTypes from 'prop-types';
 import { tagIcon, trashIcon, searchIcon } from '../UI/icons';
 import { connect } from 'react-redux';
-import { createNote } from '../../store/actions';
+import { createNote, emptyTrash } from '../../store/actions';
 import { selectCurrNoteIDs } from '../../store/selectors';
 import NoteListHeader from '../NoteListHeader/NoteListHeader';
 import { serializeBody } from '../../utils/slateHelpers';
@@ -55,6 +55,11 @@ const NoteList = props => {
       {(!!props.searchQuery.length && !!formattedNotes.length) &&
         <div className="NoteList__searchHeader">
           {searchIcon} Search results for <div>{props.searchQuery}</div>
+        </div>
+      }
+      {(!props.searchQuery && props.trashShown && !!formattedNotes.length) &&
+        <div className="NoteList__emptyTrash" onClick={props.emptyTrash}>
+          <div>{trashIcon} Empty Trash</div>
         </div>
       }
       <div className="NoteList__notes">
@@ -118,7 +123,8 @@ NoteList.propTypes = {
   pinnedNotes: PropTypes.array.isRequired,
   sortType: PropTypes.string.isRequired,
   shownTag: PropTypes.string,
-  searchQuery: PropTypes.string
+  searchQuery: PropTypes.string,
+  emptyTrash: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -133,7 +139,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  createNote: () => dispatch(createNote())
+  createNote: () => dispatch(createNote()),
+  emptyTrash: () => dispatch(emptyTrash())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NoteList);

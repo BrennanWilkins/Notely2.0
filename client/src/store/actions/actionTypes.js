@@ -35,6 +35,7 @@ export const SET_USER_INACTIVE = 'SET_USER_INACTIVE';
 export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY';
 export const PUBLISH_NOTE = 'PUBLISH_NOTE';
 export const UNPUBLISH_NOTE = 'UNPUBLISH_NOTE';
+export const EMPTY_TRASH = 'EMPTY_TRASH';
 
 // user actionTypes
 export const ADD_NEW_INVITE = 'ADD_NEW_INVITE';

@@ -100,3 +100,8 @@ export const unpublishNote = noteID => dispatch => {
   sendUpdate('put/note/unpublish', payload);
   dispatch({ type: actionTypes.UNPUBLISH_NOTE, payload });
 };
+
+export const emptyTrash = () => dispatch => {
+  // sendUpdate('put/user/emptyTrash');
+  dispatch({ type: actionTypes.EMPTY_TRASH });
+};

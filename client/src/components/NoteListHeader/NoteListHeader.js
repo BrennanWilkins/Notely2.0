@@ -23,7 +23,6 @@ const NoteListHeader = props => {
         </div>
         <button
           className="BlueBtn NoteListHeader__addBtn"
-          disabled={props.trashShown}
           onClick={props.createNote}
         >
           {plusIcon}

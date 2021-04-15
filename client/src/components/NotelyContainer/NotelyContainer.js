@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import SideNav from '../SideNav/SideNav';
 import NoteList from '../NoteList/NoteList';
 import NoteContainer from '../NoteContainer/NoteContainer';
-import { toggleSideNav, toggleFullscreen, setListShown } from '../../store/actions';
+import { toggleSideNav, toggleFullscreen, setListShown, createNote } from '../../store/actions';
 import { connect } from 'react-redux';
 import isHotkey from 'is-hotkey';
 
@@ -26,6 +26,11 @@ const NotelyContainer = props => {
         e.preventDefault();
         props.showList();
       }
+      // alt + shift + n creates new note
+      if (isHotkey('alt+shift+n', e)) {
+        e.preventDefault();
+        props.createNote();
+      }
     };
 
     window.addEventListener('keydown', shortcutHandler);
@@ -44,13 +49,15 @@ const NotelyContainer = props => {
 NotelyContainer.propTypes = {
   toggleSideNav: PropTypes.func.isRequired,
   toggleFullscreen: PropTypes.func.isRequired,
-  showList: PropTypes.func.isRequired
+  showList: PropTypes.func.isRequired,
+  createNote: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = dispatch => ({
   toggleSideNav: () => dispatch(toggleSideNav()),
   toggleFullscreen: () => dispatch(toggleFullscreen()),
-  showList: () => dispatch(setListShown(true))
+  showList: () => dispatch(setListShown(true)),
+  createNote: () => dispatch(createNote())
 });
 
 export default connect(null, mapDispatchToProps)(NotelyContainer);

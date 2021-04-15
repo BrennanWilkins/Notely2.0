@@ -111,7 +111,8 @@ const createNote = (state, { payload: { note, username } }) => {
     changesSaved: true,
     shownTag: null,
     filteredNoteIDs: state.filteredNoteIDs.length ? [] : state.filteredNoteIDs,
-    searchQuery: ''
+    searchQuery: '',
+    trashShown: false
   };
 };
 

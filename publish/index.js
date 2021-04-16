@@ -1,9 +1,6 @@
 const Note = require('../models/note');
 const serialize = require('./utils/serialize');
-
-const redirectURL = process.env.NODE_ENV === 'production' ?
-'https://notely-app.herokuapp.com' :
-'http://localhost:3000';
+const { baseURL } = require('./utils/getHtml');
 
 const publishHandler = async (req, res) => {
   try {
@@ -15,7 +12,7 @@ const publishHandler = async (req, res) => {
     const html = serialize(note.body);
     res.send(html);
   } catch (err) {
-    res.redirect(redirectURL);
+    res.redirect(baseURL);
   }
 };
 

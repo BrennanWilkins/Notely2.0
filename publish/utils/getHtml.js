@@ -1,3 +1,7 @@
+const baseURL = module.exports.baseURL = process.env.NODE_ENV === 'production' ?
+'https://notely-app.herokuapp.com' :
+'http://localhost:3000';
+
 const logo = (
   `<svg xmlns="http://www.w3.org/2000/svg" width="2.3em" height="2.3em" viewBox="0 0 512 512" x="0" y="0">
     <defs id="_WQ2A4cYe3fyjAnqdW86Q3">
@@ -17,10 +21,11 @@ const getHtml = (htmlStr, title) => (
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>${title}</title>
+      <link rel="icon" href="${baseURL}/favicon.ico" />
     </head>
     <body>
       <div style="display:flex;align-items:center;padding: 10px;">
-        <a style="text-decoration: none;" href="${process.env.NODE_ENV === 'production' ? 'https://notely-app.herokuapp.com' : 'http://localhost:3000'}">
+        <a style="text-decoration: none;" href="${baseURL}">
           ${logo}
         </a>
         <div style="color:#777777;margin-left:0.5em;font-size:1.2em;">Published with Notely</div>

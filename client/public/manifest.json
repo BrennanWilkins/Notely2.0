@@ -1,7 +1,13 @@
 {
-  "short_name": "Notely2.0",
-  "name": "Notely2.0",
-  "icons": [],
+  "short_name": "Notely",
+  "name": "Notely",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",

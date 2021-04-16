@@ -15,6 +15,11 @@ const parseData = (socket, payload, options) => {
   return payload;
 };
 
+const errHandler = (socket, msg) => {
+  const msgID = nanoid();
+  socket.emit('note error', { msgID, msg });
+};
+
 const createNote = async (socket, callback) => {
   try {
     const note = new Note({
@@ -39,7 +44,7 @@ const createNote = async (socket, callback) => {
     socket.join(noteID);
     callback({ error: false, note });
   } catch (err) {
-    socket.emit('note error', 'Your note could not be created.');
+    errHandler(socket, 'Your note could not be created.');
   }
 };
 
@@ -51,7 +56,7 @@ const updateNote = async (socket, data, callback) => {
     if (!note) { throw 'Invalid noteID'; }
     callback();
   } catch (err) {
-    socket.emit('note error', 'There was an error while updating your note.');
+    errHandler(socket, 'There was an error while updating your note.');
   }
 };
 
@@ -63,7 +68,7 @@ const trashNote = async (socket, data) => {
     if (!note) { throw 'Invalid noteID'; }
     socket.to(noteID).emit('put/note/trash', data);
   } catch (err) {
-    socket.emit('note error', 'There was an error while sending your note to trash.');
+    errHandler(socket, 'There was an error while sending your note to trash.');
   }
 };
 
@@ -75,7 +80,7 @@ const restoreNote = async (socket, data) => {
     if (!note) { throw 'Invalid noteID'; }
     socket.to(noteID).emit('put/note/restore', data);
   } catch (err) {
-    socket.emit('note error', 'There was an error while restoring your note.');
+    errHandler(socket, 'There was an error while restoring your note.');
   }
 };
 
@@ -95,7 +100,7 @@ const deleteNote = async (socket, data) => {
     socket.leave(`editor-${noteID}`);
     delete socket.userNotes[noteID];
   } catch (err) {
-    socket.emit('note error', 'There was an error while deleting your note.');
+    errHandler(socket, 'There was an error while deleting your note.');
   }
 };
 
@@ -110,7 +115,7 @@ const pinNote = async (socket, data) => {
 
     await user.save();
   } catch (err) {
-    socket.emit('note error', 'There was an error while pinning your note.');
+    errHandler(socket, 'There was an error while pinning your note.');
   }
 };
 
@@ -120,7 +125,7 @@ const unpinNote = async (socket, data) => {
 
     await User.findByIdAndUpdate(socket.userID, { $pull: { pinnedNotes: noteID } });
   } catch (err) {
-    socket.emit('note error', 'There was an error while unpinning your note.');
+    errHandler(socket, 'There was an error while unpinning your note.');
   }
 };
 
@@ -135,7 +140,7 @@ const createTag = async (socket, data) => {
     await note.save();
     socket.to(noteID).emit('post/note/tag', data);
   } catch (err) {
-    socket.emit('note error', 'There was an error while creating your tag.');
+    errHandler(socket, 'There was an error while creating your tag.');
   }
 };
 
@@ -146,7 +151,7 @@ const removeTag = async (socket, data) => {
     await Note.findByIdAndUpdate(noteID, { $pull: { tags: tag } });
     socket.to(noteID).emit('delete/note/tag', data);
   } catch (err) {
-    socket.emit('note error', 'There was an error while removing the tag.');
+    errHandler(socket, 'There was an error while removing the tag.');
   }
 };
 
@@ -221,7 +226,7 @@ const acceptInvite = async (socket, data, callback) => {
     socket.to(noteID).emit('post/note/collaborator', { noteID, email: user.email, username: user.username });
     callback({ error: false, note });
   } catch (err) {
-    socket.emit('note error', 'There was an error while joining the note.');
+    errHandler(socket, 'There was an error while joining the note.');
   }
 };
 
@@ -230,7 +235,7 @@ const rejectInvite = async (socket, data) => {
     const { noteID } = data;
     await User.updateOne({ _id: socket.userID }, { $pull: { invites: { noteID } } });
   } catch (err) {
-    socket.emit('note error', 'There was an error while updating your invites.');
+    errHandler(socket, 'There was an error while updating your invites.');
   }
 };
 
@@ -284,7 +289,7 @@ const unpublishNote = async (socket, data) => {
 
     socket.to(noteID).emit('put/note/unpublish', { noteID });
   } catch (err) {
-    socket.emit('note error', 'There was an error while unpublishing your note.');
+    errHandler(socket, 'There was an error while unpublishing your note.');
   }
 };
 
@@ -311,7 +316,7 @@ const emptyUserTrash = async (socket, data) => {
     }
 
   } catch (err) {
-    socket.emit('note error', 'There was an error while emptying your trash.');
+    errHandler(socket, 'There was an error while emptying your trash.');
   }
 };
 

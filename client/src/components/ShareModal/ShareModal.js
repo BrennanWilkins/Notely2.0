@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ModalContainer from '../UI/ModalContainer/ModalContainer';
 import { connect } from 'react-redux';
 import { useDidUpdate } from '../../utils/customHooks';
-import { sendInvite } from '../../socket';
+import { sendUpdate } from '../../socket';
 import { selectCurrCollabs } from '../../store/selectors';
 
 const ShareModal = props => {
@@ -42,7 +42,13 @@ const ShareModal = props => {
     setIsLoading(true);
     setShowMsg(false);
     setShowInviteSuccess(false);
-    sendInvite(props.noteID, userInput, msgHandler, successHandler);
+
+    sendUpdate('post/note/invite', { noteID: props.noteID, username: userInput }, res => {
+      if (res.error) {
+        return msgHandler(res.errMsg);
+      }
+      successHandler();
+    });
   };
 
   return (

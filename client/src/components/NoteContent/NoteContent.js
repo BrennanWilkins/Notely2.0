@@ -88,11 +88,13 @@ const NoteContent = props => {
       return wasRemote.current = false;
     }
     props.updateNote(props.noteID, value);
-    props.setStatus();
+    props.setStatus(false);
     // save changes to DB 700ms after stop typing
     const delay = setTimeout(() => {
       if (!props.noteID || isRemoteChange.current) { return; }
-      sendUpdate('put/note/save', { noteID: props.noteID, body: value });
+      sendUpdate('put/note/save', { noteID: props.noteID, body: value }, () => {
+        props.setStatus(true);
+      });
     }, 700);
 
     return () => clearTimeout(delay);
@@ -147,7 +149,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   updateNote: (noteID, body) => dispatch(updateNote(noteID, body)),
-  setStatus: () => dispatch(setStatus(false))
+  setStatus: bool => dispatch(setStatus(bool))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(React.memo(NoteContent));

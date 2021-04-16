@@ -2,7 +2,6 @@ import io from 'socket.io-client';
 import { instance as axios, baseURL } from '../axios';
 import socketMap from './socketMap';
 import store from '../store';
-import * as actionTypes from '../store/actions/actionTypes';
 
 let socket = null;
 
@@ -27,10 +26,6 @@ export const initSocket = () => {
     console.log(errMsg);
   });
 
-  newSocket.on('put/note finished', () => {
-    store.dispatch({ type: actionTypes.SET_STATUS, bool: true });
-  });
-
   for (let action in socketMap) {
     newSocket.on(action, payload => {
       store.dispatch({ type: socketMap[action], payload });
@@ -48,32 +43,13 @@ export const initSocket = () => {
   socket = newSocket;
 };
 
-export const sendUpdate = (type, data) => {
+export const sendUpdate = (...args) => {
   if (!socket) { return; }
-  data ? socket.emit(type, data) : socket.emit(type);
+  socket.emit(...args);
   return socket;
 };
 
 export const closeSocket = () => {
   if (!socket) { return; }
   socket.close();
-};
-
-export const sendInvite = (noteID, username, errCB, successCB) => {
-  const socket = sendUpdate('post/note/invite', { noteID, username });
-
-  const removeListeners = () => {
-    socket.off('error: post/note/invite');
-    socket.off('success: post/note/invite');
-  };
-
-  socket.on('error: post/note/invite', errMsg => {
-    removeListeners();
-    errCB(errMsg);
-  });
-
-  socket.on('success: post/note/invite', () => {
-    removeListeners();
-    successCB();
-  });
 };

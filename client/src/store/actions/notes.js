@@ -2,12 +2,9 @@ import * as actionTypes from './actionTypes';
 import { sendUpdate } from '../../socket';
 
 export const createNote = () => (dispatch, getState) => {
-  const socket = sendUpdate('post/note');
-
-  // when creating note wait for response w new note
-  socket.on('post/note', note => {
-    socket.off('post/note');
-    const payload = { note, username: getState().user.username };
+  // wait for response w new note
+  sendUpdate('post/note', res => {
+    const payload = { note: res.note, username: getState().user.username };
     dispatch({ type: actionTypes.CREATE_NOTE, payload });
   });
 };
@@ -68,21 +65,11 @@ export const removeTag = (noteID, tag) => dispatch => {
 export const showNotesByTag = tag => ({ type: actionTypes.SHOW_NOTES_BY_TAG, tag });
 
 export const acceptInvite = noteID => dispatch => {
-  const socket = sendUpdate('put/note/invite/accept', { noteID });
-
-  const removeListeners = () => {
-    socket.off('error: put/note/invite/accept');
-    socket.off('success: put/note/invite/accept');
-  };
-
-  socket.on('error: put/note/invite/accept', () => {
-    removeListeners();
-    dispatch({ type: actionTypes.REJECT_INVITE, noteID });
-  });
-
-  socket.on('success: put/note/invite/accept', note => {
-    removeListeners();
-    dispatch({ type: actionTypes.ACCEPT_INVITE, note });
+  sendUpdate('put/note/invite/accept', { noteID }, res => {
+    if (res.error) {
+      return dispatch({ type: actionTypes.REJECT_INVITE, noteID });
+    }
+    dispatch({ type: actionTypes.ACCEPT_INVITE, note: res.note })
   });
 };
 

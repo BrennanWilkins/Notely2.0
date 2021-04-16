@@ -15,7 +15,7 @@ const parseData = (socket, payload, options) => {
   return payload;
 };
 
-const createNote = async (socket, data) => {
+const createNote = async (socket, callback) => {
   try {
     const note = new Note({
       body: [{ type: 'paragraph', children: [{ text: '' }]}],
@@ -37,19 +37,19 @@ const createNote = async (socket, data) => {
     const noteID = String(note._id);
     socket.userNotes[noteID] = true;
     socket.join(noteID);
-    socket.emit('post/note', note);
+    callback({ error: false, note });
   } catch (err) {
     socket.emit('note error', 'Your note could not be created.');
   }
 };
 
-const updateNote = async (socket, data) => {
+const updateNote = async (socket, data, callback) => {
   try {
     const { noteID, body } = parseData(socket, data, { body: true });
 
     const note = await Note.findByIdAndUpdate(noteID, { body });
     if (!note) { throw 'Invalid noteID'; }
-    socket.emit('put/note finished');
+    callback();
   } catch (err) {
     socket.emit('note error', 'There was an error while updating your note.');
   }
@@ -150,7 +150,7 @@ const removeTag = async (socket, data) => {
   }
 };
 
-const sendInvite = async (socket, data, io) => {
+const sendInvite = async (socket, io, data, callback) => {
   try {
     const { noteID, username } = parseData(socket, data);
     // if username includes '@' then search for user by email, else by username
@@ -163,16 +163,16 @@ const sendInvite = async (socket, data, io) => {
     if (!user) {
       const errMsg = userQuery.email ? 'No user was found with that email.' :
       'No user was found with that username.';
-      return socket.emit('error: post/note/invite', errMsg);
+      return callback({ error: true, errMsg });
     }
     if (!note) { throw 'Invalid noteID'; }
 
     if (user.notes.includes(noteID)) {
-      return socket.emit('error: post/note/invite', 'That user is already a collaborator on this note.');
+      return callback({ error: true, errMsg: 'That user is already a collaborator on this note.' });
     }
 
     if (user.invites.find(invite => invite.noteID === noteID)) {
-      return socket.emit('error: post/note/invite', 'You have already invited that user to this note.');
+      return callback({ error: true, errMsg: 'You have already invited that user to this note.' });
     }
     const invite = { inviter: socket.username, noteID };
     user.invites.push(invite);
@@ -183,13 +183,13 @@ const sendInvite = async (socket, data, io) => {
       io.to(connectedUser[0]).emit('new invite', invite);
     }
 
-    socket.emit('success: post/note/invite');
+    callback({ error: false });
   } catch (err) {
-    socket.emit('note error', 'There was an error while sending the note invite.');
+    onError({ error: true, errMsg: 'There was an error while sending the note invite.' });
   }
 };
 
-const acceptInvite = async (socket, data) => {
+const acceptInvite = async (socket, data, callback) => {
   try {
     const { noteID } = data;
 
@@ -207,7 +207,7 @@ const acceptInvite = async (socket, data) => {
 
     if (!note || note.isTrash) {
       await user.save();
-      return socket.emit('error: put/note/invite/accept');
+      return callback({ error: true });
     }
 
     user.notes.push(noteID);
@@ -219,7 +219,7 @@ const acceptInvite = async (socket, data) => {
     socket.userNotes[noteID] = true;
     socket.join(noteID);
     socket.to(noteID).emit('post/note/collaborator', { noteID, email: user.email, username: user.username });
-    socket.emit('success: put/note/invite/accept', note);
+    callback({ error: false, note });
   } catch (err) {
     socket.emit('note error', 'There was an error while joining the note.');
   }
@@ -234,7 +234,7 @@ const rejectInvite = async (socket, data) => {
   }
 };
 
-const previewInvite = async (socket, data) => {
+const previewInvite = async (socket, data, callback) => {
   try {
     const { noteID } = data;
 
@@ -244,13 +244,13 @@ const previewInvite = async (socket, data) => {
     ]);
     if (!hasInvite || !note) { throw 'Invalid noteID'; }
 
-    socket.emit('success: get/note/invite', { body: note.body });
+    callback({ error: false, body: note.body });
   } catch (err) {
-    socket.emit('error: get/note/invite');
+    callback({ error: true });
   }
 };
 
-const publishNote = async (socket, data) => {
+const publishNote = async (socket, data, callback) => {
   try {
     const { noteID } = parseData(socket, data);
 
@@ -268,10 +268,10 @@ const publishNote = async (socket, data) => {
     note.publishID = publishID;
     await note.save();
 
-    socket.emit('success: put/note/publish', { publishID });
+    callback({ error: false, publishID });
     socket.to(noteID).emit('put/note/publish', { noteID, publishID });
   } catch (err) {
-    socket.emit('error: put/note/publish');
+    callback({ error: true });
   }
 };
 

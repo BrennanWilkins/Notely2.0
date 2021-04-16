@@ -15,22 +15,14 @@ const NotePreview = props => {
 
   useEffect(() => {
     setIsLoading(false);
-    const socket = sendUpdate('get/note/invite', { noteID: props.noteID });
-
-    socket.on('success: get/note/invite', data => {
-      socket.off('success: get/note/invite');
-      socket.off('error: get/note/invite');
-      const { body } = data;
-      setValue(body);
+    sendUpdate('get/note/invite', { noteID: props.noteID }, res => {
       setIsLoading(false);
-      setErr(false);
-    });
-
-    socket.on('error: get/note/invite', msg => {
-      socket.off('success: get/note/invite');
-      socket.off('error: get/note/invite');
-      setErr(true);
-      setIsLoading(false);
+      if (res.error) {
+        setErr(true);
+      } else {
+        setErr(false);
+        setValue(res.body);
+      }
     });
   }, [props.noteID]);
 

@@ -18,24 +18,25 @@ const PublishModal = props => {
     props.close();
   }, [props.noteID]);
 
+  useDidUpdate(() => {
+    if (!props.publishID && showMsg) { setShowMsg(false); }
+  }, [props.publishID]);
+
   const msgHandler = (txt, socket) => {
     setShowMsg(true);
     setIsLoading(false);
     setMsg(txt);
-    socket.off('success: put/note/publish');
-    socket.off('error: put/note/publish');
   };
 
   const publishHandler = () => {
     setShowMsg(false);
     if (!props.publishID) {
-      const socket = sendUpdate('put/note/publish', { noteID: props.noteID });
-      socket.on('success: put/note/publish', ({ publishID }) => {
-        msgHandler('Note published! You can visit it using the link below.', socket);
-        props.publishNote({ noteID: props.noteID, publishID });
-      });
-      socket.on('error: put/note/publish', () => {
-        msgHandler('There was an error while publishing your note.', socket);
+      sendUpdate('put/note/publish', { noteID: props.noteID }, res => {
+        if (res.error) {
+          return msgHandler('There was an error while publishing your note.');
+        }
+        msgHandler('Note published! You can visit it using the link below.');
+        props.publishNote({ noteID: props.noteID, publishID: res.publishID });
       });
     } else {
       props.unpublishNote(props.noteID);

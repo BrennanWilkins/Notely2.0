@@ -1,0 +1,40 @@
+.Notifications {
+  position: fixed;
+  bottom: 5px;
+  left: 5px;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  max-width: calc(100% - 10px);
+}
+.Notifications__notif {
+  border-radius: 3px;
+  background: rgb(184, 3, 3);
+  color: white;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 6px;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+.Notifications__msg {
+  word-wrap: break-word;
+  overflow: hidden;
+  font-size: 15px;
+  margin-right: 5px;
+}
+.Notifications__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  transition: background 250ms;
+  margin-left: auto;
+  font-size: 20px;
+  background: rgba(0,0,0,0.05);
+  cursor: pointer;
+}
+.Notifications__btn:hover {
+  background: rgba(0,0,0,0.11);
+}

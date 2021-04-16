@@ -22,10 +22,6 @@ export const initSocket = () => {
     }
   });
 
-  newSocket.on('note error', errMsg => {
-    console.log(errMsg);
-  });
-
   for (let action in socketMap) {
     newSocket.on(action, payload => {
       store.dispatch({ type: socketMap[action], payload });
@@ -53,3 +49,5 @@ export const closeSocket = () => {
   if (!socket) { return; }
   socket.close();
 };
+
+export const getSocket = () => socket;

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import SideNav from '../SideNav/SideNav';
 import NoteList from '../NoteList/NoteList';
 import NoteContainer from '../NoteContainer/NoteContainer';
+import Notifications from '../Notifications/Notifications';
 import { toggleSideNav, toggleFullscreen, setListShown, createNote } from '../../store/actions';
 import { connect } from 'react-redux';
 import isHotkey from 'is-hotkey';
@@ -42,6 +43,7 @@ const NotelyContainer = props => {
       <SideNav />
       <NoteList />
       <NoteContainer />
+      <Notifications />
     </div>
   );
 };

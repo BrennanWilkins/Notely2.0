@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Notifications.css';
 import { getSocket } from '../../socket';
 import { xIcon } from '../UI/icons';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const Notifications = () => {
   const [notifs, setNotifs] = useState([]);
@@ -13,7 +14,7 @@ const Notifications = () => {
       // remove error notification after 4 sec
       setTimeout(() => {
         setNotifs(notifs => notifs.filter(n => n.msgID !== error.msgID));
-      }, 4000);
+      }, 4500);
     });
   }, []);
 
@@ -22,16 +23,18 @@ const Notifications = () => {
   };
 
   return (
-    <div className="Notifications">
+    <TransitionGroup className="Notifications">
       {notifs.map(({ msgID, msg }) => (
-        <div className="Notifications__notif" key={msgID}>
-          <div className="Notifications__msg">{msg}</div>
-          <div className="Notifications__btn" onClick={() => deleteHandler(msgID)}>
-            {xIcon}
+        <CSSTransition key={msgID} timeout={350} classNames="Notifications__notif">
+          <div className="Notifications__notif">
+            <div className="Notifications__msg">{msg}</div>
+            <div className="Notifications__btn" onClick={() => deleteHandler(msgID)}>
+              {xIcon}
+            </div>
           </div>
-        </div>
+        </CSSTransition>
       ))}
-    </div>
+    </TransitionGroup>
   );
 };
 

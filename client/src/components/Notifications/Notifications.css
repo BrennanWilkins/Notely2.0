@@ -18,6 +18,20 @@
   margin-top: 5px;
   box-sizing: border-box;
 }
+.Notifications__notif-enter {
+  opacity: 0;
+}
+.Notifications__notif-enter-active {
+  opacity: 1;
+  transition: opacity 350ms ease-in;
+}
+.Notifications__notif-exit {
+  opacity: 1;
+}
+.Notifications__notif-exit-active {
+  opacity: 0;
+  transition: opacity 350ms ease-in;
+}
 .Notifications__msg {
   word-wrap: break-word;
   overflow: hidden;

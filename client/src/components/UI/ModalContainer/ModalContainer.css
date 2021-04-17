@@ -40,6 +40,30 @@
     transform: translateY(0);
   }
 }
+@keyframes modalContainerFadeOut {
+  from {
+    background: rgba(0,0,0,0.3);
+  }
+  to {
+    background: transparent;
+  }
+}
+@keyframes modalContainerSlideOut {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-110%);
+    opacity: 0;
+  }
+}
+.ModalContainer--unmountAnim {
+  animation: modalContainerFadeOut 325ms forwards;
+}
+.ModalContainer--unmountAnim .ModalContainer__modal {
+  animation: modalContainerSlideOut 225ms ease-in forwards;
+}
 .ModalContainer__modal::-webkit-scrollbar-track {
   border-radius: 15px;
   background: rgb(225, 225, 225);

@@ -7,6 +7,7 @@ import { logout } from '../../store/actions';
 import ChangePass from './ChangePass';
 import DeleteAccnt from './DeleteAccnt';
 import ModalContainer from '../UI/ModalContainer/ModalContainer';
+import DarkModeToggle from '../UI/DarkModeToggle/DarkModeToggle';
 
 const SettingsModal = props => {
   const [showChangePass, setShowChangePass] = useState(false);
@@ -44,6 +45,7 @@ const SettingsModal = props => {
             <div className="SettingsModal__btn" onClick={() => setShowDeleteAccnt(true)}>
               Delete my account
             </div>
+            <DarkModeToggle />
           </>
       }
     </ModalContainer>

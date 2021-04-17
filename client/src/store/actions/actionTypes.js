@@ -8,6 +8,7 @@ export const TOGGLE_SIDE_NAV = 'TOGGLE_SIDE_NAV';
 export const TOGGLE_FULLSCREEN = 'TOGGLE_FULLSCREEN';
 export const SET_LIST_SHOWN = 'SET_LIST_SHOWN';
 export const SET_SORT_TYPE = 'SET_SORT_TYPE';
+export const TOGGLE_DARK_MODE = 'TOGGLE_DARK_MODE';
 
 // note actionTypes
 export const CREATE_NOTE = 'CREATE_NOTE';

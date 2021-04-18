@@ -36,9 +36,9 @@ const withLinks = editor => {
   return editor;
 };
 
-const insertLink = (editor, url) => {
+const insertLink = (editor, url, text) => {
   if (editor.selection) {
-    wrapLink(editor, url);
+    wrapLink(editor, url, text);
   }
 };
 
@@ -57,7 +57,7 @@ const unwrapLink = editor => {
   });
 };
 
-const wrapLink = (editor, url) => {
+const wrapLink = (editor, url, text) => {
   if (isLinkActive(editor)) {
     unwrapLink(editor);
   }
@@ -67,7 +67,7 @@ const wrapLink = (editor, url) => {
   const link = {
     type: 'link',
     url,
-    children: isCollapsed ? [{ text: url }] : [],
+    children: isCollapsed ? [{ text: text || url }] : [],
   };
 
   if (isCollapsed) {
@@ -76,7 +76,7 @@ const wrapLink = (editor, url) => {
     Transforms.wrapNodes(editor, link, { split: true });
     Transforms.collapse(editor, { edge: 'end' });
   }
-}
+};
 
 export const LinkButton = () => {
   const editor = useSlate();
@@ -90,13 +90,13 @@ export const LinkButton = () => {
     setShowModal(true);
   };
 
-  const submitHandler = (e, url) => {
+  const submitHandler = (e, url, text) => {
     e.preventDefault();
     setShowModal(false);
     if (!url) { return; }
     editor.selection = selection.current;
     selection.current = null;
-    insertLink(editor, url);
+    insertLink(editor, url, text);
   };
 
   return (
@@ -122,6 +122,7 @@ export const LinkButton = () => {
 const LinkModal = ({ submit, close, btnRef }) => {
   const modalRef = useRef();
   const [url, setUrl] = useState('');
+  const [text, setText] = useState('');
   useModalToggle(modalRef, close);
 
   useLayoutEffect(() => {
@@ -139,10 +140,14 @@ const LinkModal = ({ submit, close, btnRef }) => {
   return (
     <div className="InsertLinkModal" ref={modalRef}>
       <CloseBtn onClick={close} />
-      <form onSubmit={e => submit(e, url)}>
+      <form onSubmit={e => submit(e, url, text)}>
         <label>
           Link URL
           <input className="Input" value={url} onChange={e => setUrl(e.target.value)} autoFocus />
+        </label>
+        <label>
+          Link Text <span>(optional)</span>
+          <input className="Input" value={text} onChange={e => setText(e.target.value)} />
         </label>
         <button type="submit" className="Btn BlueBtn">Insert Link</button>
       </form>

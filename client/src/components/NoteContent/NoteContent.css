@@ -137,6 +137,10 @@
   padding: 6px;
   margin: 2px 0 10px;
   width: 250px;
+  display: block;
+}
+.InsertLinkModal label span {
+  opacity: 0.8;
 }
 
 .dark .InsertLinkModal {

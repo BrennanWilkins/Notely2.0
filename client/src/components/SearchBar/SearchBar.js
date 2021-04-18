@@ -48,7 +48,7 @@ const SearchBar = props => {
         value={searchVal}
         onChange={e => setSearchVal(e.target.value)}
         className="SearchBar__input"
-        placeholder="Search Notes"
+        placeholder={props.shownTag ? `Search in ${props.shownTag}` : 'Search Notes'}
       />
       <div
         className={`SearchBar__clear ${searchVal ? 'SearchBar__clear--active' : ''}`}
@@ -65,11 +65,13 @@ SearchBar.propTypes = {
   sideNavShown: PropTypes.bool.isRequired,
   toggleSideNav: PropTypes.func.isRequired,
   setSearchQuery: PropTypes.func.isRequired,
-  searchQuery: PropTypes.string.isRequired
+  searchQuery: PropTypes.string.isRequired,
+  shownTag: PropTypes.string
 };
 
 const mapStateToProps = state => ({
-  searchQuery: state.notes.searchQuery
+  searchQuery: state.notes.searchQuery,
+  shownTag: state.notes.shownTag
 });
 
 const mapDispatchToProps = dispatch => ({

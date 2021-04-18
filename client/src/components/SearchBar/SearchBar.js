@@ -9,6 +9,7 @@ import { setSearchQuery } from '../../store/actions';
 const SearchBar = props => {
   const [searchVal, setSearchVal] = useState('');
   const inputRef = useRef();
+  const valRef = useRef('');
 
   const clickHandler = () => {
     if (!props.sideNavShown) {
@@ -24,7 +25,9 @@ const SearchBar = props => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      if (valRef.current === searchVal) { return; }
       props.setSearchQuery(searchVal);
+      valRef.current = searchVal;
     }, 400);
 
     return () => clearTimeout(timer);

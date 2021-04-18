@@ -16,7 +16,15 @@
   align-items: center;
   cursor: pointer;
   color: rgb(115,115,115);
+  transition: color 250ms;
 }
 .PassInput__eye:hover {
   color: var(--darkerGray);
+}
+
+.dark .PassInput__eye {
+  color: rgb(200,200,200);
+}
+.dark .PassInput__eye:hover {
+  color: rgb(240,240,240);
 }

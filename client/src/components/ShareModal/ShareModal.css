@@ -78,3 +78,20 @@
   overflow: hidden;
   transition: opacity 250ms ease-out, max-height 300ms ease-out 250ms;
 }
+
+.dark .ShareModal__subTitle {
+  color: rgb(230,230,230);
+}
+.dark .ShareModal__collabsTitle {
+  color: rgb(230,230,230);
+  border-bottom: var(--darkBorder);
+}
+.dark .ShareModal__user {
+  color: rgb(230,230,230);
+}
+.dark .ShareModal__email {
+  color: rgb(150,150,150);
+}
+.dark .ShareModal__msg {
+  color: rgb(200,200,200);
+}

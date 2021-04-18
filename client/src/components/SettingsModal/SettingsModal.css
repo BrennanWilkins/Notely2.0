@@ -74,3 +74,7 @@
   text-align: center;
   padding: 12px;
 }
+
+.dark .SettingsModal__btn:hover {
+  background: rgba(var(--gray), 0.25);
+}

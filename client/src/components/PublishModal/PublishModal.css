@@ -34,4 +34,10 @@
   font-size: 15px;
   margin-top: 2px;
 }
+
+.dark .PublishModal__info {
+  color: rgb(230,230,230);
+}
+.dark .PublishModal__msg {
+  color: rgb(190,190,190);
 }

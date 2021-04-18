@@ -85,3 +85,20 @@
   border-bottom: 1.2px solid #ddd;
   color: var(--darkerGray);
 }
+
+.dark .ModalContainer__modal {
+  background: rgb(34, 35, 38);
+  border: 1px solid rgb(24, 25, 27);
+  color: rgb(230,230,230);
+}
+.dark .ModalContainer__modalTitle {
+  color: rgb(230,230,230);
+  border-bottom: 1.2px solid rgb(19, 19, 23);
+}
+.dark .ModalContainer__modal::-webkit-scrollbar-track,
+.dark .ModalContainer__modal::-webkit-scrollbar {
+  background: rgba(20,20,20,0.7);
+}
+.dark .ModalContainer__modal::-webkit-scrollbar-thumb {
+  background: rgba(var(--gray), 0.7);
+}

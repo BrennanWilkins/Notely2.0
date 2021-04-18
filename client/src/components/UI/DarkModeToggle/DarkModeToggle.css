@@ -12,6 +12,7 @@
   margin: 30px auto 10px;
   box-shadow: 0 2px 6px -2px rgba(0,0,0,0.25);
   border: 1px solid rgb(232,232,232);
+  cursor: pointer;
 }
 .DarkModeToggle__btn {
   position: absolute;
@@ -19,17 +20,11 @@
   height: 30px;
   background: white;
   border-radius: 50%;
-  cursor: pointer;
   top: 50%;
   transform: translateY(-50%);
   border: 1px solid rgb(236,236,236);
-  transition: left 250ms ease-out;
-}
-.DarkModeToggle--dark .DarkModeToggle__btn {
-  left: 4px;
-}
-.DarkModeToggle--light .DarkModeToggle__btn {
   left: calc(100% - 35px);
+  transition: left 250ms ease-out;
 }
 .DarkModeToggle__sun,
 .DarkModeToggle__moon {
@@ -43,4 +38,14 @@
 }
 .DarkModeToggle__moon {
   color: rgb(var(--blue));
+}
+
+.dark .DarkModeToggle {
+  background: rgba(19, 19, 23, 0.4);
+  border: var(--darkBorder);
+}
+.dark .DarkModeToggle__btn {
+  left: 4px;
+  background: rgb(15,15,19);
+  border: 0;
 }

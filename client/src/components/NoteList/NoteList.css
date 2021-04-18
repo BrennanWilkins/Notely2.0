@@ -34,6 +34,7 @@
   font-size: 18px;
   font-weight: 500;
   padding: 100px 10px 10px;
+  color: var(--textColor);
 }
 .NoteList__noNotes svg {
   font-size: 30px;
@@ -137,14 +138,11 @@
 }
 .dark .NoteList__searchHeader,
 .dark .NoteList__emptyTrash {
-  color: rgb(230,230,230);
+  color: var(--textColor);
   border-bottom: var(--darkBorder);
 }
 .dark .NoteList__searchHeader div {
   color: rgb(240,240,240);
-}
-.dark .NoteList__noNotes {
-  color: rgb(230,230,230);
 }
 .dark .NoteList__noNotes svg {
   color: rgb(160,160,160);

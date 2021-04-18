@@ -1,7 +1,6 @@
 .SideNav {
   height: 100%;
   transition: width 200ms ease-out;
-  /* background: rgb(27, 26, 31); */
   background: rgb(27,28,32);
 }
 .SideNav--expand {

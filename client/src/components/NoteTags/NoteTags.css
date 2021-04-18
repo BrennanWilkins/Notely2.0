@@ -29,6 +29,7 @@
   align-items: center;
   margin: 0 10px 10px 0;
   position: relative;
+  color: var(--textColor);
 }
 .NoteTags__tagTitle {
   overflow: hidden;
@@ -67,7 +68,6 @@
 }
 .dark .NoteTags__tag {
   background: rgb(24,24,25);
-  color: rgb(230,230,230);
 }
 .dark .NoteTags__deleteBtn {
   background: rgb(200,200,200);

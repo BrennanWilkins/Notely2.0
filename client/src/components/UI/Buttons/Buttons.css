@@ -34,9 +34,9 @@
 }
 
 .dark .CloseBtn, .dark .BackBtn {
-  color: rgb(230,230,230);
+  color: var(--textColor);
 }
 .dark .CloseBtn:hover, .dark .BackBtn:hover {
   background: rgba(var(--gray), 0.25);
-  color: rgb(230,230,230);
+  color: var(--textColor);
 }

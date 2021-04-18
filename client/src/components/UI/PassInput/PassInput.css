@@ -23,7 +23,7 @@
 }
 
 .dark .PassInput__eye {
-  color: rgb(200,200,200);
+  color: var(--lightGray);
 }
 .dark .PassInput__eye:hover {
   color: rgb(240,240,240);

@@ -24,6 +24,8 @@ code {
   --boxShadow1: 0 2px 6px -2px rgba(0,0,0,0.15);
   --grayBorder: 1px solid #ddd;
   --darkBorder: 1px solid rgb(19, 19, 23);
+  --textColor: black;
+  --black: 19, 19, 23;
 }
 
 /* utility classes */
@@ -56,7 +58,7 @@ code {
   background: rgb(200, 0, 0);
 }
 .Btn:disabled {
-  background: rgb(200,200,200);
+  background: var(--lightGray);
   cursor: default;
 }
 .dark .Btn:disabled {
@@ -68,6 +70,7 @@ code {
   border: 2px solid #ddd;
   outline: none;
   transition: border 250ms;
+  color: var(--textColor);
 }
 .Input:hover {
   background: rgb(251,251,251);
@@ -80,17 +83,19 @@ code {
   color: rgb(150,150,150);
 }
 .dark .Input {
-  background: rgba(19, 19, 23, 0.6);
-  color: rgb(230,230,230);
-  border: 2px solid rgba(19, 19, 23);
+  background: rgba(var(--black), 0.6);
+  border: 2px solid rgb(var(--black));
 }
 .dark .Input:hover {
-  background: rgb(19,19,23, 0.8);
+  background: rgba(var(--black), 0.8);
 }
 .dark .Input:focus {
-  background: rgb(19,19,23);
+  background: rgb(var(--black));
   border: 2px solid rgba(var(--blue), 0.9);
 }
 .dark .Input::placeholder {
   color: rgb(130,130,130);
+}
+.dark {
+  --textColor: rgb(230,230,230);
 }

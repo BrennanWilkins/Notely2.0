@@ -80,18 +80,18 @@
 }
 
 .dark .ShareModal__subTitle {
-  color: rgb(230,230,230);
+  color: var(--textColor);
 }
 .dark .ShareModal__collabsTitle {
-  color: rgb(230,230,230);
+  color: var(--textColor);
   border-bottom: var(--darkBorder);
 }
 .dark .ShareModal__user {
-  color: rgb(230,230,230);
+  color: var(--textColor);
 }
 .dark .ShareModal__email {
   color: rgb(150,150,150);
 }
 .dark .ShareModal__msg {
-  color: rgb(200,200,200);
+  color: var(--lightGray);
 }

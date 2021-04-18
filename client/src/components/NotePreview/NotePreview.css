@@ -27,6 +27,7 @@
   background: white;
   text-align: left;
   padding: 5px;
+  color: var(--textColor);
 }
 .NotePreview__errMsg {
   margin-top: 10px;
@@ -44,5 +45,4 @@
 }
 .dark .NotePreview__slate {
   background: rgba(0,0,0,0.5);
-  color: rgb(230,230,230);
 }

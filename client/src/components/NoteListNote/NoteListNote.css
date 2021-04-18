@@ -5,6 +5,7 @@
   cursor: pointer;
   position: relative;
   padding: 10px 8px 10px 30px;
+  color: var(--textColor);
 }
 .NoteListNote:hover {
   background: rgb(241,241,241);
@@ -38,6 +39,7 @@
   top: 7px;
   left: 7px;
   opacity: 0;
+  color: var(--textColor);
 }
 .NoteListNote:hover .NoteListNote__pin {
   opacity: 1;
@@ -48,7 +50,6 @@
 }
 
 .dark .NoteListNote {
-  color: rgb(230,230,230);
   border-bottom: var(--darkBorder);
 }
 .dark .NoteListNote {
@@ -62,12 +63,6 @@
 }
 .dark .NoteListNote--active:hover {
   background: rgba(var(--lightBlue), 0.15);
-}
-.dark .NoteListNote__pin {
-  color: rgb(230,230,230);
-}
-.dark .NoteListNote__pin--hl {
-  color: rgba(var(--blue), 0.9);
 }
 .dark .NoteListNote__txt--hl {
   background: rgba(var(--blue), 0.5);

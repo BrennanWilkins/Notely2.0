@@ -36,7 +36,7 @@
 }
 
 .dark .PublishModal__info {
-  color: rgb(230,230,230);
+  color: var(--textColor);
 }
 .dark .PublishModal__msg {
   color: rgb(190,190,190);

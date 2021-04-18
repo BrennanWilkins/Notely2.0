@@ -5,6 +5,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   flex-grow: 1;
+  color: var(--textColor);
   --hlColor: rgba(var(--blue), 0.3);
 }
 .NoteContent--empty {
@@ -143,7 +144,6 @@
   border: var(--darkBorder);
 }
 .dark .NoteContent {
-  color: rgb(230,230,230);
   --hlColor: rgba(var(--blue), 0.5);
 }
 .dark .Toolbar {

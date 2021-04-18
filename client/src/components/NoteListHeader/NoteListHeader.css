@@ -14,6 +14,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: var(--textColor);
 }
 .NoteListHeader__addBtn, .NoteListHeader__sortBtn {
   border: 0;
@@ -59,9 +60,6 @@
 
 .dark .NoteListHeader {
   border-bottom: var(--darkBorder);
-}
-.dark .NoteListHeader__title {
-  color: rgb(230,230,230);
 }
 .dark .NoteListHeader__count {
   color: rgb(180,180,180);

@@ -41,7 +41,7 @@
 }
 
 .dark .DarkModeToggle {
-  background: rgba(19, 19, 23, 0.4);
+  background: rgba(var(--black), 0.4);
   border: var(--darkBorder);
 }
 .dark .DarkModeToggle__btn {

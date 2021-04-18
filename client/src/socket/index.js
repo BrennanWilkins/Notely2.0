@@ -37,6 +37,16 @@ export const initSocket = () => {
   newSocket.connect();
 
   socket = newSocket;
+
+  return new Promise((res, rej) => {
+    const rejListener = () => rej();
+    newSocket.once('connect_error', rejListener);
+
+    newSocket.once('connect', () => {
+      newSocket.off('connect_error', rejListener);
+      res();
+    });
+  });
 };
 
 export const sendUpdate = (...args) => {

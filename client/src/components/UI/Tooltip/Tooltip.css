@@ -4,7 +4,6 @@
   border-radius: 6px;
   padding: 4px 8px;
   color: white;
-  background: #555;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -17,6 +16,8 @@
   pointer-events: none;
   transition: opacity 250ms, transform 250ms;
   z-index: 4;
+  --back: #555;
+  background: var(--back);
 }
 .SideNav__link:hover .Tooltip,
 .ToggleSideNavBtn:hover .Tooltip,
@@ -66,7 +67,7 @@
   position: absolute;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
-  border-right: 5px solid #555;
+  border-right: 5px solid var(--back);
   left: -5px;
   top: calc(50% - 5px);
 }
@@ -77,9 +78,17 @@
   height: 0;
   position: absolute;
   border-top: 5px solid transparent;
-  border-bottom: 5px solid #555;
+  border-bottom: 5px solid var(--back);
   border-right: 5px solid transparent;
   border-left: 5px solid transparent;
   top: -10px;
   left: calc(50% - 5px);
+}
+
+.dark .Tooltip {
+  --back: rgb(10,11,15);
+  color: rgb(230,230,230);
+}
+.dark .Tooltip div {
+  color: rgb(180,180,180);
 }

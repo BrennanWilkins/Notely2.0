@@ -5,6 +5,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   flex-grow: 1;
+  --hlColor: rgba(var(--blue), 0.3);
 }
 .NoteContent--empty {
   display: flex;
@@ -37,6 +38,9 @@
   padding-left: 10px;
   color: rgb(167,167,167);
   font-style: italic;
+}
+.NoteContent a {
+  color: rgb(var(--blue));
 }
 .Toolbar {
   width: 100%;
@@ -132,4 +136,46 @@
   padding: 6px;
   margin: 2px 0 10px;
   width: 250px;
+}
+
+.dark .InsertLinkModal {
+  background: rgb(34, 35, 38);
+  border: var(--darkBorder);
+}
+.dark .NoteContent {
+  color: rgb(230,230,230);
+  --hlColor: rgba(var(--blue), 0.5);
+}
+.dark .Toolbar {
+  background: rgb(25,26,28);
+  border-bottom: 1px solid black;
+}
+.dark .Toolbar__btn {
+  color: #ddd;
+  background: rgba(var(--gray), 0.5);
+  border: 1px solid rgba(var(--gray), 0.7);
+}
+.dark .Toolbar__btn:hover {
+  background: rgba(var(--gray), 0.65);
+}
+.dark .Toolbar__btn--hl {
+  background: rgba(var(--blue), 0.4);
+  border: 1px solid rgba(var(--blue), 0.5);
+}
+.dark .Toolbar__btn--hl:hover {
+  background: rgba(var(--blue), 0.5);
+}
+.dark .NoteContent code {
+  background: rgba(var(--gray), 0.4);
+}
+.dark .NoteContent blockquote {
+  border-left: 2px solid rgb(140,140,140);
+  color: rgb(170,170,170);
+}
+.dark .NoteContent::-webkit-scrollbar-track,
+.dark .NoteContent::-webkit-scrollbar {
+  background: rgb(60,61,63);
+}
+.dark .NoteContent::-webkit-scrollbar-thumb {
+  background: rgb(82,83,85);
 }

@@ -31,3 +31,7 @@
     z-index: 2;
   }
 }
+
+.dark .NoteContainer {
+  background: rgb(25,26,28);
+}

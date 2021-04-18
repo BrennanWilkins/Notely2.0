@@ -37,3 +37,12 @@
   font-size: 8px !important;
   margin-top: 50px !important;
 }
+
+.dark .NotePreview {
+  background: rgb(var(--gray), 0.3);
+  border: var(--darkBorder);
+}
+.dark .NotePreview__slate {
+  background: rgba(0,0,0,0.5);
+  color: rgb(230,230,230);
+}

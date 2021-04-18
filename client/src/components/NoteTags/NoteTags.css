@@ -54,3 +54,22 @@
 .NoteTags__tag:hover .NoteTags__deleteBtn {
   visibility: visible;
 }
+
+.dark .NoteTags {
+  background: rgb(37,38,42);
+  border-top: 1px solid black;
+}
+.dark .NoteTags__input {
+  color: rgb(200,200,200);
+}
+.dark .NoteTags__input::placeholder {
+  color: rgb(170,170,170);
+}
+.dark .NoteTags__tag {
+  background: rgb(24,24,25);
+  color: rgb(230,230,230);
+}
+.dark .NoteTags__deleteBtn {
+  background: rgb(200,200,200);
+  color: black;
+}

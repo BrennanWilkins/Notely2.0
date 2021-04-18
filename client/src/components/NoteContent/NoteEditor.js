@@ -127,7 +127,7 @@ const Leaf = ({ attributes, children, leaf }) => {
       {...attributes}
       style={
         leaf.isCaret ? { position: 'relative', backgroundColor: leaf.alphaColor }
-        : leaf.highlight ? { backgroundColor: 'rgb(104, 136, 252, 0.3)' } 
+        : leaf.highlight ? { backgroundColor: 'var(--hlColor)' } 
         : null
       }
     >

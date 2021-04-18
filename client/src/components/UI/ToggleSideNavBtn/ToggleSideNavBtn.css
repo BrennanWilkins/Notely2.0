@@ -13,6 +13,13 @@
   width: 30px;
   box-sizing: border-box;
   cursor: pointer;
+  transition: background 250ms;
+}
+.ToggleSideNavBtn:hover {
+  background: rgba(var(--gray), 0.65);
+}
+.ToggleSideNavBtn:active {
+  background: rgba(var(--lightBlue), 0.4);
 }
 .ToggleSideNavBtn--left svg {
   transform: rotate(0deg);

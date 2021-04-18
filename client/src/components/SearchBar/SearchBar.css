@@ -66,3 +66,14 @@
   margin: 0;
   font-size: 17px;
 }
+
+.dark .SearchBar,
+.dark .SearchBar--contract:hover {
+  background: rgba(var(--gray), 0.3);
+}
+.dark .SearchBar--contract {
+  background: transparent;
+}
+.dark .SearchBar__clear {
+  background: rgb(210,210,210);
+}

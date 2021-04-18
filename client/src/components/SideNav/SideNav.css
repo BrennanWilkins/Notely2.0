@@ -1,7 +1,8 @@
 .SideNav {
-  background: rgb(var(--black));
   height: 100%;
   transition: width 200ms ease-out;
+  /* background: rgb(27, 26, 31); */
+  background: rgb(27,28,32);
 }
 .SideNav--expand {
   width: 220px;
@@ -139,4 +140,15 @@
   border-radius: 50%;
   margin-left: 8px;
   vertical-align: middle;
+}
+
+.dark .SideNav__innerLink:hover {
+  background: rgba(var(--gray), 0.3);
+}
+.dark .SideNav__container::-webkit-scrollbar-track,
+.dark .SideNav__container::-webkit-scrollbar {
+  background: rgba(20,20,20,0.7);
+}
+.dark .SideNav__container::-webkit-scrollbar-thumb {
+  background: rgba(var(--gray), 0.5);
 }

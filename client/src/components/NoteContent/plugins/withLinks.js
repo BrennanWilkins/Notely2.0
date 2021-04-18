@@ -155,23 +155,41 @@ const LinkModal = ({ submit, close, btnRef }) => {
   );
 };
 
-export const LinkElement = ({ attributes, children, element }) => (
-  <a
-    {...attributes}
-    href={element.url}
-    onClick={e => {
-      // on ctrl+click open link in new tab/window
-      if (e.ctrlKey) {
-        let url = element.url;
-        if (!url.match(/^https?:\/\//i)) {
-          url = 'http://' + url;
+export const LinkElement = ({ attributes, children, element }) => {
+  const visitHandler = () => {
+    let url = element.url;
+    if (!url.match(/^https?:\/\//i)) {
+      url = 'http://' + url;
+    }
+    window.open(url, '_blank');
+  };
+
+  return (
+    <a
+      {...attributes}
+      href={element.url}
+      onClick={e => {
+        // on ctrl+click open link in new tab/window
+        if (e.ctrlKey) {
+          visitHandler();
         }
-        window.open(url, '_blank');
-      }
-    }}
-  >
-    {children}
-  </a>
-);
+      }}
+    >
+      <span contentEditable={false} className="NoteContent__linkTooltip">
+        <span
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            visitHandler();
+          }}
+        >
+          Visit Link
+        </span>
+        (Ctrl+Click)
+      </span>
+      {children}
+    </a>
+  );
+};
 
 export default withLinks;

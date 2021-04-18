@@ -42,6 +42,31 @@
 }
 .NoteContent a {
   color: rgb(var(--blue));
+  position: relative;
+}
+.NoteContent__linkTooltip {
+  position: absolute;
+  left: 0;
+  bottom: 20px;
+  z-index: 2;
+  background: var(--modalBack);
+  padding: 5px;
+  display: none;
+  color: rgb(100,100,100);
+  border-radius: 4px;
+  box-shadow: var(--boxShadow1);
+  border: 1px solid rgb(228, 228, 228);
+  font-size: 14px;
+  white-space: nowrap;
+}
+.NoteContent__linkTooltip span {
+  text-decoration: underline;
+  color: rgb(var(--blue));
+  cursor: pointer;
+  margin-right: 3px;
+}
+.NoteContent a:hover .NoteContent__linkTooltip {
+  display: block;
 }
 .Toolbar {
   width: 100%;
@@ -143,8 +168,11 @@
   opacity: 0.8;
 }
 
-.dark .InsertLinkModal {
+.dark .InsertLinkModal, .dark .NoteContent__linkTooltip {
   border: var(--darkBorder);
+}
+.dark .NoteContent__linkTooltip {
+  color: rgb(200,200,200);
 }
 .dark .NoteContent {
   --hlColor: rgba(var(--blue), 0.5);

@@ -1,6 +1,6 @@
 .NoteListHeader {
   height: 90px;
-  border-bottom: var(--grayBorder);
+  border-bottom: var(--secBorder);
   padding: 15px;
   box-sizing: border-box;
   display: flex;
@@ -58,9 +58,6 @@
   text-overflow: ellipsis;
 }
 
-.dark .NoteListHeader {
-  border-bottom: var(--darkBorder);
-}
 .dark .NoteListHeader__count {
   color: rgb(180,180,180);
 }

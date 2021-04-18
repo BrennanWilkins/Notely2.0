@@ -1,6 +1,6 @@
 .NoteListNote {
   height: 65px;
-  border-bottom: var(--grayBorder);
+  border-bottom: var(--secBorder);
   box-sizing: border-box;
   cursor: pointer;
   position: relative;
@@ -49,9 +49,6 @@
   opacity: 1;
 }
 
-.dark .NoteListNote {
-  border-bottom: var(--darkBorder);
-}
 .dark .NoteListNote {
   background: rgba(var(--gray), 0.1);
 }

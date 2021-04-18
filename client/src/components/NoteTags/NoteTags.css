@@ -61,7 +61,7 @@
   border-top: 1px solid black;
 }
 .dark .NoteTags__input {
-  color: rgb(200,200,200);
+  color: var(--lightGray);
 }
 .dark .NoteTags__input::placeholder {
   color: rgb(170,170,170);
@@ -70,6 +70,6 @@
   background: rgb(24,24,25);
 }
 .dark .NoteTags__deleteBtn {
-  background: rgb(200,200,200);
+  background: var(--lightGray);
   color: black;
 }

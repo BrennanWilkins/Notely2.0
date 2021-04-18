@@ -13,7 +13,7 @@
   height: 95%;
   max-width: 500px;
   max-height: 500px;
-  background: white;
+  background: var(--modalBack);
   top: max(2.5%, calc(50% - 250px));
   left: max(2.5%, calc(50% - 250px));
   border-radius: 4px;
@@ -87,7 +87,6 @@
 }
 
 .dark .ModalContainer__modal {
-  background: rgb(34, 35, 38);
   border: 1px solid rgb(24, 25, 27);
   color: var(--textColor);
 }

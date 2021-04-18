@@ -60,15 +60,17 @@ const PublishModal = props => {
         {msg}
       </div>
       {!!props.publishID &&
-        <label className="PublishModal__link">
-          <span>Public Link</span>
-          <input
-            className="Input"
-            readOnly
-            onFocus={e => e.target.select()}
-            value={`${baseURL}/n/${props.publishID}`}
-          />
-        </label>
+        <div className="PublishModal__link">
+          <label>
+            Public Link
+            <input
+              className="Input"
+              readOnly
+              onFocus={e => e.target.select()}
+              value={`${baseURL}/n/${props.publishID}`}
+            />
+          </label>
+        </div>
       }
     </ModalContainer>
   );

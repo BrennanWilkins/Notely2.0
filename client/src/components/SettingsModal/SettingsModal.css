@@ -52,13 +52,14 @@
   margin: 10px auto;
 }
 .SettingsModal__section span {
-  display: inline-block;
   font-size: 13px;
   font-weight: 500;
   color: rgb(120,120,120);
   width: 100%;
   margin-left: 2px;
-  padding-bottom: 2px;
+}
+.SettingsModal__section input {
+  margin-top: 2px;
 }
 .SettingsModal__msg {
   font-size: 15px;

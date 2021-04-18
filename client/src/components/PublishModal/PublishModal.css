@@ -19,24 +19,19 @@
   width: 90%;
   margin: 0 auto 10px;
   max-width: 300px;
-  display: block;
   text-align: left;
 }
-.PublishModal__link span {
-  display: inline-block;
+.PublishModal__link label {
   font-size: 14px;
   font-weight: 500;
   color: rgb(120,120,120);
   margin-left: 2px;
-  padding-bottom: 2px;
 }
 .PublishModal__link input {
   display: block;
   width: 100%;
   padding: 6px;
-  background: rgb(253,253,253);
   font-size: 15px;
+  margin-top: 2px;
 }
-.PublishModal__link input:hover {
-  background: rgb(251,251,251);
 }

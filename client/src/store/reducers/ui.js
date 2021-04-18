@@ -10,6 +10,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.LOGIN: return login(state);
     case actionTypes.TOGGLE_SIDE_NAV: return { ...state, sideNavShown: !state.sideNavShown };
     case actionTypes.TOGGLE_FULLSCREEN: return { ...state, isFullscreen: !state.isFullscreen };
     case actionTypes.SET_LIST_SHOWN: return { ...state, listShown: action.bool };
@@ -21,6 +22,13 @@ const reducer = (state = initialState, action) => {
   }
 };
 
+const login = state => {
+  if (state.darkMode) {
+    document.body.classList.add('dark');
+  }
+  return state;
+};
+
 const setSortType = (state, { sortType }) => {
   if (state.sortType === sortType) { return state; }
   localStorage['sortType'] = sortType;
@@ -28,13 +36,16 @@ const setSortType = (state, { sortType }) => {
 };
 
 const toggleDarkMode = state => {
-  localStorage['theme'] = state.darkMode ? 'light' : 'dark';
-  return { ...state, darkMode: !state.darkMode };
+  const darkMode = !state.darkMode;
+  localStorage['theme'] = darkMode ? 'dark' : 'light';
+  document.body.classList.toggle('dark');
+  return { ...state, darkMode };
 };
 
 const logout = () => {
   localStorage.removeItem('sortType');
   localStorage.removeItem('theme');
+  document.body.classList.remove('dark');
   return initialState;
 };
 

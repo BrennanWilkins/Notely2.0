@@ -56,3 +56,23 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.dark .NoteListHeader {
+  border-bottom: var(--darkBorder);
+}
+.dark .NoteListHeader__title {
+  color: rgb(230,230,230);
+}
+.dark .NoteListHeader__count {
+  color: rgb(180,180,180);
+}
+.dark .NoteListHeader__sortBtn {
+  color: #ddd;
+  background: rgba(var(--gray), 0.5);
+}
+.dark .NoteListHeader__sortBtn:hover {
+  background: rgba(var(--gray), 0.65);
+}
+.dark .NoteListHeader__sortBtn:active {
+  background: rgba(var(--lightBlue), 0.4);
+}

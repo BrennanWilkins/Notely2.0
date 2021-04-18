@@ -130,3 +130,32 @@
   min-width: 17px;
   margin-right: 7px;
 }
+
+.dark .NoteList {
+  background: rgb(37, 38, 42);
+  border-right: var(--darkBorder);
+}
+.dark .NoteList__searchHeader,
+.dark .NoteList__emptyTrash {
+  color: rgb(230,230,230);
+  border-bottom: var(--darkBorder);
+}
+.dark .NoteList__searchHeader div {
+  color: rgb(240,240,240);
+}
+.dark .NoteList__noNotes {
+  color: rgb(230,230,230);
+}
+.dark .NoteList__noNotes svg {
+  color: rgb(160,160,160);
+}
+.dark .NoteList__emptyTrash div:hover {
+  color: rgba(var(--blue), 0.9);
+}
+.dark .NoteList__notes::-webkit-scrollbar-track,
+.dark .NoteList__notes::-webkit-scrollbar {
+  background: rgba(20,20,20,0.7);
+}
+.dark .NoteList__notes::-webkit-scrollbar-thumb {
+  background: rgba(var(--gray), 0.7);
+}

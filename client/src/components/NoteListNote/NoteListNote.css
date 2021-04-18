@@ -29,6 +29,7 @@
   font-size: 14px;
 }
 .NoteListNote__txt--hl {
+  color: inherit;
   background: rgba(var(--blue), 0.4);
 }
 .NoteListNote__pin {
@@ -44,4 +45,30 @@
 .NoteListNote__pin--hl {
   color: rgb(var(--blue));
   opacity: 1;
+}
+
+.dark .NoteListNote {
+  color: rgb(230,230,230);
+  border-bottom: var(--darkBorder);
+}
+.dark .NoteListNote {
+  background: rgba(var(--gray), 0.1);
+}
+.dark .NoteListNote:hover {
+  background: rgba(var(--gray), 0.2);
+}
+.dark .NoteListNote--active {
+  background: rgba(var(--lightBlue), 0.12);
+}
+.dark .NoteListNote--active:hover {
+  background: rgba(var(--lightBlue), 0.15);
+}
+.dark .NoteListNote__pin {
+  color: rgb(230,230,230);
+}
+.dark .NoteListNote__pin--hl {
+  color: rgba(var(--blue), 0.9);
+}
+.dark .NoteListNote__txt--hl {
+  background: rgba(var(--blue), 0.5);
 }

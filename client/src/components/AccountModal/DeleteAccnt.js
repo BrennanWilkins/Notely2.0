@@ -15,7 +15,8 @@ const DeleteAccnt = props => {
       props.logout();
     }).catch(err => {
       setIsLoading(false);
-      let errMsg = err?.response?.data?.msg || 'There was an error while deleting your account.';
+      let errMsg = err?.response?.data?.msg ||
+      'There was an error while deleting your account.';
       setShowMsg(true);
       setMsg(errMsg);
     });
@@ -28,20 +29,25 @@ const DeleteAccnt = props => {
 
   return (
     <>
-      <p className="SettingsModal__deleteInfo">Deleting your account cannot be undone. All of your notes will be deleted.
-      Any notes that are shared with another collaborator will not be deleted. Please enter your password to confirm.</p>
-      <div className="SettingsModal__container">
-        <div className="SettingsModal__section">
+      <p className="AccountModal__deleteInfo">
+        Deleting your account cannot be undone. All of your notes will be deleted.
+        Any notes that are shared with another collaborator will not be deleted.
+        Please enter your password to confirm.
+      </p>
+      <div className="AccountModal__container">
+        <div className="AccountModal__section">
           <PassInput value={pass} onChange={passHandler} />
         </div>
         <button
-          className="Btn RedBtn SettingsModal__deleteBtn"
+          className="Btn RedBtn AccountModal__deleteBtn"
           disabled={isLoading || !pass}
           onClick={deleteHandler}
         >
           DELETE MY ACCOUNT
         </button>
-        <div className={`SettingsModal__msg ${!showMsg ? 'SettingsModal__msg--hide' : ''}`}>{msg}</div>
+        <div className={`AccountModal__msg ${!showMsg ? 'AccountModal__msg--hide' : ''}`}>
+          {msg}
+        </div>
       </div>
     </>
   );

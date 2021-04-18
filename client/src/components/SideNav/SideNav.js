@@ -2,18 +2,21 @@ import React, { useState, useRef, useEffect } from 'react';
 import './SideNav.css';
 import PropTypes from 'prop-types';
 import ToggleSideNavBtn from '../UI/ToggleSideNavBtn/ToggleSideNavBtn';
-import { logo, notesIcon, trashIcon, settingsIcon, tagsIcon, backIcon, peopleIcon } from '../UI/icons';
+import { logo, notesIcon, trashIcon, settingsIcon, tagsIcon, backIcon,
+  peopleIcon, personIcon } from '../UI/icons';
 import { connect } from 'react-redux';
 import { toggleSideNav, setShowTrash, showNotesByTag, setListShown } from '../../store/actions';
 import SettingsModal from '../SettingsModal/SettingsModal';
 import Tooltip from '../UI/Tooltip/Tooltip';
 import InvitesModal from '../InvitesModal/InvitesModal';
 import SearchBar from '../SearchBar/SearchBar';
+import AccountModal from '../AccountModal/AccountModal';
 
 const SideNav = props => {
   const [showSettings, setShowSettings] = useState(false);
   const [showInvitesModal, setShowInvitesModal] = useState(false);
   const [showTags, setShowTags] = useState(false);
+  const [showAccnt, setShowAccnt] = useState(false);
   const sideNavRef = useRef();
 
   useEffect(() => {
@@ -100,6 +103,13 @@ const SideNav = props => {
             </div>
             {!props.sideNavShown && <Tooltip position="right">Settings</Tooltip>}
           </div>
+          <div className="SideNav__link" onClick={() => setShowAccnt(true)}>
+            <div className="SideNav__innerLink">
+              {personIcon}
+              <div>Account</div>
+            </div>
+            {!props.sideNavShown && <Tooltip position="right">Account</Tooltip>}
+          </div>
           <div className="SideNav__link" onClick={() => setShowInvitesModal(true)}>
             <div className="SideNav__innerLink">
               {peopleIcon}
@@ -132,6 +142,7 @@ const SideNav = props => {
           </div>
         </div>
       </div>
+      {showAccnt && <AccountModal close={() => setShowAccnt(false)} />}
       {showSettings && <SettingsModal close={() => setShowSettings(false)} />}
       {showInvitesModal && <InvitesModal close={() => setShowInvitesModal(false)} />}
     </>

@@ -1,0 +1,80 @@
+.AccountModal__subTitle {
+  font-size: 15px;
+  color: rgb(110,110,110);
+  margin: 10px 0 4px;
+}
+.AccountModal__info {
+  font-size: 16px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.AccountModal__saveBtn {
+  display: block;
+  margin-top: 15px;
+  padding: 8px 12px;
+}
+.AccountModal__deleteBtn {
+  display: block;
+  margin: auto;
+  width: 100%;
+  font-size: 14px;
+  padding: 8px 12px;
+}
+.AccountModal__logoutBtn {
+  display: block;
+  font-size: 16px;
+  width: 100%;
+  max-width: 200px;
+  margin: 20px auto 30px;
+}
+.AccountModal__btn {
+  margin: 20px auto;
+  cursor: pointer;
+  text-decoration: underline;
+  border-radius: 3px;
+  width: 100%;
+  max-width: 200px;
+  padding: 8px 0;
+}
+.AccountModal__btn:hover {
+  background: var(--lighterGray);
+}
+.AccountModal__container {
+  width: 100%;
+  max-width: 280px;
+  text-align: left;
+  margin: 15px auto;
+}
+.AccountModal__section {
+  width: 100%;
+  margin: 10px auto;
+}
+.AccountModal__section span {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgb(120,120,120);
+  width: 100%;
+  margin-left: 2px;
+}
+.AccountModal__section input {
+  margin-top: 2px;
+}
+.AccountModal__msg {
+  font-size: 15px;
+  margin-top: 10px;
+  transition: opacity 250ms;
+}
+.AccountModal__msg--hide {
+  opacity: 0;
+}
+.AccountModal__deleteInfo {
+  font-size: 15px;
+  text-align: center;
+  padding: 12px;
+}
+
+.dark .AccountModal__btn:hover {
+  background: rgba(var(--gray), 0.25);
+}

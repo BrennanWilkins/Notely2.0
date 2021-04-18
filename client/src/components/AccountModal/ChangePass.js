@@ -27,7 +27,8 @@ const ChangePass = () => {
       setConfirmPass('');
     }).catch(err => {
       setIsLoading(false);
-      const errMsg = err?.response?.data?.msg || 'There was an error while changing your password.';
+      const errMsg = err?.response?.data?.msg ||
+      'There was an error while changing your password.';
       setMsg(errMsg);
       setShowMsg(true);
     });
@@ -49,35 +50,35 @@ const ChangePass = () => {
   };
 
   return (
-    <div className="SettingsModal__container">
-      <div className="SettingsModal__section">
+    <div className="AccountModal__container">
+      <div className="AccountModal__section">
         <label>
           <span>Old password</span>
           <PassInput value={oldPass} onChange={oldPassHandler} />
         </label>
       </div>
-      <div className="SettingsModal__section">
+      <div className="AccountModal__section">
         <label>
           <span>New password</span>
           <PassInput value={newPass} onChange={newPassHandler} />
         </label>
       </div>
-      <div className="SettingsModal__section">
+      <div className="AccountModal__section">
         <label>
           <span>Confirm new password</span>
           <PassInput value={confirmPass} onChange={confPassHandler} />
         </label>
       </div>
       <button
-        className="Btn BlueBtn SettingsModal__saveBtn"
+        className="Btn BlueBtn AccountModal__saveBtn"
         disabled={isLoading}
         onClick={changePassHandler}
       >
         Save
       </button>
       <div className={`
-        SettingsModal__msg
-        ${!showMsg ? 'SettingsModal__msg--hide' : ''}
+        AccountModal__msg
+        ${!showMsg ? 'AccountModal__msg--hide' : ''}
       `}>
         {msg}
       </div>

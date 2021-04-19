@@ -5,16 +5,16 @@ const initialState = {
   sideNavShown: window.innerWidth > 900,
   isFullscreen: false,
   listShown: true,
-  sortType: localStorage['sortType'] || 'Modified Newest',
-  darkMode: localStorage['theme'] === 'dark' ? true : false,
-  noteMargins: localStorage['margin'] || 'Normal',
-  noteFontSize: localStorage['fontSize'] || 'Normal',
-  noteListDisplay: localStorage['listDisplay'] || 'Normal'
+  sortType: 'Modified Newest',
+  darkMode: false,
+  noteMargins: 'Normal',
+  noteFontSize: 'Normal',
+  noteListDisplay: 'Normal'
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.LOGIN: return login(state);
+    case actionTypes.LOGIN: return login(state, action);
     case actionTypes.TOGGLE_SIDE_NAV: return { ...state, sideNavShown: !state.sideNavShown };
     case actionTypes.TOGGLE_FULLSCREEN: return { ...state, isFullscreen: !state.isFullscreen };
     case actionTypes.SET_LIST_SHOWN: return { ...state, listShown: action.bool };
@@ -29,13 +29,37 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-const login = state => {
-  if (state.darkMode) {
+const login = (state, { payload: { email } }) => {
+  const prevUser = localStorage['email'];
+  if (!prevUser || prevUser !== email) {
+    localStorage['email'] = email;
+  }
+
+  // if different user logging in then remove previous user's settings
+  if (prevUser && prevUser !== email) {
+    localStorage.removeItem('sortType');
+    localStorage.removeItem('theme');
+    localStorage.removeItem('margin');
+    localStorage.removeItem('fontSize');
+    localStorage.removeItem('listDisplay');
+    return state;
+  }
+
+  const newState = {
+    ...state,
+    sortType: localStorage['sortType'] || 'Modified Newest',
+    darkMode: localStorage['theme'] === 'dark' ? true : false,
+    noteMargins: localStorage['margin'] || 'Normal',
+    noteFontSize: localStorage['fontSize'] || 'Normal',
+    noteListDisplay: localStorage['listDisplay'] || 'Normal'
+  };
+
+  if (newState.darkMode) {
     document.body.classList.add('dark');
   }
-  document.documentElement.style.setProperty('--noteFontSize', fontValues[state.noteFontSize]);
-  document.documentElement.style.setProperty('--noteMargins', marginValues[state.noteMargins]);
-  return state;
+  document.documentElement.style.setProperty('--noteFontSize', fontValues[newState.noteFontSize]);
+  document.documentElement.style.setProperty('--noteMargins', marginValues[newState.noteMargins]);
+  return newState;
 };
 
 const showNote = state => {
@@ -58,11 +82,6 @@ const toggleDarkMode = state => {
 };
 
 const logout = () => {
-  localStorage.removeItem('sortType');
-  localStorage.removeItem('theme');
-  localStorage.removeItem('margin');
-  localStorage.removeItem('fontSize');
-  localStorage.removeItem('listDisplay');
   document.body.classList.remove('dark');
   document.documentElement.style.setProperty('--noteFontSize', '16px');
   document.documentElement.style.setProperty('--noteMargins', '10px');

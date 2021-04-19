@@ -34,7 +34,7 @@ const login = state => {
     document.body.classList.add('dark');
   }
   document.documentElement.style.setProperty('--noteFontSize', fontValues[state.noteFontSize]);
-  document.documentElement.style.setProperty('--noteMargins', fontValues[state.noteMargins]);
+  document.documentElement.style.setProperty('--noteMargins', marginValues[state.noteMargins]);
   return state;
 };
 

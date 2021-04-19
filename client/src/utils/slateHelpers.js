@@ -1,8 +1,8 @@
 import { Node } from 'slate';
 
-export const serializeToText = nodes => {
+export const serializeToText = (nodes, delimiter) => {
   if (!nodes || !nodes.length) { return ''; }
-  return nodes.map(n => Node.string(n)).join('');
+  return nodes.map(n => Node.string(n)).join(delimiter || '');
 };
 
 export const serializeBody = (nodes, searchQuery) => {

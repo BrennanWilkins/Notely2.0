@@ -15,6 +15,7 @@
   padding: 5px;
   margin: 0 5px;
   width: 80px;
+  min-width: 80px;
   text-align: center;
   cursor: pointer;
   background: rgb(245,245,245);
@@ -31,6 +32,20 @@
 }
 .SettingsModal__opt:active {
   background: rgba(var(--blue), 0.2);
+}
+@media (max-width: 330px) {
+  .SettingsModal__options {
+    flex-direction: column;
+  }
+  .SettingsModal__opt {
+    margin: 5px;
+    width: 100px;
+  }
+}
+.SettingsModal__export {
+  width: 100px;
+  padding: 7px;
+  margin: 35px auto 10px;
 }
 
 .dark .SettingsModal__title {

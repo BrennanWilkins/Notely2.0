@@ -7,7 +7,7 @@ const initialState = {
   listShown: true,
   sortType: localStorage['sortType'] || 'Modified Newest',
   darkMode: localStorage['theme'] === 'dark' ? true : false,
-  noteMargin: localStorage['margin'] || 'Normal',
+  noteMargins: localStorage['margin'] || 'Normal',
   noteFontSize: localStorage['fontSize'] || 'Normal',
   noteListDisplay: localStorage['listDisplay'] || 'Normal'
 };
@@ -34,6 +34,7 @@ const login = state => {
     document.body.classList.add('dark');
   }
   document.documentElement.style.setProperty('--noteFontSize', fontValues[state.noteFontSize]);
+  document.documentElement.style.setProperty('--noteMargins', fontValues[state.noteMargins]);
   return state;
 };
 
@@ -64,15 +65,17 @@ const logout = () => {
   localStorage.removeItem('listDisplay');
   document.body.classList.remove('dark');
   document.documentElement.style.setProperty('--noteFontSize', '16px');
+  document.documentElement.style.setProperty('--noteMargins', '10px');
   return initialState;
 };
 
 const setNoteMargins = (state, { size }) => {
-  if (size === state.noteMargin) { return; }
+  if (size === state.noteMargins) { return; }
   localStorage['margin'] = size;
+  document.documentElement.style.setProperty('--noteMargins', marginValues[size]);
   return {
     ...state,
-    noteMargin: size
+    noteMargins: size
   };
 };
 

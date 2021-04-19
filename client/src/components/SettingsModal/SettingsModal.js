@@ -20,7 +20,7 @@ const SettingsModal = props => {
             key={opt}
             className={`
               SettingsModal__opt
-              ${props.noteMargin === opt ? 'SettingsModal__opt--active' : ''}
+              ${props.noteMargins === opt ? 'SettingsModal__opt--active' : ''}
             `}
             onClick={() => props.setNoteMargins(opt)}
           >
@@ -68,7 +68,7 @@ const SettingsModal = props => {
 
 SettingsModal.propTypes = {
   close: PropTypes.func.isRequired,
-  noteMargin: PropTypes.string.isRequired,
+  noteMargins: PropTypes.string.isRequired,
   noteFontSize: PropTypes.string.isRequired,
   noteListDisplay: PropTypes.string.isRequired,
   setNoteMargins: PropTypes.func.isRequired,
@@ -77,7 +77,7 @@ SettingsModal.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  noteMargin: state.ui.noteMargin,
+  noteMargins: state.ui.noteMargins,
   noteFontSize: state.ui.noteFontSize,
   noteListDisplay: state.ui.noteListDisplay
 });

@@ -36,6 +36,7 @@ const NoteEditor = ({ editor, decorate }) => {
       autoFocus
       onKeyDown={keyDownHandler}
       decorate={decorate}
+      style={{ padding: '0 var(--noteMargins)' }}
     />
   )
 };
@@ -127,7 +128,7 @@ const Leaf = ({ attributes, children, leaf }) => {
       {...attributes}
       style={
         leaf.isCaret ? { position: 'relative', backgroundColor: leaf.alphaColor }
-        : leaf.highlight ? { backgroundColor: 'var(--hlColor)' } 
+        : leaf.highlight ? { backgroundColor: 'var(--hlColor)' }
         : null
       }
     >

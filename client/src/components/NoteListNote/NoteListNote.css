@@ -13,8 +13,6 @@
 .NoteListNote--Expanded {
   height: auto;
   min-height: 65px;
-  max-height: 112px;
-  overflow: hidden;
 }
 .NoteListNote:hover {
   background: rgb(241,241,241);
@@ -33,6 +31,11 @@
 }
 .NoteListNote--Expanded .NoteListNote__txt {
   word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 .NoteListNote__title {
   font-weight: 500;

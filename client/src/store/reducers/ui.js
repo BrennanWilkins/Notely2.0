@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
+import { marginValues, fontValues } from '../../utils/displayOptions';
 
 const initialState = {
   sideNavShown: window.innerWidth > 900,
@@ -32,6 +33,7 @@ const login = state => {
   if (state.darkMode) {
     document.body.classList.add('dark');
   }
+  document.documentElement.style.setProperty('--noteFontSize', fontValues[state.noteFontSize]);
   return state;
 };
 
@@ -61,10 +63,12 @@ const logout = () => {
   localStorage.removeItem('fontSize');
   localStorage.removeItem('listDisplay');
   document.body.classList.remove('dark');
+  document.documentElement.style.setProperty('--noteFontSize', '16px');
   return initialState;
 };
 
 const setNoteMargins = (state, { size }) => {
+  if (size === state.noteMargin) { return; }
   localStorage['margin'] = size;
   return {
     ...state,
@@ -73,7 +77,9 @@ const setNoteMargins = (state, { size }) => {
 };
 
 const setNoteFontSize = (state, { size }) => {
+  if (size === state.noteFontSize) { return; }
   localStorage['fontSize'] = size;
+  document.documentElement.style.setProperty('--noteFontSize', fontValues[size]);
   return {
     ...state,
     noteFontSize: size
@@ -81,6 +87,7 @@ const setNoteFontSize = (state, { size }) => {
 };
 
 const setNoteListDisplay = (state, { size }) => {
+  if (size === state.noteListDisplay) { return; }
   localStorage['listDisplay'] = size;
   return {
     ...state,

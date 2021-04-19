@@ -7,6 +7,7 @@
   flex-grow: 1;
   color: var(--textColor);
   --hlColor: rgba(var(--blue), 0.3);
+  font-size: var(--noteFontSize);
 }
 .NoteContent--empty {
   display: flex;
@@ -30,7 +31,7 @@
 }
 .NoteContent code {
   background: var(--lighterGray);
-  font-size: 16px;
+  font-size: 1em;
 }
 .NoteContent blockquote {
   border-left: 2px solid rgb(219,219,219);

@@ -29,6 +29,8 @@ code {
   --black: 19, 19, 23;
   --modalBack: white;
   --noteBack: white;
+  --noteFontSize: 16px;
+  --noteMargins: 10px;
 }
 
 /* utility classes */

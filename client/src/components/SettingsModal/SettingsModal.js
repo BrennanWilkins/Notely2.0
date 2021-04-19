@@ -5,7 +5,7 @@ import ModalContainer from '../UI/ModalContainer/ModalContainer';
 import DarkModeToggle from '../UI/DarkModeToggle/DarkModeToggle';
 import { connect } from 'react-redux';
 import { setNoteMargins, setNoteFontSize, setNoteListDisplay } from '../../store/actions';
-import { noteMargins, noteFontSizes, noteListDisplays } from '../../utils/displayOptions';
+import { marginOptions, fontSizeOptions, listDisplayOptions } from '../../utils/displayOptions';
 
 const SettingsModal = props => {
   return (
@@ -15,7 +15,7 @@ const SettingsModal = props => {
         Note Margins
       </div>
       <div className="SettingsModal__options">
-        {noteMargins.map(opt => (
+        {marginOptions.map(opt => (
           <div
             key={opt}
             className={`
@@ -32,7 +32,7 @@ const SettingsModal = props => {
         Note font size
       </div>
       <div className="SettingsModal__options">
-        {noteFontSizes.map(opt => (
+        {fontSizeOptions.map(opt => (
           <div
             key={opt}
             className={`
@@ -49,7 +49,7 @@ const SettingsModal = props => {
         Note list display
       </div>
       <div className="SettingsModal__options">
-        {noteListDisplays.map(opt => (
+        {listDisplayOptions.map(opt => (
           <div
             key={opt}
             className={`

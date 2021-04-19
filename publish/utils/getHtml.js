@@ -1,6 +1,4 @@
-const baseURL = module.exports.baseURL = process.env.NODE_ENV === 'production' ?
-'https://notely-app.herokuapp.com' :
-'http://localhost:3000';
+const baseURL = require('../../utils/baseURL');
 
 const logo = (
   `<svg xmlns="http://www.w3.org/2000/svg" width="2.3em" height="2.3em" viewBox="0 0 512 512" x="0" y="0">

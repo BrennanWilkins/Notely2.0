@@ -5,8 +5,9 @@ const { body, param } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const { validate, passwordRE } = require('../middleware/validate');
-const nodemailer = require('nodemailer');
 const auth = require('../middleware/auth');
+const sendMail = require('../utils/sendMail');
+const baseURL = require('../utils/baseURL');
 
 const signToken = async (user, expiration) => {
   // create jwt token that expires in given expiration days when logging in
@@ -14,20 +15,6 @@ const signToken = async (user, expiration) => {
   const token = await jwt.sign(jwtPayload, process.env.AUTH_KEY, { expiresIn: expiration });
   return token;
 };
-
-const baseURL = process.env.NODE_ENV === 'production' ?
-'https://notely-app.herokuapp.com' :
-'http://localhost:3000';
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  secure: false,
-  tls: { rejectUnauthorized: false },
-  auth: {
-    user: process.env.NOTELY_EMAIL,
-    pass: process.env.NOTELY_PASS
-  }
-});
 
 router.post('/signup',
   validate(
@@ -67,13 +54,15 @@ router.post('/signup',
 
       // send link to provided email with hash to finish signup
       const hRef = `${baseURL}/finish-signup?token=${signupID}`;
-      const mailOptions = {
-        from: process.env.NOTELY_EMAIL,
-        to: email,
-        subject: 'Finish signing up for Notely',
-        html: `<h1>Welcome to Notely!</h1><h2>Click on the link below to finish signing up.</h2><p><a href="${hRef}">Sign up</a></p>`
-      };
-      await transporter.sendMail(mailOptions);
+      await sendMail(
+        email,
+        'Finish signing up for Notely',
+        `
+        <h1>Welcome to Notely!</h1>
+        <h2>Click on the link below to finish signing up.</h2>
+        <p><a href="${hRef}">Sign up</a></p>
+        `
+      );
 
       res.sendStatus(200);
     } catch(err) { res.status(500).json({ msg: 'There was an error while signing up.' }); }
@@ -222,13 +211,14 @@ router.post('/forgotPass',
 
       // send email to user with link to reset password
       const hRef = `${baseURL}/reset-password?token=${recoverPassID}`;
-      const mailOptions = {
-        from: process.env.NOTELY_EMAIL,
-        to: email,
-        subject: 'Reset your Notely password',
-        html: `<h2>Please click on the link below to reset your password.</h2><p><a href="${hRef}">Reset password</a></p>`
-      };
-      await transporter.sendMail(mailOptions);
+      await sendMail(
+        email,
+        'Reset your Notely password',
+        `
+        <h2>Please click on the link below to reset your password.</h2>
+        <p><a href="${hRef}">Reset password</a></p>
+        `
+      );
 
       res.sendStatus(200);
     } catch (err) { res.sendStatus(500); }

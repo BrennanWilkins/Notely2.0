@@ -1,6 +1,6 @@
 const Note = require('../models/note');
 const serialize = require('./utils/serialize');
-const { baseURL } = require('./utils/getHtml');
+const baseURL = require('../utils/baseURL');
 
 const publishHandler = async (req, res) => {
   try {

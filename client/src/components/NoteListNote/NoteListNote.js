@@ -13,7 +13,11 @@ const NoteListNote = props => {
 
   return (
     <div
-      className={`NoteListNote ${props.isCurrent ? 'NoteListNote--active' : ''}`}
+      className={`
+        NoteListNote
+        ${props.isCurrent ? 'NoteListNote--active' : ''}
+        NoteListNote--${props.display}
+      `}
       onClick={() => props.showNote(props.noteID)}
     >
       {!props.trashShown &&
@@ -32,7 +36,7 @@ const NoteListNote = props => {
             searchWords={[props.searchQuery]}
             textToHighlight={props.title}
           />
-          {!!props.txt &&
+          {!!props.txt && props.display !== 'Condensed' &&
             <Highlighter
               className="NoteListNote__txt"
               highlightClassName="NoteListNote__txt--hl"
@@ -46,9 +50,11 @@ const NoteListNote = props => {
           <div className="NoteListNote__title">
             {props.title || 'New Note'}
           </div>
-          <div className="NoteListNote__txt">
-            {props.txt}
-          </div>
+          {props.display !== 'Condensed' &&
+            <div className="NoteListNote__txt">
+              {props.txt}
+            </div>
+          }
         </>
       }
     </div>
@@ -65,13 +71,15 @@ NoteListNote.propTypes = {
   isPinned: PropTypes.bool.isRequired,
   txt: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  trashShown: PropTypes.bool.isRequired
+  trashShown: PropTypes.bool.isRequired,
+  display: PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
   searchQuery: state.notes.searchQuery,
   isCurrent: state.notes.currentNoteID === ownProps.noteID,
-  trashShown: state.notes.trashShown
+  trashShown: state.notes.trashShown,
+  display: state.ui.noteListDisplay
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -7,6 +7,15 @@
   padding: 10px 8px 10px 30px;
   color: var(--textColor);
 }
+.NoteListNote--Condensed {
+  height: 42px;
+}
+.NoteListNote--Expanded {
+  height: auto;
+  min-height: 65px;
+  max-height: 112px;
+  overflow: hidden;
+}
 .NoteListNote:hover {
   background: rgb(241,241,241);
 }
@@ -16,11 +25,14 @@
 .NoteListNote--active:hover {
   background: rgba(var(--blue), 0.15);
 }
-.NoteListNote__title, .NoteListNote__txt {
+.NoteListNote__title, .NoteListNote--Normal .NoteListNote__txt {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   display: block;
+}
+.NoteListNote--Expanded .NoteListNote__txt {
+  word-wrap: break-word;
 }
 .NoteListNote__title {
   font-weight: 500;

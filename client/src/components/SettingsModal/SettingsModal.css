@@ -1,0 +1,48 @@
+.SettingsModal__title {
+  text-transform: uppercase;
+  font-size: 15px;
+  color: rgb(100,100,100);
+  font-weight: 500;
+  margin: 20px 0 5px;
+}
+.SettingsModal__options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.SettingsModal__opt {
+  font-size: 15px;
+  padding: 5px;
+  margin: 0 5px;
+  width: 80px;
+  text-align: center;
+  cursor: pointer;
+  background: rgb(245,245,245);
+  color: rgb(50,50,50);
+  border-radius: 3px;
+  transition: background 250ms;
+}
+.SettingsModal__opt:hover {
+  background: rgb(235,235,235);
+}
+.SettingsModal__opt--active {
+  border-bottom: 2px solid rgb(var(--blue));
+  background: rgb(240,240,240);
+}
+.SettingsModal__opt:active {
+  background: rgba(var(--blue), 0.2);
+}
+
+.dark .SettingsModal__title {
+  color: rgb(160,160,160);
+}
+.dark .SettingsModal__opt {
+  color: #ddd;
+  background: rgba(var(--gray), 0.5);
+}
+.dark .SettingsModal__opt:hover {
+  background: rgba(var(--gray), 0.65);
+}
+.dark .SettingsModal__opt:active {
+  background: rgba(var(--lightBlue), 0.4);
+}

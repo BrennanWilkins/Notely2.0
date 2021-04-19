@@ -9,6 +9,9 @@ export const TOGGLE_FULLSCREEN = 'TOGGLE_FULLSCREEN';
 export const SET_LIST_SHOWN = 'SET_LIST_SHOWN';
 export const SET_SORT_TYPE = 'SET_SORT_TYPE';
 export const TOGGLE_DARK_MODE = 'TOGGLE_DARK_MODE';
+export const SET_NOTE_MARGINS = 'SET_NOTE_MARGINS';
+export const SET_NOTE_FONT_SIZE = 'SET_NOTE_FONT_SIZE';
+export const SET_NOTE_LIST_DISPLAY = 'SET_NOTE_LIST_DISPLAY';
 
 // note actionTypes
 export const CREATE_NOTE = 'CREATE_NOTE';

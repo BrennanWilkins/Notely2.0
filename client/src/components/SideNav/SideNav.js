@@ -21,7 +21,7 @@ const SideNav = props => {
 
   useEffect(() => {
     const clickHandler = e => {
-      if (props.sideNavShown && !sideNavRef.current.contains(e.target)) {
+      if (props.shown && !sideNavRef.current.contains(e.target)) {
         props.toggleSideNav();
       }
     };
@@ -34,8 +34,8 @@ const SideNav = props => {
       }
     };
 
-    if (props.sideNavShown) { resizeHandler(); }
-    if (!props.sideNavShown && showTags) {
+    if (props.shown) { resizeHandler(); }
+    if (!props.shown && showTags) {
       setShowTags(false);
     }
 
@@ -44,10 +44,10 @@ const SideNav = props => {
       window.removeEventListener('resize', resizeHandler);
       document.removeEventListener('mousedown', clickHandler);
     };
-  }, [props.sideNavShown]);
+  }, [props.shown]);
 
   const toggleTagsHandler = () => {
-    if (!props.sideNavShown) {
+    if (!props.shown) {
       props.toggleSideNav();
     }
     setShowTags(shown => !shown);
@@ -67,69 +67,61 @@ const SideNav = props => {
   const showNotesByTagHandler = tag => {
     props.showNotesByTag(tag);
     resetListShown();
-    if (props.sideNavShown && window.innerWidth <= 750) {
+    if (props.shown && window.innerWidth <= 750) {
       props.toggleSideNav();
     }
   };
 
   return (
     <>
-      <div ref={sideNavRef} className={`SideNav ${props.sideNavShown ? 'SideNav--expand' : 'SideNav--contract'}`}>
-        <ToggleSideNavBtn isExpanded={props.sideNavShown} onClick={props.toggleSideNav} />
+      <div ref={sideNavRef} className={`SideNav ${props.shown ? 'SideNav--expand' : 'SideNav--contract'}`}>
+        <ToggleSideNavBtn isExpanded={props.shown} onClick={props.toggleSideNav} />
         <div className="SideNav__title">
           {logo}
           <div>Notely</div>
         </div>
         <div className="SideNav__container">
-          <SearchBar sideNavShown={props.sideNavShown} toggleSideNav={props.toggleSideNav} />
-          <div className="SideNav__link" onClick={() => toggleTrashHandler(false)}>
-            <div className="SideNav__innerLink">
-              {notesIcon}
-              <div>All Notes</div>
+          <SearchBar sideNavShown={props.shown} toggleSideNav={props.toggleSideNav} />
+          <SideNavLink
+            onClick={() => toggleTrashHandler(false)}
+            title="All Notes"
+            icon={notesIcon}
+          />
+          <SideNavLink
+            onClick={() => toggleTrashHandler(true)}
+            title="Trash"
+            icon={trashIcon}
+          />
+          <SideNavLink
+            onClick={() => setShowSettings(true)}
+            title="Settings"
+            icon={settingsIcon}
+          />
+          <SideNavLink
+            onClick={() => setShowAccnt(true)}
+            title="Account"
+            icon={personIcon}
+          />
+          <SideNavLink
+            onClick={() => setShowInvitesModal(true)}
+            title="Invites"
+            icon={peopleIcon}
+          >
+            <div>
+              Invites
+              {props.hasInvites && <span className="SideNav__notif" />}
             </div>
-            {!props.sideNavShown && <Tooltip position="right">All Notes</Tooltip>}
-          </div>
-          <div className="SideNav__link" onClick={() => toggleTrashHandler(true)}>
-            <div className="SideNav__innerLink">
-              {trashIcon}
-              <div>Trash</div>
-            </div>
-            {!props.sideNavShown && <Tooltip position="right">Trash</Tooltip>}
-          </div>
-          <div className="SideNav__link" onClick={() => setShowSettings(true)}>
-            <div className="SideNav__innerLink">
-              {settingsIcon}
-              <div>Settings</div>
-            </div>
-            {!props.sideNavShown && <Tooltip position="right">Settings</Tooltip>}
-          </div>
-          <div className="SideNav__link" onClick={() => setShowAccnt(true)}>
-            <div className="SideNav__innerLink">
-              {personIcon}
-              <div>Account</div>
-            </div>
-            {!props.sideNavShown && <Tooltip position="right">Account</Tooltip>}
-          </div>
-          <div className="SideNav__link" onClick={() => setShowInvitesModal(true)}>
-            <div className="SideNav__innerLink">
-              {peopleIcon}
-              <div>
-                Invites
-                {props.hasInvites && <span className="SideNav__notif" />}
-              </div>
-            </div>
-            {!props.sideNavShown && <Tooltip position="right">Invites</Tooltip>}
-          </div>
-          <div className="SideNav__link" onClick={toggleTagsHandler}>
-            <div className="SideNav__innerLink">
-              {tagsIcon}
-              <div>Tags</div>
-              <span className={`SideNav__toggleTagBtn ${showTags ? 'SideNav__toggleTagBtn--rotate' : ''}`}>
-                {backIcon}
-              </span>
-            </div>
-            {!props.sideNavShown && <Tooltip position="right">Tags</Tooltip>}
-          </div>
+          </SideNavLink>
+          <SideNavLink
+            onClick={toggleTagsHandler}
+            title="Tags"
+            icon={tagsIcon}
+          >
+            <div>Tags</div>
+            <span className={`SideNav__toggleTagBtn ${showTags ? 'SideNav__toggleTagBtn--rotate' : ''}`}>
+              {backIcon}
+            </span>
+          </SideNavLink>
           <div
             className={`SideNav__tags ${showTags ? 'SideNav__tags--show' : 'SideNav__tags--hide'}`}
             style={{ maxHeight: showTags ? props.tags.length * 42 + 'px' : '0' }}
@@ -149,8 +141,20 @@ const SideNav = props => {
   );
 };
 
+const SideNavLink = (
+  connect(state => ({ shown: state.ui.sideNavShown }))
+  (({ onClick, title, icon, children, shown }) => (
+    <div className="SideNav__link" onClick={onClick}>
+      <div className="SideNav__innerLink">
+        {icon}
+        {children || <div>{title}</div>}
+      </div>
+      {!shown && <Tooltip position="right">{title}</Tooltip>}
+    </div>
+)));
+
 SideNav.propTypes = {
-  sideNavShown: PropTypes.bool.isRequired,
+  shown: PropTypes.bool.isRequired,
   toggleSideNav: PropTypes.func.isRequired,
   setShowTrash: PropTypes.func.isRequired,
   tags: PropTypes.array.isRequired,
@@ -160,7 +164,7 @@ SideNav.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  sideNavShown: state.ui.sideNavShown,
+  shown: state.ui.sideNavShown,
   tags: state.notes.allTags,
   hasInvites: state.user.invites.length > 0
 });

@@ -10,6 +10,7 @@ const ForgotPage = lazy(() => import('./components/AuthPages/ForgotPage'));
 const FinishSignupPage = lazy(() => import('./components/AuthPages/FinishSignupPage'));
 const ResetPassPage = lazy(() => import('./components/AuthPages/ResetPassPage'));
 const NotelyContainer = lazy(() => import('./components/NotelyContainer/NotelyContainer'));
+const HelpPage = lazy(() => import('./components/HelpPage/HelpPage'));
 
 const App = props => {
   useEffect(() => props.tryAutoLogin(), []);
@@ -27,6 +28,9 @@ const App = props => {
           <Switch>
             <Route exact path="/">
               <Suspense fallback={<Spinner />}><NotelyContainer /></Suspense>
+            </Route>
+            <Route exact path="/help">
+              <Suspense fallback={<Spinner />}><HelpPage isAuth /></Suspense>
             </Route>
             <Redirect to="/" />
           </Switch>
@@ -46,6 +50,9 @@ const App = props => {
             </Route>
             <Route path="/reset-password">
               <Suspense fallback={<Spinner />}><ResetPassPage /></Suspense>
+            </Route>
+            <Route exact path="/help">
+              <Suspense fallback={<Spinner />}><HelpPage isAuth={false} /></Suspense>
             </Route>
             <Redirect to="/login" />
           </Switch>

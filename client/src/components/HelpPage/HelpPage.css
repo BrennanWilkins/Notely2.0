@@ -1,0 +1,117 @@
+.HelpPage__nav {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background: rgb(245,245,245);
+  box-sizing: border-box;
+  padding: 0 15px 10px;
+}
+.HelpPage__title {
+  display: inline-flex;
+  align-items: center;
+  font-size: 24px;
+  color: rgb(var(--blue));
+  width: auto;
+  margin-top: 10px;
+}
+.HelpPage__title svg {
+  font-size: 40px;
+  margin-right: 5px;
+}
+.HelpPage__title span {
+  color: rgba(var(--blue), 0.4);
+  margin-left: 5px;
+}
+.HelpPage__backBtn {
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 7px 9px;
+  font-size: 16px;
+  margin: 10px 0 0 5px;
+}
+.HelpPage__content {
+  display: flex;
+  padding: 50px 20px;
+}
+.HelpPage__linkContainer {
+  width: 230px;
+  margin-right: 20px;
+}
+.HelpPage__infoContainer {
+  flex-grow: 1;
+  max-width: 1000px;
+}
+.HelpPage__linksTitle {
+  color: rgb(145,145,145);
+  padding-bottom: 10px;
+  border-bottom: 1.2px solid #ddd;
+  text-align: center;
+  font-size: 19px;
+}
+.HelpPage__link {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: rgb(50,50,50);
+  margin: 5px 0;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 250ms;
+  box-sizing: border-box;
+}
+.HelpPage__link:hover {
+  background: rgb(252,252,252);
+  color: rgb(var(--blue));
+}
+.HelpPage__link svg {
+  font-size: 20px;
+  margin-right: 10px;
+}
+.HelpPage__link span {
+  margin: 0 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.HelpPage__link span svg {
+  font-size: 15px;
+  color: rgb(160,160,160);
+  margin: 0;
+  transform: rotate(180deg);
+}
+@media (max-width: 900px) {
+  .HelpPage__content {
+    flex-direction: column;
+    align-items: center;
+  }
+  .HelpPage__linkContainer, .HelpPage__infoContainer {
+    width: 90%;
+    max-width: 600px;
+  }
+  .HelpPage__linkContainer {
+    margin: 0 0 50px;
+  }
+  .HelpPage__link {
+    width: calc(50% - 10px);
+    margin: 5px;
+  }
+  .HelpPage__links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 485px) {
+  .HelpPage__link {
+    width: 100%;
+  }
+}

@@ -3,7 +3,7 @@ import './SideNav.css';
 import PropTypes from 'prop-types';
 import ToggleSideNavBtn from '../UI/ToggleSideNavBtn/ToggleSideNavBtn';
 import { logo, notesIcon, trashIcon, settingsIcon, tagsIcon, backIcon,
-  peopleIcon, personIcon } from '../UI/icons';
+  peopleIcon, personIcon, helpIcon } from '../UI/icons';
 import { connect } from 'react-redux';
 import { toggleSideNav, setShowTrash, showNotesByTag, setListShown } from '../../store/actions';
 import SettingsModal from '../SettingsModal/SettingsModal';
@@ -11,6 +11,7 @@ import Tooltip from '../UI/Tooltip/Tooltip';
 import InvitesModal from '../InvitesModal/InvitesModal';
 import SearchBar from '../SearchBar/SearchBar';
 import AccountModal from '../AccountModal/AccountModal';
+import { Link } from 'react-router-dom';
 
 const SideNav = props => {
   const [showSettings, setShowSettings] = useState(false);
@@ -80,8 +81,8 @@ const SideNav = props => {
           {logo}
           <div>Notely</div>
         </div>
+        <SearchBar sideNavShown={props.shown} toggleSideNav={props.toggleSideNav} />
         <div className="SideNav__container">
-          <SearchBar sideNavShown={props.shown} toggleSideNav={props.toggleSideNav} />
           <SideNavLink
             onClick={() => toggleTrashHandler(false)}
             title="All Notes"
@@ -133,6 +134,13 @@ const SideNav = props => {
             ))}
           </div>
         </div>
+        <Link to="/help" className="SideNav__link SideNav__helpLink">
+          <div className="SideNav__innerLink">
+            {helpIcon}
+            <div>Help</div>
+          </div>
+          {!props.shown && <Tooltip position="right">Help</Tooltip>}
+        </Link>
       </div>
       {showAccnt && <AccountModal close={() => setShowAccnt(false)} />}
       {showSettings && <SettingsModal close={() => setShowSettings(false)} />}

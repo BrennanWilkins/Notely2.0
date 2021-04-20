@@ -2,6 +2,8 @@
   height: 100%;
   transition: width 200ms ease-out;
   background: rgb(27,28,32);
+  display: flex;
+  flex-direction: column;
 }
 .SideNav--expand {
   width: 220px;
@@ -12,7 +14,7 @@
 .SideNav--expand .SideNav__container {
   overflow-x: hidden;
   overflow-y: auto;
-  max-height: calc(100% - 95px);
+  flex-grow: 1;
 }
 .SideNav__container::-webkit-scrollbar-track,
 .SideNav__container::-webkit-scrollbar {
@@ -32,7 +34,7 @@
   align-items: center;
   font-size: 23px;
   color: rgb(var(--blue));
-  margin: 20px 0;
+  margin: 20px 0 10px;
 }
 .SideNav__title div {
   margin-left: 5px;
@@ -139,6 +141,11 @@
   border-radius: 50%;
   margin-left: 8px;
   vertical-align: middle;
+}
+.SideNav__helpLink {
+  text-decoration: none;
+  display: block;
+  margin-top: auto;
 }
 
 .dark .SideNav__innerLink:hover {

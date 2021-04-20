@@ -38,13 +38,13 @@ const App = props => {
             <Route exact path="/signup">
               <Suspense fallback={<Spinner />}><SignupPage /></Suspense>
             </Route>
-            <Route exact path="/finish-signup">
+            <Route path="/finish-signup">
               <Suspense fallback={<Spinner />}><FinishSignupPage /></Suspense>
             </Route>
             <Route exact path="/forgot">
               <Suspense fallback={<Spinner />}><ForgotPage /></Suspense>
             </Route>
-            <Route exact path="/reset-password">
+            <Route path="/reset-password">
               <Suspense fallback={<Spinner />}><ResetPassPage /></Suspense>
             </Route>
             <Redirect to="/login" />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AuthContainer from './AuthContainer';
 import { Link } from 'react-router-dom';
-import { validateResetPass } from '../../utils/authValidation';
+import { validateResetPass, getTokenParam } from '../../utils/authValidation';
 import { instance as axios } from '../../axios';
 import { useLocation } from 'react-router';
 import PassInput from '../UI/PassInput/PassInput';
@@ -20,14 +20,14 @@ const ResetPassPage = () => {
 
   const submitHandler = e => {
     e.preventDefault();
-    const validationMsg = validateResetPass(newPass, confirmPass, location.search);
+    const recoverPassID = getTokenParam(location.search);
+    const validationMsg = validateResetPass(newPass, confirmPass, recoverPassID);
     if (validationMsg) {
       setShowMsg(true);
       return setMsg(validationMsg);
     }
     setIsLoading(true);
     setShowMsg(false);
-    const recoverPassID = location.search.slice(7);
     axios.post('/auth/resetPass', { newPass, recoverPassID }).then(res => {
       setIsLoading(false);
       setShowMsg(true);

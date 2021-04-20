@@ -8,18 +8,18 @@ import './AuthPages.css';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login } from '../../store/actions';
-import { searchIsValid } from '../../utils/authValidation';
+import { getTokenParam } from '../../utils/authValidation';
 
 const FinishSignupPage = props => {
   const history = useHistory();
-  const [msg, setMsg] = useState('There was an error while finishing your signup.');
+  const [msg, setMsg] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!searchIsValid(history.location.search)) {
+    const signupID = getTokenParam(history.location.search);
+    if (!signupID) {
       return history.push('/');
     }
-    const signupID = history.location.search.slice(7);
     axios.get(`/auth/finishSignup/${signupID}`).then(res => {
       setIsLoading(false);
       props.login(res.data);

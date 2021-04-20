@@ -8,6 +8,7 @@ const { validate, passwordRE } = require('../middleware/validate');
 const auth = require('../middleware/auth');
 const sendMail = require('../utils/sendMail');
 const baseURL = require('../utils/baseURL');
+const firstNoteBody = require('../utils/firstNoteBody');
 
 const signToken = async (user, expiration) => {
   // create jwt token that expires in given expiration days when logging in
@@ -86,20 +87,23 @@ router.get('/finishSignup/:signupID',
         if (user.signupID === null) {
           return res.status(400).json({ msg: 'Your account has already been signed up.' });
         }
-        user.signupID = null;
-        await user.save();
-
-        // if user chose remember me in signup, token expires in 30 days, else 7 days
-        const token = await signToken(user, decoded.rememberUser ? '30d' : '7d');
-
         const firstNote = new Note({
-          body: [{ type: 'paragraph', children: [{ text: 'Welcome to Notely!' }]}],
+          body: firstNoteBody,
           tags: [],
           collaborators: [user._id],
           publishID: null,
           isTrash: false
         });
-        await firstNote.save();
+
+        user.signupID = null;
+        user.notes.push(firstNote._id);
+
+        // if user chose remember me in signup, token expires in 30 days, else 7 days
+        const [token] = await Promise.all([
+          signToken(user, decoded.rememberUser ? '30d' : '7d'),
+          user.save(),
+          firstNote.save()
+        ]);
 
         res.status(200).json({
           token,
@@ -186,7 +190,7 @@ router.post('/resetPass',
         }
         try {
           const hashedPass = await bcryptjs.hash(newPass, 10);
-          await User.updateOne({ email: decoded.email }, { recoverPassID: null, password: hashedPass });
+          await User.updateOne({ email: decoded.email, recoverPassID }, { recoverPassID: null, password: hashedPass });
         } catch (err) { throw err; }
       });
 

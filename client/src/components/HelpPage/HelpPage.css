@@ -45,7 +45,7 @@
   width: 230px;
   margin-right: 20px;
   position: sticky;
-  top: 100px;
+  top: 130px;
   left: 0;
   align-self: flex-start;
 }
@@ -95,19 +95,19 @@
   padding: 0 10px;
   box-sizing: border-box;
 }
-.HelpPage__section {
+.HelpPage section {
   margin-bottom: 40px;
 }
-.HelpPage__section h2 {
+.HelpPage h2, .HelpPage h3 {
   color: rgb(100,100,100);
   font-weight: 500;
-  margin: 0 0 10px;
+}
+.HelpPage h2 {
+  margin: 0 0 15px;
   padding-bottom: 10px;
   border-bottom: 1.2px solid #ddd;
 }
-.HelpPage__section h3 {
-  font-weight: 500;
-  color: rgb(100,100,100);
+.HelpPage h3 {
   margin: 15px 0;
 }
 .HelpPage__shortcuts {
@@ -125,6 +125,41 @@
   border-radius: 4px;
   padding: 4px;
   margin: 0 4px;
+}
+.HelpPage__QA {
+  box-shadow: 0 1px 4px -1px rgba(0,0,0,0.3);
+  padding: 8px;
+  border-radius: 3px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 15px;
+}
+.HelpPage__question {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.HelpPage__QA--toggled .HelpPage__question {
+  font-weight: 500;
+}
+.HelpPage__answer {
+  margin-top: 12px;
+}
+.HelpPage__question span {
+  padding-left: 3px;
+  margin: 0 5px 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.HelpPage__question svg {
+  font-size: 15px;
+  color: rgb(160,160,160);
+  transform: rotate(180deg);
+}
+.HelpPage__QA--toggled .HelpPage__question svg {
+  transform: rotate(270deg);
 }
 @media (max-width: 900px) {
   .HelpPage__content {

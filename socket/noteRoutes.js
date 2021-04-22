@@ -155,7 +155,7 @@ const removeTag = async (socket, data) => {
   }
 };
 
-const sendInvite = async (socket, io, data, callback) => {
+const sendInvite = async (socket, data, callback) => {
   try {
     const { noteID, username } = parseData(socket, data);
     // if username includes '@' then search for user by email, else by username
@@ -183,10 +183,7 @@ const sendInvite = async (socket, io, data, callback) => {
     user.invites.push(invite);
     await user.save();
 
-    const connectedUser = [...io.sockets.sockets].find(([key,val]) => val.userID === String(user._id));
-    if (connectedUser) {
-      io.to(connectedUser[0]).emit('new invite', invite);
-    }
+    socket.to(`user-${String(user._id)}`).emit('new invite', invite);
 
     callback({ error: false });
   } catch (err) {

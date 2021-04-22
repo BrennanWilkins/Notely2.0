@@ -90,12 +90,7 @@ const initSocket = server => {
 
     // add event handlers for note routes, callback may be provided
     for (let route in noteRoutes) {
-      if (route === 'post/note/invite') {
-        // give io to send invite handler to check if invitee connected to send invite
-        socket.on(route, (...args) => noteRoutes[route](socket, io, ...args));
-      } else {
-        socket.on(route, (...args) => noteRoutes[route](socket, ...args));
-      }
+      socket.on(route, (...args) => noteRoutes[route](socket, ...args));
     }
 
     // separate editor room used for sending editor operations/user activity

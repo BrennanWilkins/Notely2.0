@@ -28,10 +28,20 @@ const initSocket = server => {
       next();
     } catch (err) { next(new Error('join error')); }
   }).on('connection', socket => {
-    socket.userColor = randomColor({ luminosity: 'dark', format: 'rgba', alpha: 1 });
+    // check if user already connected on another device/tab/etc
+    const connectedUser = [...io.sockets.sockets].find(([_,user]) => user.userID === socket.userID);
+
+    // use same color if already connected
+    socket.userColor = (connectedUser && connectedUser[1].userColor) ?
+    connectedUser[1].userColor :
+    randomColor({ luminosity: 'dark', format: 'rgba', alpha: 1 });
+
     socket.activeNoteID = null;
 
-    const connectedUsers = {};
+    // join user to their own private room to manage multiple connections
+    socket.join(`user-${socket.userID}`);
+
+    const connectedUsers = { [socket.username]: socket.userColor };
 
     // auto join user to all of their note's rooms
     for (let noteID in socket.userNotes) {
@@ -59,7 +69,9 @@ const initSocket = server => {
     socket.on('disconnect', () => {
       for (let noteID in socket.userNotes) {
         // notify other users that user is offline
-        socket.to(noteID).emit('user offline', { username: socket.username });
+        socket.to(noteID).except(`user-${socket.userID}`).emit('user offline', {
+          username: socket.username
+        });
       }
     });
 
@@ -92,7 +104,7 @@ const initSocket = server => {
       // if user switching notes tell users in prev editor room they are inactive
       if (socket.activeNoteID) {
         const oldRoomName = `editor-${socket.activeNoteID}`;
-        socket.to(oldRoomName).emit('user inactive', {
+        socket.to(oldRoomName).except(`user-${socket.userID}`).emit('user inactive', {
           username: socket.username,
           color: socket.userColor
         });
@@ -113,7 +125,7 @@ const initSocket = server => {
       });
       socket.emit('receive active users', users);
 
-      socket.to(roomName).emit('user active', {
+      socket.to(roomName).except(`user-${socket.userID}`).emit('user active', {
         username: socket.username,
         color: socket.userColor
       });
@@ -121,7 +133,7 @@ const initSocket = server => {
 
     socket.on('leave editor', () => {
       if (!socket.activeNoteID) { return; }
-      socket.to(`editor-${socket.activeNoteID}`).emit('user inactive', {
+      socket.to(`editor-${socket.activeNoteID}`).except(`user-${socket.userID}`).emit('user inactive', {
         username: socket.username,
         color: socket.userColor
       })
@@ -143,7 +155,7 @@ const initSocket = server => {
         username: socket.username,
         color: socket.userColor
       };
-      socket.to(`editor-${noteID}`).emit('receive cursor', cursorData);
+      socket.to(`editor-${noteID}`).except(`user-${socket.userID}`).emit('receive cursor', cursorData);
     });
   });
 };

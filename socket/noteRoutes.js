@@ -20,7 +20,7 @@ const errHandler = (socket, msg) => {
   socket.emit('note error', { msgID, msg });
 };
 
-const createNote = async (socket, callback) => {
+const createNote = async (socket, sockets, callback) => {
   try {
     const note = new Note({
       body: [{ type: 'paragraph', children: [{ text: '' }]}],
@@ -38,11 +38,20 @@ const createNote = async (socket, callback) => {
       user.save()
     ]);
 
-    // auto join user to note room on creation
     const noteID = String(note._id);
-    socket.userNotes[noteID] = true;
-    socket.join(noteID);
-    callback({ error: false, note });
+    const userRoom = `user-${socket.userID}`;
+
+    // auto join all of user's clients to note room
+    const room = sockets.adapter.rooms.get(userRoom);
+    room.forEach(socketID => {
+      const client = sockets.sockets.get(socketID);
+      client.userNotes[noteID] = true;
+      client.join(noteID);
+    });
+
+    const payload = { note, username: socket.username };
+    socket.to(userRoom).emit('post/note', payload);
+    callback(payload);
   } catch (err) {
     errHandler(socket, 'Your note could not be created.');
   }

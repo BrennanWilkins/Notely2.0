@@ -1,10 +1,9 @@
 import * as actionTypes from './actionTypes';
 import { sendUpdate } from '../../socket';
 
-export const createNote = () => (dispatch, getState) => {
+export const createNote = () => dispatch => {
   // wait for response w new note
-  sendUpdate('post/note', res => {
-    const payload = { note: res.note, username: getState().user.username };
+  sendUpdate('post/note', payload => {
     dispatch({ type: actionTypes.CREATE_NOTE, payload });
   });
 };

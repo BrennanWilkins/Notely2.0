@@ -84,7 +84,7 @@ const initSocket = server => {
 
     // add event handlers for note routes, callback may be provided
     for (let route in noteRoutes) {
-      if (route === 'post/note' || route === 'delete/note') {
+      if (route === 'post/note' || route === 'delete/note' || route === 'put/user/emptyTrash') {
         // provide sockets so can send to/update multiple clients
         socket.on(route, (...args) => noteRoutes[route](socket, io.sockets, ...args));
       } else {

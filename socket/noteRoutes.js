@@ -15,6 +15,17 @@ const parseData = (socket, payload, options) => {
   return payload;
 };
 
+const deleteRoomHandler = (noteID, sockets) => {
+  // remove all users in room & update their userNotes
+  const room = sockets.adapter.rooms.get(noteID);
+  room.forEach(socketID => {
+    const client = sockets.sockets.get(socketID);
+    client.leave(noteID);
+    client.leave(`editor-${noteID}`);
+    delete client.userNotes[noteID];
+  });
+};
+
 const errHandler = (socket, msg) => {
   const msgID = nanoid();
   socket.emit('note error', { msgID, msg });
@@ -105,15 +116,7 @@ const deleteNote = async (socket, sockets, data) => {
     if (!note) { throw 'Invalid noteID'; }
 
     socket.to(noteID).emit('delete/note', data);
-
-    // remove all users in room & update their userNotes
-    const room = sockets.adapter.rooms.get(noteID);
-    room.forEach(socketID => {
-      const client = sockets.sockets.get(socketID);
-      client.leave(noteID);
-      client.leave(`editor-${noteID}`);
-      delete client.userNotes[noteID];
-    });
+    deleteRoomHandler(noteID, sockets);
 
   } catch (err) {
     errHandler(socket, 'There was an error while deleting your note.');
@@ -306,7 +309,7 @@ const unpublishNote = async (socket, data) => {
   }
 };
 
-const emptyUserTrash = async (socket, data) => {
+const emptyUserTrash = async (socket, sockets, data) => {
   try {
     const user = await User.findById(socket.userID);
     if (!user) { throw 'Unauthorized'; }
@@ -323,9 +326,7 @@ const emptyUserTrash = async (socket, data) => {
 
     for (let noteID of trashIDs) {
       socket.to(noteID).emit('delete/note', { noteID });
-      socket.leave(noteID);
-      socket.leave(`editor-${noteID}`);
-      delete socket.userNotes[noteID];
+      deleteRoomHandler(noteID, sockets);
     }
 
   } catch (err) {

@@ -68,7 +68,7 @@ export const acceptInvite = noteID => dispatch => {
     if (res.error) {
       return dispatch({ type: actionTypes.REJECT_INVITE, noteID });
     }
-    dispatch({ type: actionTypes.ACCEPT_INVITE, note: res.note })
+    dispatch({ type: actionTypes.ACCEPT_INVITE, payload: { note: res.note } });
   });
 };
 

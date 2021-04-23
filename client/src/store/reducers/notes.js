@@ -295,7 +295,7 @@ const showNotesByTag = (state, { tag }) => {
   };
 };
 
-const acceptInvite = (state, { note }) => {
+const acceptInvite = (state, { payload: { note } }) => {
   const { _id: noteID, isTrash, __v, collaborators, ...rest } = note;
   const newNote = {
     ...rest,

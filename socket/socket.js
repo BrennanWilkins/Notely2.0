@@ -1,7 +1,7 @@
 const socketIO = require('socket.io');
 const jwt = require('jsonwebtoken');
 const Note = require('../models/note');
-const noteRoutes = require('./noteRoutes');
+const { noteRoutes, noteRoutesWithSockets } = require('./noteRoutes');
 const randomColor = require('randomcolor');
 
 const initSocket = server => {
@@ -84,12 +84,11 @@ const initSocket = server => {
 
     // add event handlers for note routes, callback may be provided
     for (let route in noteRoutes) {
-      if (route === 'post/note' || route === 'delete/note' || route === 'put/user/emptyTrash') {
-        // provide sockets so can send to/update multiple clients
-        socket.on(route, (...args) => noteRoutes[route](socket, io.sockets, ...args));
-      } else {
-        socket.on(route, (...args) => noteRoutes[route](socket, ...args));
-      }
+      socket.on(route, (...args) => noteRoutes[route](socket, ...args));
+    }
+    for (let route in noteRoutesWithSockets) {
+      // provide sockets so can send to/update multiple clients
+      socket.on(route, (...args) => noteRoutesWithSockets[route](socket, io.sockets, ...args));
     }
 
     // separate editor room used for sending editor operations/user activity

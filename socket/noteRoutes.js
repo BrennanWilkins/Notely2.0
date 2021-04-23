@@ -26,6 +26,16 @@ const deleteRoomHandler = (noteID, sockets) => {
   });
 };
 
+const joinRoomHandler = (noteID, userRoom, sockets) => {
+  // auto join all of user's clients to note room
+  const room = sockets.adapter.rooms.get(userRoom);
+  room.forEach(socketID => {
+    const client = sockets.sockets.get(socketID);
+    client.userNotes[noteID] = true;
+    client.join(noteID);
+  });
+};
+
 const errHandler = (socket, msg) => {
   const msgID = nanoid();
   socket.emit('note error', { msgID, msg });
@@ -52,13 +62,7 @@ const createNote = async (socket, sockets, callback) => {
     const noteID = String(note._id);
     const userRoom = `user-${socket.userID}`;
 
-    // auto join all of user's clients to note room
-    const room = sockets.adapter.rooms.get(userRoom);
-    room.forEach(socketID => {
-      const client = sockets.sockets.get(socketID);
-      client.userNotes[noteID] = true;
-      client.join(noteID);
-    });
+    joinRoomHandler(noteID, userRoom, sockets);
 
     const payload = { note, username: socket.username };
     socket.to(userRoom).emit('post/note', payload);
@@ -210,7 +214,7 @@ const sendInvite = async (socket, data, callback) => {
   }
 };
 
-const acceptInvite = async (socket, data, callback) => {
+const acceptInvite = async (socket, sockets, data, callback) => {
   try {
     const { noteID } = data;
 
@@ -237,9 +241,17 @@ const acceptInvite = async (socket, data, callback) => {
 
     await note.populate('collaborators', 'username email -_id').execPopulate();
 
-    socket.userNotes[noteID] = true;
-    socket.join(noteID);
-    socket.to(noteID).emit('post/note/collaborator', { noteID, email: user.email, username: user.username });
+    const userRoom = `user-${socket.userID}`;
+
+    joinRoomHandler(noteID, userRoom, sockets);
+    socket.to(userRoom).emit('put/note/invite/accept', { note });
+
+    socket.to(noteID).except(userRoom).emit('post/note/collaborator', {
+      noteID,
+      email: user.email,
+      username: user.username
+    });
+
     callback({ error: false, note });
   } catch (err) {
     errHandler(socket, 'There was an error while joining the note.');
@@ -334,21 +346,24 @@ const emptyUserTrash = async (socket, sockets, data) => {
   }
 };
 
-module.exports = {
-  'post/note' : createNote,
+module.exports.noteRoutes = {
   'put/note/save' : updateNote,
   'put/note/trash' : trashNote,
   'put/note/restore' : restoreNote,
-  'delete/note' : deleteNote,
   'put/note/pin': pinNote,
   'put/note/unpin': unpinNote,
   'post/note/tag': createTag,
   'delete/note/tag': removeTag,
   'post/note/invite': sendInvite,
-  'put/note/invite/accept': acceptInvite,
   'put/note/invite/reject': rejectInvite,
   'get/note/invite': previewInvite,
   'put/note/publish': publishNote,
-  'put/note/unpublish': unpublishNote,
-  'put/user/emptyTrash': emptyUserTrash
+  'put/note/unpublish': unpublishNote
+};
+
+module.exports.noteRoutesWithSockets = {
+  'post/note' : createNote,
+  'delete/note' : deleteNote,
+  'put/user/emptyTrash': emptyUserTrash,
+  'put/note/invite/accept': acceptInvite
 };

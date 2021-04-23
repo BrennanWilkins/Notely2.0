@@ -17,7 +17,8 @@ const socketMap = {
   'receive active users': actionTypes.SET_ACTIVE_USERS,
   'receive connected users': actionTypes.SET_CONNECTED_USERS,
   'put/note/publish': actionTypes.PUBLISH_NOTE,
-  'put/note/unpublish': actionTypes.UNPUBLISH_NOTE
+  'put/note/unpublish': actionTypes.UNPUBLISH_NOTE,
+  'put/note/invite/accept': actionTypes.ACCEPT_INVITE
 };
 
 export default socketMap;

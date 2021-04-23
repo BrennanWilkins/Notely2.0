@@ -103,7 +103,7 @@ const NoteContent = props => {
   const changeHandler = val => {
     setValue(val);
     const ops = editor.operations;
-    if (props.isCollab && props.noteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
+    if (props.noteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
       const sendOps = ops.filter(op => op && OP_TYPES[op.type]);
       if (sendOps.length) {
         sendUpdate('send ops', { noteID: props.noteID, ops: sendOps });

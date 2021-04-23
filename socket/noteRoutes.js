@@ -93,7 +93,7 @@ const restoreNote = async (socket, data) => {
   }
 };
 
-const deleteNote = async (socket, data) => {
+const deleteNote = async (socket, sockets, data) => {
   try {
     const { noteID } = parseData(socket, data);
 
@@ -105,9 +105,16 @@ const deleteNote = async (socket, data) => {
     if (!note) { throw 'Invalid noteID'; }
 
     socket.to(noteID).emit('delete/note', data);
-    socket.leave(noteID);
-    socket.leave(`editor-${noteID}`);
-    delete socket.userNotes[noteID];
+
+    // remove all users in room & update their userNotes
+    const room = sockets.adapter.rooms.get(noteID);
+    room.forEach(socketID => {
+      const client = sockets.sockets.get(socketID);
+      client.leave(noteID);
+      client.leave(`editor-${noteID}`);
+      delete client.userNotes[noteID];
+    });
+
   } catch (err) {
     errHandler(socket, 'There was an error while deleting your note.');
   }

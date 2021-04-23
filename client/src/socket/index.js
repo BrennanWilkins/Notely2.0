@@ -28,12 +28,6 @@ export const initSocket = () => {
     });
   }
 
-  // leave note room on collaborator deleting a note
-  newSocket.on('delete/note', data => {
-    const { noteID } = data;
-    socket.emit('leave note', noteID);
-  });
-
   newSocket.connect();
 
   socket = newSocket;

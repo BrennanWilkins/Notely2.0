@@ -75,12 +75,6 @@ const initSocket = server => {
       }
     });
 
-    socket.on('leave note', noteID => {
-      socket.leave(noteID);
-      socket.leave(`editor-${noteID}`);
-      delete socket.userNotes[noteID];
-    });
-
     // send note body update to other collaborators but dont update body in DB
     socket.on('put/note', data => {
       const { noteID, body } = data;
@@ -90,8 +84,8 @@ const initSocket = server => {
 
     // add event handlers for note routes, callback may be provided
     for (let route in noteRoutes) {
-      if (route === 'post/note') {
-        // provide sockets so can send to all of user's connected clients
+      if (route === 'post/note' || route === 'delete/note') {
+        // provide sockets so can send to/update multiple clients
         socket.on(route, (...args) => noteRoutes[route](socket, io.sockets, ...args));
       } else {
         socket.on(route, (...args) => noteRoutes[route](socket, ...args));
@@ -133,7 +127,10 @@ const initSocket = server => {
 
     socket.on('leave editor', () => {
       if (!socket.activeNoteID) { return; }
-      socket.to(`editor-${socket.activeNoteID}`).except(`user-${socket.userID}`).emit('user inactive', {
+
+      const room = `editor-${socket.activeNoteID}`;
+      socket.leave(room);
+      socket.to(room).except(`user-${socket.userID}`).emit('user inactive', {
         username: socket.username,
         color: socket.userColor
       })

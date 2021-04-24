@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 import { instance as axios, baseURL } from '../axios';
 import socketMap from './socketMap';
 import store from '../store';
+import * as actionTypes from '../store/actions/actionTypes';
 
 let socket = null;
 
@@ -20,6 +21,14 @@ export const initSocket = () => {
     if (reason === 'io server disconnect') {
       newSocket.connect();
     }
+  });
+
+  newSocket.on('note error', notif => {
+    store.dispatch({ type: actionTypes.ADD_NOTIF, notif });
+    // remove notification after 4 sec
+    setTimeout(() => {
+      store.dispatch({ type: actionTypes.DELETE_NOTIF, msgID: notif.msgID });
+    }, 4500);
   });
 
   for (let action in socketMap) {
@@ -53,5 +62,3 @@ export const closeSocket = () => {
   if (!socket) { return; }
   socket.close();
 };
-
-export const getSocket = () => socket;

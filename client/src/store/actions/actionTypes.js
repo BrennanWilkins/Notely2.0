@@ -43,3 +43,7 @@ export const EMPTY_TRASH = 'EMPTY_TRASH';
 
 // user actionTypes
 export const ADD_NEW_INVITE = 'ADD_NEW_INVITE';
+
+// notifs actionTypes
+export const ADD_NOTIF = 'ADD_NOTIF';
+export const DELETE_NOTIF = 'DELETE_NOTIF';

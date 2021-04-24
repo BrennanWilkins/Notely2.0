@@ -137,6 +137,8 @@ const pinNote = async (socket, data) => {
     user.pinnedNotes.unshift(noteID);
 
     await user.save();
+
+    socket.to(`user-${socket.userID}`).emit('put/note/pin', { noteID });
   } catch (err) {
     errHandler(socket, 'There was an error while pinning your note.');
   }
@@ -147,6 +149,8 @@ const unpinNote = async (socket, data) => {
     const { noteID } = parseData(socket, data);
 
     await User.findByIdAndUpdate(socket.userID, { $pull: { pinnedNotes: noteID } });
+
+    socket.to(`user-${socket.userID}`).emit('put/note/unpin', { noteID });
   } catch (err) {
     errHandler(socket, 'There was an error while unpinning your note.');
   }
@@ -262,6 +266,8 @@ const rejectInvite = async (socket, data) => {
   try {
     const { noteID } = data;
     await User.updateOne({ _id: socket.userID }, { $pull: { invites: { noteID } } });
+
+    socket.to(`user-${socket.userID}`).emit('put/note/invite/reject', data);
   } catch (err) {
     errHandler(socket, 'There was an error while updating your invites.');
   }

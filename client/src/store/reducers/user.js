@@ -11,7 +11,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.LOGIN: return login(state, action);
     case actionTypes.LOGOUT: return initialState;
     case actionTypes.ADD_NEW_INVITE: return addNewInvite(state, action);
-    case actionTypes.REJECT_INVITE: return removeInvite(state, action.noteID);
+    case actionTypes.REJECT_INVITE: return removeInvite(state, action.payload.noteID);
     case actionTypes.ACCEPT_INVITE: return removeInvite(state, action.payload.note._id);
     default: return state;
   }

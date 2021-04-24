@@ -223,12 +223,12 @@ const deleteNote = (state, { payload: { noteID } }) => {
   };
 };
 
-const pinNote = (state, { noteID }) => ({
+const pinNote = (state, { payload: { noteID } }) => ({
   ...state,
   pinnedNotes: [noteID, ...state.pinnedNotes]
 });
 
-const unpinNote = (state, { noteID }) => ({
+const unpinNote = (state, { payload: { noteID } }) => ({
   ...state,
   pinnedNotes: state.pinnedNotes.filter(id => id !== noteID)
 });

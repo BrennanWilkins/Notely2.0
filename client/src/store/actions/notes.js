@@ -38,12 +38,12 @@ export const setShowTrash = bool => ({ type: actionTypes.SET_SHOW_TRASH, bool })
 
 export const pinNote = noteID => dispatch => {
   sendUpdate('put/note/pin', { noteID });
-  dispatch({ type: actionTypes.PIN_NOTE, noteID });
+  dispatch({ type: actionTypes.PIN_NOTE, payload: { noteID } });
 };
 
 export const unpinNote = noteID => dispatch => {
   sendUpdate('put/note/unpin', { noteID });
-  dispatch({ type: actionTypes.UNPIN_NOTE, noteID });
+  dispatch({ type: actionTypes.UNPIN_NOTE, payload: { noteID } });
 };
 
 export const setStatus = bool => ({ type: actionTypes.SET_STATUS, bool });
@@ -74,7 +74,7 @@ export const acceptInvite = noteID => dispatch => {
 
 export const rejectInvite = noteID => dispatch => {
   sendUpdate('put/note/invite/reject', { noteID });
-  dispatch({ type: actionTypes.REJECT_INVITE, noteID });
+  dispatch({ type: actionTypes.REJECT_INVITE, payload: { noteID } });
 };
 
 export const setSearchQuery = query => ({ type: actionTypes.SET_SEARCH_QUERY, query });

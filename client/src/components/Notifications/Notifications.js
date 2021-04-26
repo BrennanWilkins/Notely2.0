@@ -10,7 +10,10 @@ const Notifications = props => (
   <TransitionGroup className="Notifications">
     {props.notifs.map(({ msgID, msg }) => (
       <CSSTransition key={msgID} timeout={350} classNames="Notifications__notif">
-        <div className="Notifications__notif">
+        <div
+          className="Notifications__notif"
+          style={msgID === 'reconnect' ? { background: '#0a9f10' } : null}
+        >
           <div className="Notifications__msg">{msg}</div>
           <div className="Notifications__btn" onClick={() => props.deleteNotif(msgID)}>
             {xIcon}

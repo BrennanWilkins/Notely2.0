@@ -45,6 +45,7 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.PUBLISH_NOTE: return publishNote(state, action);
     case actionTypes.UNPUBLISH_NOTE: return unpublishNote(state, action);
     case actionTypes.EMPTY_TRASH: return emptyTrash(state, action);
+    case actionTypes.REFRESH_NOTES: return refreshNotes(state, action);
     default: return state;
   }
 };
@@ -530,6 +531,21 @@ const emptyTrash = (state, action) => {
     pinnedNotes: state.pinnedNotes.filter(noteID => !state.trashIDs.includes(noteID)),
     changesSaved: true
   };
+};
+
+const refreshNotes = (state, action) => {
+  // check if note bodies are diff due to server disconnect
+  const notesByID = { ...state.notesByID };
+  let isDiff = false;
+  for (let note of action.notes) {
+    let n = notesByID[note._id];
+    if (note.updatedAt !== n.updatedAt) {
+      isDiff = true;
+      notesByID[note._id] = { ...n, body: note.body };
+    }
+  }
+
+  return isDiff ? { ...state, notesByID } : state;
 };
 
 export default reducer;

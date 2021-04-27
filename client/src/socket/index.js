@@ -2,7 +2,8 @@ import io from 'socket.io-client';
 import { instance as axios, baseURL } from '../axios';
 import socketMap from './socketMap';
 import store from '../store';
-import { addNotif, connectErrNotif, disconnectNotif, reconnectNotif } from '../store/actions';
+import { addNotif, connectErrNotif, disconnectNotif, reconnectNotif,
+  refreshNotes } from '../store/actions';
 
 let socket = null;
 
@@ -20,7 +21,13 @@ export const initSocket = () => {
 
   newSocket.on('disconnect', () => {
     store.dispatch(disconnectNotif());
-    newSocket.once('connect', () => store.dispatch(reconnectNotif()));
+    newSocket.once('connect', () => {
+      newSocket.emit('get/user/notes', res => {
+        if (res.error || !res.notes) { return; }
+        store.dispatch(reconnectNotif());
+        store.dispatch(refreshNotes(res.notes));
+      });
+    });
   });
 
   newSocket.on('note error', notif => store.dispatch(addNotif(notif)));

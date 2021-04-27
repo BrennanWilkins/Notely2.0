@@ -91,3 +91,5 @@ export const emptyTrash = () => dispatch => {
   sendUpdate('put/user/emptyTrash');
   dispatch({ type: actionTypes.EMPTY_TRASH });
 };
+
+export const refreshNotes = notes => ({ type: actionTypes.REFRESH_NOTES, notes });

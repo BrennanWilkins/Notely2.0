@@ -352,6 +352,15 @@ const emptyUserTrash = async (socket, sockets, data) => {
   }
 };
 
+const getNotes = async (socket, callback) => {
+  try {
+    const notes = await Note.find({ collaborators: socket.userID }).select('body updatedAt').lean();
+    callback({ error: false, notes });
+  } catch (err) {
+    callback({ error: true });
+  }
+};
+
 module.exports.noteRoutes = {
   'put/note/save' : updateNote,
   'put/note/trash' : trashNote,
@@ -364,7 +373,8 @@ module.exports.noteRoutes = {
   'put/note/invite/reject': rejectInvite,
   'get/note/invite': previewInvite,
   'put/note/publish': publishNote,
-  'put/note/unpublish': unpublishNote
+  'put/note/unpublish': unpublishNote,
+  'get/user/notes': getNotes
 };
 
 module.exports.noteRoutesWithSockets = {

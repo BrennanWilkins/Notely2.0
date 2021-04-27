@@ -5,6 +5,7 @@
   background: var(--lighterGray);
   display: flex;
   flex-direction: column;
+  transition: background 250ms;
 }
 .NoteList__notes {
   overflow-x: hidden;

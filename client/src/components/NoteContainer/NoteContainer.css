@@ -3,6 +3,7 @@
   background: var(--noteBack);
   display: flex;
   flex-direction: column;
+  transition: background 250ms;
 }
 .NoteContainer--contract {
   flex-grow: 1;

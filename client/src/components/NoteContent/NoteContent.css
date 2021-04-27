@@ -81,6 +81,7 @@
   top: 0;
   background: var(--noteBack);
   z-index: 2;
+  transition: background 250ms;
 }
 .Toolbar__btn {
   padding: 5px;

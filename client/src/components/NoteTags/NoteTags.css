@@ -4,6 +4,7 @@
   background: rgb(252,252,252);
   border-top: 1px solid var(--lighterGray2);
   padding: 15px;
+  transition: background 250ms;
 }
 .NoteTags__input {
   font-size: 15px;
@@ -30,6 +31,7 @@
   margin: 0 10px 10px 0;
   position: relative;
   color: var(--textColor);
+  transition: background 250ms;
 }
 .NoteTags__tagTitle {
   overflow: hidden;

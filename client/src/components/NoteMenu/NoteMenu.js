@@ -6,7 +6,7 @@ import { expandIcon, contractIcon, trashIcon, shareIcon, pinIcon,
   arrowIcon, publishIcon } from '../UI/icons';
 import { toggleFullscreen, trashNote, restoreNote, deleteNote,
   setListShown, pinNote, unpinNote } from '../../store/actions';
-  import { selectNoteIsPinned, selectIsCollab } from '../../store/selectors';
+import { selectNoteIsPinned, selectIsCollab } from '../../store/selectors';
 import Tooltip from '../UI/Tooltip/Tooltip';
 import NoteStatus from './NoteStatus';
 import ShareModal from '../ShareModal/ShareModal';

@@ -89,7 +89,7 @@ const logout = () => {
 };
 
 const setNoteMargins = (state, { size }) => {
-  if (size === state.noteMargins) { return; }
+  if (size === state.noteMargins) { return state; }
   localStorage['margin'] = size;
   document.documentElement.style.setProperty('--noteMargins', marginValues[size]);
   return {
@@ -99,7 +99,7 @@ const setNoteMargins = (state, { size }) => {
 };
 
 const setNoteFontSize = (state, { size }) => {
-  if (size === state.noteFontSize) { return; }
+  if (size === state.noteFontSize) { return state; }
   localStorage['fontSize'] = size;
   document.documentElement.style.setProperty('--noteFontSize', fontValues[size]);
   return {
@@ -109,7 +109,7 @@ const setNoteFontSize = (state, { size }) => {
 };
 
 const setNoteListDisplay = (state, { size }) => {
-  if (size === state.noteListDisplay) { return; }
+  if (size === state.noteListDisplay) { return state; }
   localStorage['listDisplay'] = size;
   return {
     ...state,

@@ -3,7 +3,7 @@ import './NoteMenu.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { expandIcon, contractIcon, trashIcon, shareIcon, pinIcon,
-  arrowIcon, publishIcon } from '../UI/icons';
+  arrowIcon, publishIcon, dotsIcon } from '../UI/icons';
 import { toggleFullscreen, trashNote, restoreNote, deleteNote,
   setListShown, pinNote, unpinNote } from '../../store/actions';
 import { selectNoteIsPinned, selectIsCollab } from '../../store/selectors';
@@ -12,10 +12,12 @@ import NoteStatus from './NoteStatus';
 import ShareModal from '../ShareModal/ShareModal';
 import Collaborators from './NoteCollaborators';
 import PublishModal from '../PublishModal/PublishModal';
+import NoteOptions from './NoteOptions';
 
 const NoteMenu = props => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
+  const [showNoteOptions, setShowNoteOptions] = useState(false);
 
   const pinHandler = () => {
     props.noteIsPinned ?
@@ -27,49 +29,89 @@ const NoteMenu = props => {
     <>
       <div className="NoteMenu">
         <div className="NoteMenu__btns">
-          <button className="NoteMenu__btn NoteMenu__fsBtn" onClick={props.toggleFullscreen}>
+          <button
+            className="NoteMenu__btn NoteMenu__fsBtn"
+            onClick={props.toggleFullscreen}
+          >
             {props.isFullscreen ? contractIcon : expandIcon}
-            <Tooltip position="down">Fullscreen<div>Alt+Shift+F</div></Tooltip>
+            <Tooltip position="down">
+              Fullscreen
+              <div>Alt+Shift+F</div>
+            </Tooltip>
           </button>
-          <button className="NoteMenu__btn NoteMenu__backBtn" onClick={props.showList}>
+          <button
+            className="NoteMenu__btn NoteMenu__backBtn"
+            onClick={props.showList}
+          >
             {arrowIcon}
-            <Tooltip position="down">Back<div>Alt+Shift+B</div></Tooltip>
+            <Tooltip position="down">
+              Back
+              <div>Alt+Shift+B</div>
+            </Tooltip>
           </button>
           <div className="NoteMenu__options">
             {!!props.noteID && (props.trashShown ?
               <>
-                <button className="NoteMenu__btn NoteMenu__trashBtn" onClick={props.restoreNote}>
+                <button
+                  className="NoteMenu__btn NoteMenu__trashBtn"
+                  onClick={props.restoreNote}
+                >
                   Restore
                 </button>
-                <button className="NoteMenu__btn NoteMenu__trashBtn" onClick={props.deleteNote}>
+                <button
+                  className="NoteMenu__btn NoteMenu__trashBtn"
+                  onClick={props.deleteNote}
+                >
                   Delete Forever
                 </button>
               </>
               :
               <>
                 <button
-                  className={`NoteMenu__btn NoteMenu__iconBtn ${props.noteIsPinned ? 'NoteMenu__btn--hl' : ''}`}
+                  className={`
+                    NoteMenu__btn
+                    NoteMenu__iconBtn
+                    ${props.noteIsPinned ? 'NoteMenu__btn--hl' : ''}
+                  `}
                   onClick={pinHandler}
                 >
                   {pinIcon}
-                  <Tooltip position="down">{props.noteIsPinned ? 'Unpin' : 'Pin to top'}</Tooltip>
+                  <Tooltip position="down">
+                    {props.noteIsPinned ? 'Unpin' : 'Pin to top'}
+                  </Tooltip>
                 </button>
-                <button className="NoteMenu__btn NoteMenu__iconBtn" onClick={() => setShowShareModal(true)}>
+                <button
+                  className="NoteMenu__btn NoteMenu__iconBtn"
+                  onClick={() => setShowShareModal(true)}
+                >
                   {shareIcon}
                   <Tooltip position="down">Share</Tooltip>
                 </button>
-                <button className="NoteMenu__btn NoteMenu__iconBtn" onClick={() => setShowPublishModal(true)}>
+                <button
+                  className="NoteMenu__btn NoteMenu__iconBtn"
+                  onClick={() => setShowPublishModal(true)}
+                >
                   {publishIcon}
                   <Tooltip position="down">Publish</Tooltip>
                 </button>
-                <button className="NoteMenu__btn NoteMenu__iconBtn" onClick={props.trashNote}>
+                <button
+                  className="NoteMenu__btn NoteMenu__iconBtn"
+                  onClick={props.trashNote}
+                >
                   {trashIcon}
                   <Tooltip position="down">Send to trash</Tooltip>
+                </button>
+                <button
+                  className="NoteMenu__btn NoteMenu__iconBtn"
+                  onClick={() => setShowNoteOptions(true)}
+                >
+                  {dotsIcon}
                 </button>
               </>
             )}
           </div>
         </div>
+        {showNoteOptions && <NoteOptions close={() => setShowNoteOptions(false)} />}
         {!!props.noteID && <NoteStatus />}
         {props.isCollab && <Collaborators />}
       </div>

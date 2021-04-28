@@ -107,6 +107,32 @@
     display: block;
   }
 }
+.NoteMenu__optBtn {
+  position: relative;
+}
+.NoteMenu__optModal {
+  position: absolute;
+  top: 52px;
+  right: 22px;
+  width: 140px;
+  box-sizing: border-box;
+  box-shadow: var(--boxShadow1);
+  background: var(--modalBack);
+  z-index: 3;
+  border-radius: 4px;
+  padding-bottom: 5px;
+  border: 1px solid #eee;
+  color: var(--textColor);
+  font-size: 14.5px;
+  text-align: left;
+}
+.NoteMenu__optModal div {
+  padding: 10px;
+  cursor: pointer;
+}
+.NoteMenu__optModal div:hover {
+  background: rgb(248,248,248);
+}
 
 .dark .NoteMenu {
   border-bottom: 1px solid black;
@@ -129,4 +155,11 @@
 }
 .dark .NoteMenu__info {
   color: rgb(180, 180, 180);
+}
+.dark .NoteMenu__optModal {
+  border: 1px solid rgb(24, 25, 27);
+  box-shadow: 0 2px 6px -2px rgb(20,20,20);
+}
+.dark .NoteMenu__optModal div:hover {
+  background: rgba(var(--gray), 0.15);
 }

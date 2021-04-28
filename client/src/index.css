@@ -107,3 +107,19 @@ code {
   --modalBack: rgb(34,35,38);
   --noteBack: rgb(25,26,28);
 }
+
+/* print preview styles */
+@media print {
+  .NoteMenu, .NoteList, .SideNav, .Toolbar, .NoteTags, .Notifications {
+    display: none !important;
+  }
+  .NoteContent, .NoteContainer, .NotelyContainer, body {
+    overflow: visible !important;
+    position: static !important;
+    display: block !important;
+  }
+  .NoteContent {
+    padding: 0 !important;
+    font-size: 16px !important;
+  }
+}

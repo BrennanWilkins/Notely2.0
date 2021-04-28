@@ -11,7 +11,7 @@ const NoteStatus = props => {
 
   return (
     <div className="NoteMenu__info">
-      <div className="NoteMenu__date">Last updated {formattedDate}</div>
+      <div className="NoteMenu__date">Last updated <span>{formattedDate}</span></div>
       <div className={`NoteMenu__status ${!props.changesSaved ? 'NoteMenu__status--anim' : ''}`}>
         {
           props.changesSaved ?

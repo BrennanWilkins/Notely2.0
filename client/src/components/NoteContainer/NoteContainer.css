@@ -17,6 +17,10 @@
   .NoteContainer {
     max-width: calc(100% - 376px) !important;
   }
+  .NoteContainer--expanded {
+    margin-left: 55px;
+    max-width: calc(100vw - 55px) !important;
+  }
 }
 @media (max-width: 750px) {
   .NoteContainer {

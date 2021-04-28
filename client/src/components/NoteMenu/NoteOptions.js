@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import './NoteMenu.css';
 import { useModalToggle } from '../../utils/customHooks';
+import { downloadCurrNote } from '../../utils/downloadNotes';
 
 const NoteOptions = ({ close }) => {
   const modalRef = useRef();
@@ -9,8 +10,8 @@ const NoteOptions = ({ close }) => {
 
   return (
     <div ref={modalRef} className="NoteMenu__optModal">
-      <div>Print Note</div>
-      <div>Export Note</div>
+      <div onClick={() => window.print()}>Print Note</div>
+      <div onClick={() => downloadCurrNote()}>Export Note</div>
     </div>
   );
 };

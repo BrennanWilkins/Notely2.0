@@ -6,7 +6,7 @@ import DarkModeToggle from '../UI/DarkModeToggle/DarkModeToggle';
 import { connect } from 'react-redux';
 import { setNoteMargins, setNoteFontSize, setNoteListDisplay } from '../../store/actions';
 import { marginOptions, fontSizeOptions, listDisplayOptions } from '../../utils/displayOptions';
-import downloadNotes from '../../utils/downloadNotes';
+import { downloadNotes } from '../../utils/downloadNotes';
 
 const SettingsModal = props => (
   <ModalContainer close={props.close} title="Settings">

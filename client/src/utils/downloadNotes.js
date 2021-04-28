@@ -4,8 +4,8 @@ import { formatDate } from './formatDate';
 
 const convertNote = (string, note) => {
   const body = serializeToText(note.body, '\n');
-  let str = `Created at ${formatDate(note.createdAt)}\n`;
-  str += `Last modified ${formatDate(note.updatedAt)}\n\n`;
+  let str = `Created at ${formatDate(note.createdAt, { year: true })}\n`;
+  str += `Last modified ${formatDate(note.updatedAt, { year: true })}\n\n`;
   str += `${body}\n`;
   return str;
 };

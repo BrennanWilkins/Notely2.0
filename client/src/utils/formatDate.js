@@ -1,11 +1,10 @@
 import { format, isThisYear } from 'date-fns';
 
-export const formatDate = str => {
+export const formatDate = (str, options) => {
   let date = new Date(str);
-  // if date not curr year show year
-  const formatted = isThisYear(date) ?
-  format(date, `MMM d 'at' h:mm aa`) :
-  format(date, `MMM d, yyyy 'at' h:mm aa`);
-
-  return formatted;
+  // show year if date not curr year or if requested
+  if (options?.year || !isThisYear(date)) {
+    return format(date, `MMM d, yyyy 'at' h:mm aa`);
+  }
+  return format(date, `MMM d 'at' h:mm aa`);
 };

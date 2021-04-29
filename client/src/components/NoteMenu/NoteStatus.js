@@ -2,19 +2,19 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import './NoteMenu.css';
 import { connect } from 'react-redux';
-import { formatDate } from '../../utils/formatDate';
 import { arrowRepeatIcon, checkIcon } from '../UI/icons';
 import { selectCurrUpdatedAt } from '../../store/selectors';
+import LiveDate from '../UI/LiveDate';
 
-const NoteStatus = props => {
-  const formattedDate = useMemo(() => formatDate(props.updatedAt), [props.updatedAt]);
-
+const NoteStatus = ({ updatedAt, changesSaved }) => {
   return (
     <div className="NoteMenu__info">
-      <div className="NoteMenu__date">Last updated <span>{formattedDate}</span></div>
-      <div className={`NoteMenu__status ${!props.changesSaved ? 'NoteMenu__status--anim' : ''}`}>
+      <div className="NoteMenu__date">
+        <LiveDate date={updatedAt} prefix="Last updated" />
+      </div>
+      <div className={`NoteMenu__status ${!changesSaved ? 'NoteMenu__status--anim' : ''}`}>
         {
-          props.changesSaved ?
+          changesSaved ?
           <>{checkIcon}All changes saved</> :
           <>{arrowRepeatIcon}Saving changes</>
         }

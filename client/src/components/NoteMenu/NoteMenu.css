@@ -102,11 +102,6 @@
   flex-wrap: wrap;
   margin-left: -3px;
 }
-@media (max-width: 415px) {
-  .NoteMenu__date span {
-    display: block;
-  }
-}
 .NoteMenu__optBtn {
   position: relative;
 }
@@ -120,14 +115,14 @@
   background: var(--modalBack);
   z-index: 3;
   border-radius: 4px;
-  padding-bottom: 5px;
+  padding: 5px 0;
   border: 1px solid #eee;
   color: var(--textColor);
   font-size: 14.5px;
   text-align: left;
 }
 .NoteMenu__optModal div {
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
 }
 .NoteMenu__optModal div:hover {

@@ -89,7 +89,7 @@ const login = (state, { payload: { notes, pinnedNotes }}) => {
     trashIDs,
     noteIDs,
     pinnedNotes,
-    currentNoteID: noteIDs[0] || null,
+    currentNoteID: (pinnedNotes.length ? pinnedNotes[0] : noteIDs[0]) || null,
     allTags: [...new Set(allTags)],
     collabsByName
   };
@@ -140,6 +140,7 @@ const trashNote = (state, { payload: { noteID } }) => {
     (state.currentNoteID && state.currentNoteID !== noteID) ? state.currentNoteID :
     (state.trashShown && !state.currentNoteID) ? noteID :
     (state.shownTag && filteredNoteIDs.length && state.currentNoteID === noteID) ? filteredNoteIDs[0] :
+    state.pinnedNotes.length ? state.pinnedNotes[0] :
     noteIDs[0] || null
   );
 
@@ -166,7 +167,11 @@ const setShowTrash = (state, action) => {
   return {
     ...state,
     trashShown: action.bool,
-    currentNoteID: (action.bool ? state.trashIDs[0] : state.noteIDs[0]) || null,
+    currentNoteID: (
+      action.bool ? state.trashIDs[0] :
+      state.pinnedNotes.length ? state.pinnedNotes[0] :
+      state.noteIDs[0]
+    ) || null,
     changesSaved: true,
     shownTag: null,
     filteredNoteIDs: state.filteredNoteIDs.length ? [] : state.filteredNoteIDs,
@@ -286,7 +291,9 @@ const showNote = (state, { noteID }) => {
 const showNotesByTag = (state, { tag }) => {
   if (tag === state.shownTag) { return state; }
 
-  const filteredNoteIDs = state.noteIDs.filter(id => state.notesByID[id].tags.includes(tag));
+  const filteredNoteIDs = state.noteIDs.filter(id => state.notesByID[id].tags.includes(tag))
+  .sort((a,b) => state.pinnedNotes.indexOf(b) - state.pinnedNotes.indexOf(a));
+
   return {
     ...state,
     filteredNoteIDs,

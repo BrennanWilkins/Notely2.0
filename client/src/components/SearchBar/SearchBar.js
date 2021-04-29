@@ -12,7 +12,7 @@ const SearchBar = props => {
   const valRef = useRef('');
 
   const clickHandler = () => {
-    if (!props.sideNavShown) {
+    if (!props.isExpanded) {
       props.toggleSideNav();
       setTimeout(() => inputRef.current.focus(), 250);
     }
@@ -39,7 +39,7 @@ const SearchBar = props => {
 
   return (
     <div
-      className={`SearchBar ${props.sideNavShown ? '' : 'SearchBar--contract'}`}
+      className={`SearchBar ${props.isExpanded ? '' : 'SearchBar--contract'}`}
       onClick={clickHandler}
     >
       <div className="SearchBar__icon">{searchIcon}</div>
@@ -56,13 +56,13 @@ const SearchBar = props => {
       >
         {xIcon}
       </div>
-      {!props.sideNavShown && <Tooltip position="right">Search</Tooltip>}
+      {!props.isExpanded && <Tooltip position="right">Search</Tooltip>}
     </div>
   );
 };
 
 SearchBar.propTypes = {
-  sideNavShown: PropTypes.bool.isRequired,
+  isExpanded: PropTypes.bool.isRequired,
   toggleSideNav: PropTypes.func.isRequired,
   setSearchQuery: PropTypes.func.isRequired,
   searchQuery: PropTypes.string.isRequired,

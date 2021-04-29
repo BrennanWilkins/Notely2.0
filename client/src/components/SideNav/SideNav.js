@@ -5,13 +5,14 @@ import ToggleSideNavBtn from '../UI/ToggleSideNavBtn/ToggleSideNavBtn';
 import { logo, notesIcon, trashIcon, settingsIcon, tagsIcon, backIcon,
   peopleIcon, personIcon, helpIcon } from '../UI/icons';
 import { connect } from 'react-redux';
-import { toggleSideNav, setShowTrash, showNotesByTag, setListShown } from '../../store/actions';
+import { toggleSideNav, setShowTrash, setListShown } from '../../store/actions';
 import SettingsModal from '../SettingsModal/SettingsModal';
 import Tooltip from '../UI/Tooltip/Tooltip';
 import InvitesModal from '../InvitesModal/InvitesModal';
 import SearchBar from '../SearchBar/SearchBar';
 import AccountModal from '../AccountModal/AccountModal';
 import { Link } from 'react-router-dom';
+import SideNavTags from './SideNavTags';
 
 const SideNav = props => {
   const [showSettings, setShowSettings] = useState(false);
@@ -65,14 +66,6 @@ const SideNav = props => {
     resetListShown();
   };
 
-  const showNotesByTagHandler = tag => {
-    props.showNotesByTag(tag);
-    resetListShown();
-    if (props.shown && window.innerWidth <= 750) {
-      props.toggleSideNav();
-    }
-  };
-
   return (
     <>
       <div ref={sideNavRef} className={`SideNav ${props.shown ? 'SideNav--expand' : 'SideNav--contract'}`}>
@@ -81,7 +74,7 @@ const SideNav = props => {
           {logo}
           <div>Notely</div>
         </div>
-        <SearchBar sideNavShown={props.shown} toggleSideNav={props.toggleSideNav} />
+        <SearchBar isExpanded={props.shown} toggleSideNav={props.toggleSideNav} />
         <div className="SideNav__container">
           <SideNavLink
             onClick={() => toggleTrashHandler(false)}
@@ -123,16 +116,12 @@ const SideNav = props => {
               {backIcon}
             </span>
           </SideNavLink>
-          <div
-            className={`SideNav__tags ${showTags ? 'SideNav__tags--show' : 'SideNav__tags--hide'}`}
-            style={{ maxHeight: showTags ? props.tags.length * 42 + 'px' : '0' }}
-          >
-            {props.tags.map(tag => (
-              <div className="SideNav__tag" key={tag} onClick={() => showNotesByTagHandler(tag)}>
-                {tag}
-              </div>
-            ))}
-          </div>
+          <SideNavTags
+            showTags={showTags}
+            shown={props.shown}
+            toggleSideNav={props.toggleSideNav}
+            resetListShown={resetListShown}
+          />
         </div>
         <Link to="/help" className="SideNav__link SideNav__helpLink">
           <div className="SideNav__innerLink">
@@ -165,22 +154,18 @@ SideNav.propTypes = {
   shown: PropTypes.bool.isRequired,
   toggleSideNav: PropTypes.func.isRequired,
   setShowTrash: PropTypes.func.isRequired,
-  tags: PropTypes.array.isRequired,
-  showNotesByTag: PropTypes.func.isRequired,
   setListShown: PropTypes.func.isRequired,
   hasInvites: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   shown: state.ui.sideNavShown,
-  tags: state.notes.allTags,
   hasInvites: state.user.invites.length > 0
 });
 
 const mapDispatchToProps = dispatch => ({
   toggleSideNav: () => dispatch(toggleSideNav()),
   setShowTrash: bool => dispatch(setShowTrash(bool)),
-  showNotesByTag: tag => dispatch(showNotesByTag(tag)),
   setListShown: bool => dispatch(setListShown(bool))
 });
 

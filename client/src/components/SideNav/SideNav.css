@@ -1,15 +1,17 @@
 .SideNav {
   height: 100%;
-  transition: width 200ms ease-out;
   background: rgb(27,28,32);
   display: flex;
   flex-direction: column;
+  transition: min-width 200ms ease-out, width 200ms ease-out;
 }
 .SideNav--expand {
   width: 220px;
+  min-width: 220px;
 }
 .SideNav--contract {
   width: 55px;
+  min-width: 55px;
 }
 .SideNav--expand .SideNav__container {
   overflow-x: hidden;

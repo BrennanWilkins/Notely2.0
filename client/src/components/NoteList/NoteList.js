@@ -41,7 +41,7 @@ const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType, sear
     formatted = formatted.filter(note => note.matchesSearch);
   }
 
-  return formatted;
+  return formatted.map(note => <NoteListNote key={note.noteID} {...note} />);
 };
 
 const NoteList = props => {
@@ -50,7 +50,11 @@ const NoteList = props => {
   }, [props.noteIDs, props.pinnedNotes, props.notesByID, props.trashShown, props.sortType, props.searchQuery]);
 
   return (
-    <div className={`NoteList ${props.listShown ? 'NoteList--show' : 'NoteList--hide'}`}>
+    <div className={`
+      NoteList
+      ${!props.listShown ? 'NoteList--hideSmall' : ''}
+      ${props.isFullscreen ? 'NoteList--hide' : ''}
+    `}>
       <NoteListHeader
         createNote={props.createNote}
         trashShown={props.trashShown}
@@ -69,7 +73,7 @@ const NoteList = props => {
       }
       <div className="NoteList__notes">
         {formattedNotes.length ?
-          formattedNotes.map(note => <NoteListNote key={note.noteID} {...note} />)
+          formattedNotes
           :
           <div className="NoteList__noNotes">
             {
@@ -129,7 +133,8 @@ NoteList.propTypes = {
   sortType: PropTypes.string.isRequired,
   shownTag: PropTypes.string,
   searchQuery: PropTypes.string,
-  emptyTrash: PropTypes.func.isRequired
+  emptyTrash: PropTypes.func.isRequired,
+  isFullscreen: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -140,7 +145,8 @@ const mapStateToProps = state => ({
   listShown: state.ui.listShown,
   pinnedNotes: state.notes.pinnedNotes,
   sortType: state.ui.sortType,
-  shownTag: state.notes.shownTag
+  shownTag: state.notes.shownTag,
+  isFullscreen: state.ui.isFullscreen
 });
 
 const mapDispatchToProps = dispatch => ({

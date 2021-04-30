@@ -73,18 +73,21 @@
     margin-left: 55px;
   }
 }
+@media (min-width: 751px) {
+  .NoteList--hide {
+    display: none;
+  }
+}
 @media (max-width: 750px) {
   .NoteList {
     position: fixed;
     top: 0;
     left: 0;
     width: calc(100vw - 55px);
-  }
-  .NoteList--show {
     z-index: 3;
   }
-  .NoteList--hide {
-    z-index: 2;
+  .NoteList--hideSmall {
+    display: none;
   }
 }
 @media (max-height: 300px) {

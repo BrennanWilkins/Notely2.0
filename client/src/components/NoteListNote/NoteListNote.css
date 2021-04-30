@@ -6,6 +6,7 @@
   position: relative;
   padding: 10px 8px 10px 30px;
   color: var(--textColor);
+  outline: none;
 }
 .NoteListNote--Condensed {
   height: 42px;
@@ -14,14 +15,14 @@
   height: auto;
   min-height: 65px;
 }
-.NoteListNote:hover {
-  background: rgb(241,241,241);
+.NoteListNote:hover, .NoteListNote:focus {
+  background: var(--lighterGray2);
 }
 .NoteListNote--active {
   background: rgba(var(--blue), 0.12);
 }
-.NoteListNote--active:hover {
-  background: rgba(var(--blue), 0.15);
+.NoteListNote--active:hover, .NoteListNote--active:focus {
+  background: rgba(var(--blue), 0.18);
 }
 .NoteListNote__title, .NoteListNote--Normal .NoteListNote__txt {
   text-overflow: ellipsis;
@@ -67,13 +68,14 @@
 .dark .NoteListNote {
   background: rgba(var(--gray), 0.1);
 }
-.dark .NoteListNote:hover {
+.dark .NoteListNote:hover, .dark .NoteListNote:focus {
   background: rgba(var(--gray), 0.2);
 }
 .dark .NoteListNote--active {
   background: rgba(var(--lightBlue), 0.12);
 }
-.dark .NoteListNote--active:hover {
+.dark .NoteListNote--active:hover,
+.dark .NoteListNote--active:focus {
   background: rgba(var(--lightBlue), 0.15);
 }
 .dark .NoteListNote__txt--hl {

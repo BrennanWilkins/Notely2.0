@@ -11,6 +11,12 @@ const NoteListNote = props => {
     isPinned ? props.unpinNote(noteID) : props.pinNote(noteID);
   };
 
+  const keyPressHandler = e => {
+    if (e.key === 'Enter') {
+      props.showNote(props.noteID);
+    }
+  };
+
   return (
     <div
       className={`
@@ -19,6 +25,8 @@ const NoteListNote = props => {
         NoteListNote--${props.display}
       `}
       onClick={() => props.showNote(props.noteID)}
+      onKeyPress={keyPressHandler}
+      tabIndex="0"
     >
       {!props.trashShown &&
         <span

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './NoteMenu.css';
 import { connect } from 'react-redux';

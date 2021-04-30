@@ -20,6 +20,7 @@
   background: var(--back);
 }
 .SideNav__link:hover .Tooltip,
+.SideNav__link:focus .Tooltip,
 .ToggleSideNavBtn:hover .Tooltip,
 .Toolbar__btn:hover .Tooltip,
 .NoteListHeader__addBtn:hover .Tooltip,
@@ -27,7 +28,8 @@
 .NoteMenu__btn:hover .Tooltip,
 .NoteMenu__optionBtn:hover .Tooltip,
 .Avatar:hover .Tooltip,
-.SearchBar:hover .Tooltip {
+.SearchBar:hover .Tooltip,
+.SearchBar:focus .Tooltip {
   opacity: 1;
   transform: scale(1);
   transition: opacity 250ms 450ms, transform 250ms 450ms;

@@ -9,6 +9,7 @@
   color: var(--lighterGray2);
   width: 90%;
   margin: 10px auto;
+  outline: none;
 }
 .SearchBar__icon {
   display: flex;
@@ -59,7 +60,7 @@
 .SearchBar--contract .SearchBar__clear {
   display: none;
 }
-.SearchBar--contract:hover {
+.SearchBar--contract:hover, .SearchBar--contract:focus {
   background: rgba(var(--gray), 0.5);
 }
 .SearchBar--contract .SearchBar__icon {

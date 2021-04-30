@@ -18,6 +18,13 @@ const SearchBar = props => {
     }
   };
 
+  const keyPressHandler = e => {
+    if (e.key === 'Enter' && !props.isExpanded) {
+      clickHandler();
+      e.currentTarget.blur();
+    }
+  };
+
   const clearSearch = () => {
     setSearchVal('');
     props.setSearchQuery('');
@@ -41,6 +48,8 @@ const SearchBar = props => {
     <div
       className={`SearchBar ${props.isExpanded ? '' : 'SearchBar--contract'}`}
       onClick={clickHandler}
+      tabIndex={props.isExpanded ? '-1' : '0'}
+      onKeyPress={keyPressHandler}
     >
       <div className="SearchBar__icon">{searchIcon}</div>
       <input

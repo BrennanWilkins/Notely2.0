@@ -80,26 +80,31 @@ const SideNav = props => {
             onClick={() => toggleTrashHandler(false)}
             title="All Notes"
             icon={notesIcon}
+            shown={props.shown}
           />
           <SideNavLink
             onClick={() => toggleTrashHandler(true)}
             title="Trash"
             icon={trashIcon}
+            shown={props.shown}
           />
           <SideNavLink
             onClick={() => setShowSettings(true)}
             title="Settings"
             icon={settingsIcon}
+            shown={props.shown}
           />
           <SideNavLink
             onClick={() => setShowAccnt(true)}
             title="Account"
             icon={personIcon}
+            shown={props.shown}
           />
           <SideNavLink
             onClick={() => setShowInvitesModal(true)}
             title="Invites"
             icon={peopleIcon}
+            shown={props.shown}
           >
             <div>
               Invites
@@ -110,6 +115,7 @@ const SideNav = props => {
             onClick={toggleTagsHandler}
             title="Tags"
             icon={tagsIcon}
+            shown={props.shown}
           >
             <div>Tags</div>
             <span className={`SideNav__toggleTagBtn ${showTags ? 'SideNav__toggleTagBtn--rotate' : ''}`}>
@@ -138,17 +144,33 @@ const SideNav = props => {
   );
 };
 
-const SideNavLink = (
-  connect(state => ({ shown: state.ui.sideNavShown }))
-  (({ onClick, title, icon, children, shown }) => (
-    <div className="SideNav__link" onClick={onClick}>
+const SideNavLink = ({ onClick, title, icon, children, shown }) => {
+  const clickHandler = e => {
+    e.currentTarget.blur();
+    onClick();
+  };
+
+  const keyPressHandler = e => {
+    if (e.key === 'Enter') {
+      clickHandler(e);
+    }
+  };
+
+  return (
+    <div
+      className="SideNav__link"
+      onClick={clickHandler}
+      tabIndex="0"
+      onKeyPress={keyPressHandler}
+    >
       <div className="SideNav__innerLink">
         {icon}
         {children || <div>{title}</div>}
       </div>
       {!shown && <Tooltip position="right">{title}</Tooltip>}
     </div>
-)));
+  );
+};
 
 SideNav.propTypes = {
   shown: PropTypes.bool.isRequired,

@@ -52,6 +52,7 @@
 }
 .SideNav__link {
   position: relative;
+  outline: none;
 }
 .SideNav__innerLink {
   color: var(--lighterGray2);
@@ -63,7 +64,8 @@
   cursor: pointer;
   padding: 10px 0;
 }
-.SideNav__innerLink:hover {
+.SideNav__innerLink:hover,
+.SideNav__link:focus .SideNav__innerLink {
   background: rgba(var(--gray), 0.5);
 }
 .SideNav__innerLink div {
@@ -123,8 +125,9 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
+  outline: none;
 }
-.SideNav__tag:hover {
+.SideNav__tag:hover, .SideNav__tag:focus {
   background: rgba(var(--gray), 0.25) !important;
 }
 @media (max-width: 900px) {

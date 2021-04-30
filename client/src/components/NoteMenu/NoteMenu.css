@@ -44,7 +44,9 @@
 .NoteMenu__iconBtn:hover {
   background: rgba(0,0,0,0.05);
 }
-.NoteMenu__fsBtn:hover, .NoteMenu__trashBtn:hover, .NoteMenu__backBtn:hover {
+.NoteMenu__fsBtn:hover,
+.NoteMenu__trashBtn:hover,
+.NoteMenu__backBtn:hover {
   background: rgba(0,0,0,0.08);
 }
 .NoteMenu__btn:active {
@@ -132,11 +134,15 @@
 .dark .NoteMenu {
   border-bottom: 1px solid black;
 }
-.dark .NoteMenu__fsBtn, .dark .NoteMenu__trashBtn {
+.dark .NoteMenu__fsBtn,
+.dark .NoteMenu__trashBtn, 
+.dark .NoteMenu__backBtn {
   color: #ddd;
   background: rgba(var(--gray), 0.5);
 }
-.dark .NoteMenu__fsBtn:hover, .dark .NoteMenu__trashBtn:hover {
+.dark .NoteMenu__fsBtn:hover,
+.dark .NoteMenu__trashBtn:hover,
+.dark .NoteMenu__backBtn:hover {
   background: rgba(var(--gray), 0.65);
 }
 .dark .NoteMenu__btn:active {

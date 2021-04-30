@@ -1,13 +1,12 @@
 import React, { useMemo } from 'react';
 import './NoteList.css';
 import PropTypes from 'prop-types';
-import { tagIcon, trashIcon, searchIcon } from '../UI/icons';
 import { connect } from 'react-redux';
-import { createNote, emptyTrash } from '../../store/actions';
 import { selectCurrNoteIDs } from '../../store/selectors';
 import NoteListHeader from '../NoteListHeader/NoteListHeader';
 import { serializeBody } from '../../utils/slateHelpers';
 import NoteListNote from '../NoteListNote/NoteListNote';
+import NoNotes from './NoNotes';
 
 const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType, searchQuery) => {
   let formatted = notes.map(noteID => {
@@ -44,79 +43,30 @@ const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType, sear
   return formatted.map(note => <NoteListNote key={note.noteID} {...note} />);
 };
 
-const NoteList = props => {
+const NoteList = ({ noteIDs, pinnedNotes, notesByID, trashShown, sortType, searchQuery, listShown, isFS }) => {
   const formattedNotes = useMemo(() => {
-    return formatAndSort(props.noteIDs, props.pinnedNotes, props.notesByID, props.trashShown, props.sortType, props.searchQuery);
-  }, [props.noteIDs, props.pinnedNotes, props.notesByID, props.trashShown, props.sortType, props.searchQuery]);
+    return formatAndSort(noteIDs, pinnedNotes, notesByID, trashShown, sortType, searchQuery);
+  }, [noteIDs, pinnedNotes, notesByID, trashShown, sortType, searchQuery]);
 
   return (
     <div className={`
       NoteList
-      ${!props.listShown ? 'NoteList--hideSmall' : ''}
-      ${props.isFullscreen ? 'NoteList--hide' : ''}
+      ${!listShown ? 'NoteList--hideSmall' : ''}
+      ${isFS ? 'NoteList--hide' : ''}
     `}>
       <NoteListHeader
-        createNote={props.createNote}
-        trashShown={props.trashShown}
+        trashShown={trashShown}
         noteCount={formattedNotes.length}
-        shownTag={props.shownTag}
+        searchQuery={searchQuery}
       />
-      {(!!props.searchQuery.length && !!formattedNotes.length) &&
-        <div className="NoteList__searchHeader">
-          {searchIcon} Search results for <div>{props.searchQuery}</div>
-        </div>
-      }
-      {(!props.searchQuery && props.trashShown && !!formattedNotes.length) &&
-        <div className="NoteList__emptyTrash" onClick={props.emptyTrash}>
-          <div>{trashIcon} Empty Trash</div>
-        </div>
-      }
       <div className="NoteList__notes">
         {formattedNotes.length ?
           formattedNotes
           :
-          <div className="NoteList__noNotes">
-            {
-              (!!props.searchQuery && props.shownTag) ?
-                <>
-                  {searchIcon}
-                  <div className="NoteList__noNotesText">
-                    No search results found for
-                    <div>{props.searchQuery}</div>
-                    for notes tagged
-                    <div>{props.shownTag}</div>
-                  </div>
-                </>
-              : !!props.searchQuery ?
-                <>
-                  {searchIcon}
-                  <div className="NoteList__noNotesText">
-                    No search results found for
-                    <div>{props.searchQuery}</div>
-                  </div>
-                </>
-              : props.shownTag ?
-                <>
-                  {tagIcon}
-                  <div className="NoteList__noNotesText">
-                    No notes tagged
-                    <div>{props.shownTag}</div>
-                  </div>
-                </>
-              : props.trashShown ?
-                <>
-                  {trashIcon}
-                  Your trash is empty.
-                </>
-              :
-                <>
-                  No notes
-                  <div className="NoteList__noNotesBtn" onClick={props.createNote}>
-                    Create a new note
-                  </div>
-                </>
-            }
-          </div>
+          <NoNotes
+            searchQuery={searchQuery}
+            trashShown={trashShown}
+          />
         }
       </div>
     </div>
@@ -127,14 +77,11 @@ NoteList.propTypes = {
   noteIDs: PropTypes.array.isRequired,
   notesByID: PropTypes.object.isRequired,
   trashShown: PropTypes.bool.isRequired,
-  createNote: PropTypes.func.isRequired,
   listShown: PropTypes.bool.isRequired,
   pinnedNotes: PropTypes.array.isRequired,
   sortType: PropTypes.string.isRequired,
-  shownTag: PropTypes.string,
   searchQuery: PropTypes.string,
-  emptyTrash: PropTypes.func.isRequired,
-  isFullscreen: PropTypes.bool.isRequired
+  isFS: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -145,13 +92,7 @@ const mapStateToProps = state => ({
   listShown: state.ui.listShown,
   pinnedNotes: state.notes.pinnedNotes,
   sortType: state.ui.sortType,
-  shownTag: state.notes.shownTag,
-  isFullscreen: state.ui.isFullscreen
+  isFS: state.ui.isFullscreen
 });
 
-const mapDispatchToProps = dispatch => ({
-  createNote: () => dispatch(createNote()),
-  emptyTrash: () => dispatch(emptyTrash())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(NoteList);
+export default connect(mapStateToProps)(NoteList);

@@ -32,7 +32,10 @@ export const deleteNote = () => (dispatch, getState) => {
   dispatch({ type: actionTypes.DELETE_NOTE, payload });
 };
 
-export const showNote = noteID => ({ type: actionTypes.SHOW_NOTE, noteID });
+export const showNote = noteID => (dispatch, getState) => {
+  if (getState().ui.isFullscreen) { return; }
+  dispatch({ type: actionTypes.SHOW_NOTE, noteID });
+};
 
 export const setShowTrash = bool => ({ type: actionTypes.SET_SHOW_TRASH, bool });
 

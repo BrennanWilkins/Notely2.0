@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import './ModalContainer.css';
 import PropTypes from 'prop-types';
@@ -17,6 +17,18 @@ const ModalContainer = props => {
     if (modalRef.current.contains(e.target)) { return; }
     closeHandler();
   };
+
+  useEffect(() => {
+    // close modal on esc key press
+    const escKeyHandler = e => {
+      if (e.keyCode === 27) {
+        closeHandler();
+      }
+    };
+
+    window.addEventListener('keydown', escKeyHandler);
+    return () => window.removeEventListener('keydown', escKeyHandler);
+  }, []);
 
   return createPortal(
     <div

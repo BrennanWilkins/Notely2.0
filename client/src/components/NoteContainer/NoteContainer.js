@@ -11,7 +11,7 @@ const NoteContainer = props => (
     className={`
       NoteContainer
       ${props.isFullscreen ? 'NoteContainer--expanded' : 'NoteContainer--contract'}
-      ${props.listShown ? 'NoteContainer--hide' : 'NoteContainer--show'}
+      ${props.listShown ? 'NoteContainer--hide' : ''}
     `}
     style={
       !props.isFullscreen ?

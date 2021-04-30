@@ -28,11 +28,9 @@
     width: calc(100vw - 55px);
     margin-left: 55px;
     max-width: calc(100vw - 55px) !important;
-  }
-  .NoteContainer--show {
     z-index: 3;
   }
   .NoteContainer--hide {
-    z-index: 2;
+    display: none;
   }
 }

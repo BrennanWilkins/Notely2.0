@@ -17,6 +17,11 @@ const NoteListNote = props => {
     }
   };
 
+  const showNoteHandler = () => {
+    if (props.isCurrent) { return; }
+    props.showNote(props.noteID);
+  };
+
   return (
     <div
       className={`
@@ -24,7 +29,7 @@ const NoteListNote = props => {
         ${props.isCurrent ? 'NoteListNote--active' : ''}
         NoteListNote--${props.display}
       `}
-      onClick={() => props.showNote(props.noteID)}
+      onClick={showNoteHandler}
       onKeyPress={keyPressHandler}
       tabIndex="0"
     >

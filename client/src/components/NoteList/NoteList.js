@@ -8,17 +8,24 @@ import { serializeBody } from '../../utils/slateHelpers';
 import NoteListNote from '../NoteListNote/NoteListNote';
 import NoNotes from './NoNotes';
 
-const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType, searchQuery) => {
-  let formatted = notes.map(noteID => {
-    const { updatedAt, createdAt } = notesByID[noteID];
+const formatAndSort = (noteIDs, pinnedNotes, notesByID, trashShown, sortType, searchQuery) => {
+  let notes = noteIDs.map(noteID => {
+    const { updatedAt, createdAt, body } = notesByID[noteID];
+
     return {
       noteID,
       updatedAt,
       createdAt,
       isPinned: trashShown ? false : pinnedNotes.includes(noteID),
-      ...serializeBody(notesByID[noteID].body, searchQuery)
+      ...serializeBody(body)
     };
-  }).sort((a,b) => {
+  });
+
+  if (searchQuery) {
+    notes = notes.filter(note => note.text.includes(searchQuery));
+  }
+
+  notes.sort((a,b) => {
     if (a.isPinned && b.isPinned) {
       return pinnedNotes.indexOf(b) - pinnedNotes.indexOf(a);
     }
@@ -30,17 +37,13 @@ const formatAndSort = (notes, pinnedNotes, notesByID, trashShown, sortType, sear
       case 'Created Oldest': return new Date(a.createdAt) - new Date(b.createdAt);
       case 'Modified Newest': return new Date(b.updatedAt) - new Date(a.updatedAt);
       case 'Modified Oldest': return new Date(a.updatedAt) - new Date(b.updatedAt);
-      case 'AtoZ': return a.title.localeCompare(b.title);
-      case 'ZtoA': return b.title.localeCompare(a.title);
+      case 'AtoZ': return a.text.localeCompare(b.text);
+      case 'ZtoA': return b.text.localeCompare(a.text);
       default: return 0;
     }
   });
 
-  if (searchQuery) {
-    formatted = formatted.filter(note => note.matchesSearch);
-  }
-
-  return formatted.map(note => <NoteListNote key={note.noteID} {...note} />);
+  return notes.map(({ text, ...note }) => <NoteListNote key={note.noteID} {...note} />);
 };
 
 const NoteList = ({ noteIDs, pinnedNotes, notesByID, trashShown, sortType, searchQuery, listShown, isFS }) => {

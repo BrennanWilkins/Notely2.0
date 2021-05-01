@@ -5,18 +5,15 @@ export const serializeToText = (nodes, delimiter) => {
   return nodes.map(n => Node.string(n)).join(delimiter || '');
 };
 
-export const serializeBody = (nodes, searchQuery) => {
+export const serializeBody = nodes => {
   if (!nodes || !nodes.length) {
-    return { title: '', txt: '', matchesSearch: false };
+    return { title: '', subTitle: '', text: '' };
   }
 
-  let matchesSearch = false;
-  let arr = nodes.map(n => Node.string(n)).filter(n => n !== '');
-  let title = arr[0] || '';
-  let txt = arr.length > 1 ? arr.slice(1).join('') : '';
-  if (searchQuery) {
-    matchesSearch = arr.join('').includes(searchQuery);
-  }
+  const arr = nodes.map(n => Node.string(n)).filter(n => n !== '');
+  const title = arr[0] || '';
+  const subTitle = arr.length > 1 ? arr.slice(1).join('') : '';
+  const text = arr.join('');
 
-  return { title, txt, matchesSearch };
+  return { title, subTitle, text };
 };

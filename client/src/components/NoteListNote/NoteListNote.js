@@ -49,12 +49,12 @@ const NoteListNote = props => {
             searchWords={[props.searchQuery]}
             textToHighlight={props.title}
           />
-          {!!props.txt && props.display !== 'Condensed' &&
+          {!!props.subTitle && props.display !== 'Condensed' &&
             <Highlighter
               className="NoteListNote__txt"
               highlightClassName="NoteListNote__txt--hl"
               searchWords={[props.searchQuery]}
-              textToHighlight={props.txt}
+              textToHighlight={props.subTitle}
             />
           }
         </>
@@ -65,7 +65,7 @@ const NoteListNote = props => {
           </div>
           {props.display !== 'Condensed' &&
             <div className="NoteListNote__txt">
-              {props.txt}
+              {props.subTitle}
             </div>
           }
         </>
@@ -82,7 +82,7 @@ NoteListNote.propTypes = {
   isCurrent: PropTypes.bool.isRequired,
   noteID: PropTypes.string.isRequired,
   isPinned: PropTypes.bool.isRequired,
-  txt: PropTypes.string.isRequired,
+  subTitle: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   trashShown: PropTypes.bool.isRequired,
   display: PropTypes.string.isRequired

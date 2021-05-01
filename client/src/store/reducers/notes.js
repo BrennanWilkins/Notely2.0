@@ -283,8 +283,7 @@ const showNote = (state, { noteID }) => ({
 const showNotesByTag = (state, { tag }) => {
   if (tag === state.shownTag) { return state; }
 
-  const filteredNoteIDs = state.noteIDs.filter(id => state.notesByID[id].tags.includes(tag))
-  .sort((a,b) => state.pinnedNotes.indexOf(b) - state.pinnedNotes.indexOf(a));
+  const filteredNoteIDs = state.noteIDs.filter(id => state.notesByID[id].tags.includes(tag));
 
   return {
     ...state,

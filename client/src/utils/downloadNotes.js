@@ -2,11 +2,11 @@ import store from '../store';
 import { serializeToText } from './slateHelpers';
 import { formatDate } from './formatDate';
 
-const convertNote = (string, note) => {
-  const body = serializeToText(note.body, '\n');
-  let str = `Created at ${formatDate(note.createdAt, { year: true })}\n`;
-  str += `Last modified ${formatDate(note.updatedAt, { year: true })}\n\n`;
-  str += `${body}\n`;
+const convertNote = ({ body, createdAt, updatedAt }) => {
+  const text = serializeToText(body, '\n');
+  let str = `Created at ${formatDate(createdAt, { year: true })}\n`;
+  str += `Last modified ${formatDate(updatedAt, { year: true })}\n\n`;
+  str += `${text}\n`;
   return str;
 };
 
@@ -23,7 +23,7 @@ const download = (str, fileName) => {
 export const downloadCurrNote = () => {
   const state = store.getState();
   const note = state.notes.notesByID[state.notes.currentNoteID];
-  const str = convertNote('', note);
+  const str = convertNote(note);
   download(str, 'notely-note.txt');
 };
 
@@ -32,8 +32,7 @@ export const downloadNotes = () => {
   const noteIDs = state.notes.noteIDs;
   let str = '--------------------------------------------------------\n\n';
   for (let noteID of noteIDs) {
-    const note = state.notes.notesByID[noteID];
-    str += convertNote(str, note);
+    str += convertNote(state.notes.notesByID[noteID]);
     str += '\n--------------------------------------------------------\n\n';
   }
   download(str, 'my-notes.txt');

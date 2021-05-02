@@ -32,7 +32,7 @@ const ModalContainer = ({ close, className, children, title }) => {
   }, []);
 
   return createPortal(
-    <FocusTrap>
+    <FocusTrap focusTrapOptions={{ allowOutsideClick: true }}>
       <div
         className={`ModalContainer ${unmount ? 'ModalContainer--unmountAnim' : ''}`}
         onClick={clickHandler}

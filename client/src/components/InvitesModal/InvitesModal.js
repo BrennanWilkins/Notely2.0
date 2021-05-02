@@ -3,46 +3,52 @@ import './InvitesModal.css';
 import PropTypes from 'prop-types';
 import ModalContainer from '../UI/ModalContainer/ModalContainer';
 import { connect } from 'react-redux';
-import { eyeIcon } from '../UI/icons';
+import { eyeIcon, checkIcon, xIcon } from '../UI/icons';
 import NotePreview from '../NotePreview/NotePreview';
 import { acceptInvite, rejectInvite } from '../../store/actions';
 
-const InvitesModal = props => {
+const InvitesModal = ({ invites, close, acceptInvite, rejectInvite }) => {
   const [shownPreview, setShownPreview] = useState('');
 
   return (
-    <ModalContainer close={props.close} title="Invites" className="InvitesModalContainer">
-      {props.invites.length ?
+    <ModalContainer
+      close={close}
+      title="Invites"
+      className="InvitesModalContainer"
+    >
+      {invites.length ?
         <>
           <div className="InvitesModal__title">
             Inviter Username
           </div>
-          {props.invites.map(({ inviter, noteID }) => (
+          {invites.map(({ inviter, noteID }) => (
             <React.Fragment key={noteID}>
               <div className="InvitesModal__invite">
                 <div className="InvitesModal__inviter">{inviter}</div>
                 <div className="InvitesModal__actions">
                   <button
                     className="Btn BlueBtn InvitesModal__accBtn"
-                    onClick={() => props.acceptInvite(noteID)}
+                    onClick={() => acceptInvite(noteID)}
                   >
-                    Accept
+                    {checkIcon}<span>Accept</span>
                   </button>
                   <button
                     className="Btn BlueBtn InvitesModal__rejBtn"
-                    onClick={() => props.rejectInvite(noteID)}
+                    onClick={() => rejectInvite(noteID)}
                   >
-                    Reject
+                    {xIcon}<span>Reject</span>
                   </button>
                   <button
                     className="Btn BlueBtn InvitesModal__prevBtn"
                     onClick={() => setShownPreview(noteID)}
                   >
-                    Preview Note{eyeIcon}
+                    <span>Preview Note</span>{eyeIcon}
                   </button>
                 </div>
               </div>
-              {shownPreview === noteID && <NotePreview noteID={noteID} close={() => setShownPreview('')} />}
+              {shownPreview === noteID &&
+                <NotePreview noteID={noteID} close={() => setShownPreview('')} />
+              }
             </React.Fragment>
           ))}
         </>

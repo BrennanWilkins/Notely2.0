@@ -17,12 +17,14 @@
   display: flex;
   align-items: center;
   width: 94%;
-  margin: 10px auto;
+  flex-wrap: wrap;
+  margin: 12px auto -12px;
 }
 .InvitesModal__inviter {
   font-size: 15px;
   word-wrap: break-word;
-  max-width: calc(100% - 250px);
+  max-width: 100%;
+  margin-bottom: 12px;
 }
 .InvitesModal__actions,
 .InvitesModal__actions button {
@@ -31,7 +33,7 @@
   align-items: center;
 }
 .InvitesModal__actions {
-  margin-left: auto;
+  margin: 0 0 12px auto;
 }
 .InvitesModal__actions button {
   padding: 6px 8px;
@@ -48,11 +50,39 @@
   font-size: 14px;
   min-width: 14px;
 }
+.InvitesModal__accBtn svg, .InvitesModal__rejBtn svg {
+  display: none;
+}
 .InvitesModal__noInvites {
   text-align: center;
   font-size: 16px;
   font-weight: 500;
   margin-top: 20px;
+}
+@media (max-width: 500px) {
+  .InvitesModal__actions button span {
+    display: none;
+  }
+  .InvitesModal__actions button {
+    max-height: 28px;
+    max-width: 28px;
+  }
+  .InvitesModal__actions button svg {
+    display: block;
+    margin: 0;
+  }
+  .InvitesModal__prevBtn svg {
+    font-size: 15px;
+    min-width: 15px;
+  }
+  .InvitesModal__accBtn svg {
+    font-size: 18px;
+    min-width: 18px;
+  }
+  .InvitesModal__rejBtn svg {
+    font-size: 21px;
+    min-width: 21px;
+  }
 }
 
 .dark .InvitesModal__title {

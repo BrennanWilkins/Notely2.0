@@ -10,8 +10,28 @@ const NoteOptions = ({ close }) => {
 
   return (
     <div ref={modalRef} className="NoteMenu__optModal">
-      <div onClick={() => window.print()}>Print Note</div>
-      <div onClick={() => downloadCurrNote()}>Export Note</div>
+      <div
+        onClick={() => window.print()}
+        tabIndex="0"
+        onKeyPress={e => {
+          if (e.key === 'Enter') {
+            window.print();
+          }
+        }}
+      >
+        Print Note
+      </div>
+      <div
+        onClick={() => downloadCurrNote()}
+        tabIndex="0"
+        onKeyPress={e => {
+          if (e.key === 'Enter') {
+            downloadCurrNote();
+          }
+        }}
+      >
+        Export Note
+      </div>
     </div>
   );
 };

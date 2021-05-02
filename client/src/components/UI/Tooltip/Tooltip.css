@@ -28,6 +28,7 @@
 .NoteListHeader__sortBtn:hover .Tooltip,
 .NoteListHeader__sortBtn:focus .Tooltip,
 .NoteMenu__btn:hover .Tooltip,
+.NoteMenu__btn:focus .Tooltip,
 .NoteMenu__optionBtn:hover .Tooltip,
 .Avatar:hover .Tooltip,
 .SearchBar:hover .Tooltip,

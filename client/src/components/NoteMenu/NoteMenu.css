@@ -41,12 +41,16 @@
   margin-left: 10px;
   font-size: 14px;
 }
-.NoteMenu__iconBtn:hover {
+.NoteMenu__iconBtn:hover,
+.NoteMenu__iconBtn:focus {
   background: rgba(0,0,0,0.05);
 }
 .NoteMenu__fsBtn:hover,
+.NoteMenu__fsBtn:focus,
 .NoteMenu__trashBtn:hover,
-.NoteMenu__backBtn:hover {
+.NoteMenu__trashBtn:focus,
+.NoteMenu__backBtn:hover,
+.NoteMenu__backBtn:focus {
   background: rgba(0,0,0,0.08);
 }
 .NoteMenu__btn:active {
@@ -126,8 +130,10 @@
 .NoteMenu__optModal div {
   padding: 8px;
   cursor: pointer;
+  outline: none;
 }
-.NoteMenu__optModal div:hover {
+.NoteMenu__optModal div:hover,
+.NoteMenu__optModal div:focus {
   background: rgb(248,248,248);
 }
 
@@ -135,14 +141,17 @@
   border-bottom: 1px solid black;
 }
 .dark .NoteMenu__fsBtn,
-.dark .NoteMenu__trashBtn, 
+.dark .NoteMenu__trashBtn,
 .dark .NoteMenu__backBtn {
   color: #ddd;
   background: rgba(var(--gray), 0.5);
 }
 .dark .NoteMenu__fsBtn:hover,
+.dark .NoteMenu__fsBtn:focus,
 .dark .NoteMenu__trashBtn:hover,
-.dark .NoteMenu__backBtn:hover {
+.dark .NoteMenu__backBtn:hover,
+.dark .NoteMenu__trashBtn:focus,
+.dark .NoteMenu__backBtn:focus {
   background: rgba(var(--gray), 0.65);
 }
 .dark .NoteMenu__btn:active {
@@ -151,7 +160,8 @@
 .dark .NoteMenu__iconBtn {
   color: rgb(220,220,220);
 }
-.dark .NoteMenu__iconBtn:hover {
+.dark .NoteMenu__iconBtn:hover,
+.dark .NoteMenu__iconBtn:focus {
   background: rgba(var(--gray), 0.5);
 }
 .dark .NoteMenu__info {
@@ -161,6 +171,7 @@
   border: 1px solid rgb(24, 25, 27);
   box-shadow: 0 2px 6px -2px rgb(20,20,20);
 }
-.dark .NoteMenu__optModal div:hover {
+.dark .NoteMenu__optModal div:hover,
+.dark .NoteMenu__optModal div:focus {
   background: rgba(var(--gray), 0.15);
 }

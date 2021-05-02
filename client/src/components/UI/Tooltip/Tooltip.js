@@ -9,7 +9,7 @@ const Tooltip = props => (
 );
 
 Tooltip.propTypes = {
-  position: PropTypes.oneOf(['up', 'down', 'right', 'left']).isRequired
+  position: PropTypes.oneOf(['down', 'right']).isRequired
 };
 
 export default Tooltip;

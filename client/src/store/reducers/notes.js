@@ -450,10 +450,10 @@ const removeTag = (state, { payload: { noteID, tag } }) => {
   };
 };
 
-const showNote = (state, { noteID }) => ({
-  ...state,
-  currentNoteID: noteID
-});
+const showNote = (state, { noteID }) => {
+  return state.currentNoteID === noteID ? state
+  : { ...state, currentNoteID: noteID };
+};
 
 const showNotesByTag = (state, { tag }) => {
   if (tag === state.shownTag) { return state; }

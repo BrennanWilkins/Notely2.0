@@ -14,18 +14,7 @@ const NoteListNote = props => {
   }, [props.body]);
 
   const pinHandler = () => {
-    props.isPinned ? props.unpinNote(props.noteID) : props.pinNote(props.noteID);
-  };
-
-  const keyPressHandler = e => {
-    if (e.key === 'Enter') {
-      props.showNote(props.noteID);
-    }
-  };
-
-  const showNoteHandler = () => {
-    if (props.isCurrent) { return; }
-    props.showNote(props.noteID);
+    props.isPinned ? props.unpinNote() : props.pinNote();
   };
 
   return (
@@ -35,8 +24,12 @@ const NoteListNote = props => {
         ${props.isCurrent ? 'NoteListNote--active' : ''}
         NoteListNote--${props.display}
       `}
-      onClick={showNoteHandler}
-      onKeyPress={keyPressHandler}
+      onClick={props.showNote}
+      onKeyPress={e => {
+        if (e.key === 'Enter') {
+          props.showNote();
+        }
+      }}
       tabIndex="0"
     >
       {!props.trashShown &&
@@ -102,10 +95,10 @@ const mapStateToProps = (state, ownProps) => ({
   body: state.notes.notesByID[ownProps.noteID].body
 });
 
-const mapDispatchToProps = dispatch => ({
-  showNote: noteID => dispatch(showNote(noteID)),
-  pinNote: noteID => dispatch(pinNote(noteID)),
-  unpinNote: noteID => dispatch(unpinNote(noteID))
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  showNote: () => dispatch(showNote(ownProps.noteID)),
+  pinNote: () => dispatch(pinNote(ownProps.noteID)),
+  unpinNote: () => dispatch(unpinNote(ownProps.noteID))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NoteListNote);

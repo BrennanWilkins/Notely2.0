@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { instance as axios } from '../../axios';
 import PassInput from '../UI/PassInput/PassInput';
 
-const DeleteAccnt = props => {
+const DeleteAccnt = ({ logout }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [msg, setMsg] = useState('');
   const [showMsg, setShowMsg] = useState(false);
@@ -12,7 +12,7 @@ const DeleteAccnt = props => {
   const deleteHandler = () => {
     setIsLoading(true);
     axios.delete('/user/' + pass).then(res => {
-      props.logout();
+      logout();
     }).catch(err => {
       setIsLoading(false);
       let errMsg = err?.response?.data?.msg ||

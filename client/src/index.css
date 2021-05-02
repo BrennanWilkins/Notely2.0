@@ -56,7 +56,7 @@ code {
 .RedBtn {
   background: red;
 }
-.RedBtn:hover {
+.RedBtn:hover, .RedBtn:focus {
   background: rgb(228, 0, 0);
 }
 .RedBtn:active {

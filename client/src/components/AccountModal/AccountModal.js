@@ -8,7 +8,7 @@ import ChangePass from './ChangePass';
 import DeleteAccnt from './DeleteAccnt';
 import ModalContainer from '../UI/ModalContainer/ModalContainer';
 
-const AccountModal = props => {
+const AccountModal = ({ close, email, username, logout }) => {
   const [showChangePass, setShowChangePass] = useState(false);
   const [showDeleteAccnt, setShowDeleteAccnt] = useState(false);
 
@@ -19,7 +19,7 @@ const AccountModal = props => {
 
   return (
     <ModalContainer
-      close={props.close}
+      close={close}
       title={showChangePass ? 'Change my password' : showDeleteAccnt ? 'Delete my account' : 'Account'}
     >
       {(showChangePass || showDeleteAccnt) && <BackBtn onClick={backHandler} />}
@@ -28,20 +28,41 @@ const AccountModal = props => {
           <ChangePass />
         :
         showDeleteAccnt ?
-          <DeleteAccnt logout={props.logout} />
+          <DeleteAccnt logout={logout} />
         :
           <>
             <div className="AccountModal__subTitle">Username</div>
-            <div className="AccountModal__info">{props.username}</div>
+            <div className="AccountModal__info">{username}</div>
             <div className="AccountModal__subTitle">Email</div>
-            <div className="AccountModal__info">{props.email}</div>
-            <button className="Btn BlueBtn AccountModal__logoutBtn" onClick={props.logout}>
+            <div className="AccountModal__info">{email}</div>
+            <button
+              className="Btn BlueBtn AccountModal__logoutBtn"
+              onClick={logout}
+            >
               Log Out
             </button>
-            <div className="AccountModal__btn" onClick={() => setShowChangePass(true)}>
+            <div
+              className="AccountModal__btn"
+              onClick={() => setShowChangePass(true)}
+              onKeyPress={e => {
+                if (e.key === 'Enter') {
+                  setShowChangePass(true);
+                }
+              }}
+              tabIndex="0"
+            >
               Change my password
             </div>
-            <div className="AccountModal__btn" onClick={() => setShowDeleteAccnt(true)}>
+            <div
+              className="AccountModal__btn"
+              onClick={() => setShowDeleteAccnt(true)}
+              onKeyPress={e => {
+                if (e.key === 'Enter') {
+                  setShowDeleteAccnt(true);
+                }
+              }}
+              tabIndex="0"
+            >
               Delete my account
             </div>
           </>

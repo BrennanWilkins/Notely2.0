@@ -94,7 +94,7 @@ const login = (state, { payload: { notes, pinnedNotes, email }}) => {
 
   const sortType = (
     localStorage['email'] === email ?
-    localStorage['sortType'] :
+    (localStorage['sortType'] || 'Modified Newest') :
     'Modified Newest'
   );
 

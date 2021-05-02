@@ -536,29 +536,46 @@ const acceptInvite = (state, { payload: { note } }) => {
   };
 };
 
-const addCollaborator = (state, { payload: { noteID, email, username } }) => ({
-  ...state,
-  notesByID: {
+const addCollaborator = (state, { payload: { noteID, email, username } }) => {
+  const notesByID = {
     ...state.notesByID,
     [noteID]: {
       ...state.notesByID[noteID],
-      collaborators: [...state.notesByID[noteID].collaborators, username]
+      collaborators: [...state.notesByID[noteID].collaborators, username],
+      updatedAt: String(new Date())
     }
-  },
-  collabsByName:
-    state.collabsByName[username] ?
-    state.collabsByName :
-    {
-      ...state.collabsByName,
-      [username]: {
-        username,
-        email,
-        color: null,
-        isActive: false,
-        isOnline: false
+  };
+
+  let filteredNoteIDs = state.filteredNoteIDs;
+  if (shouldResortByModified(noteID, filteredNoteIDs, state.sortType)) {
+    filteredNoteIDs = resortByModified(
+      notesByID,
+      state.filteredNoteIDs,
+      state.pinnedNotes,
+      state.sortType,
+      state.trashShown
+    );
+  }
+
+  return {
+    ...state,
+    notesByID,
+    filteredNoteIDs,
+    collabsByName:
+      state.collabsByName[username] ?
+      state.collabsByName :
+      {
+        ...state.collabsByName,
+        [username]: {
+          username,
+          email,
+          color: null,
+          isActive: false,
+          isOnline: false
+        }
       }
-    }
-});
+  };
+};
 
 const setConnectedUsers = (state, { payload: users }) => {
   if (!users) { return state; }

@@ -1,5 +1,12 @@
 import * as actionTypes from '../actions/actionTypes';
-import { serializeToText } from '../../utils/slateHelpers';
+import {
+  filterAndSortNoteIDs,
+  resortByPinned,
+  resortByModified,
+  resortBodyUpdate,
+  shouldResortByModified,
+  resortNotes
+} from '../../utils/noteReducerHelpers';
 
 const initialState = {
   notesByID: {},
@@ -13,7 +20,8 @@ const initialState = {
   filteredNoteIDs: [],
   shownTag: null,
   collabsByName: {},
-  searchQuery: ''
+  searchQuery: '',
+  sortType: 'Modified Newest',
 };
 
 const reducer = (state  = initialState, action) => {
@@ -46,11 +54,12 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.UNPUBLISH_NOTE: return unpublishNote(state, action);
     case actionTypes.EMPTY_TRASH: return emptyTrash(state, action);
     case actionTypes.REFRESH_NOTES: return refreshNotes(state, action);
+    case actionTypes.SET_SORT_TYPE: return setSortType(state, action);
     default: return state;
   }
 };
 
-const login = (state, { payload: { notes, pinnedNotes }}) => {
+const login = (state, { payload: { notes, pinnedNotes, email }}) => {
   const notesByID = {};
   const noteIDs = [];
   const trashIDs = [];
@@ -83,15 +92,30 @@ const login = (state, { payload: { notes, pinnedNotes }}) => {
     });
   }
 
+  const sortType = (
+    localStorage['email'] === email ?
+    localStorage['sortType'] :
+    'Modified Newest'
+  );
+
+  const filteredNoteIDs = filterAndSortNoteIDs(
+    noteIDs,
+    notesByID,
+    pinnedNotes,
+    sortType
+  );
+
   return {
     ...state,
     notesByID,
     trashIDs,
     noteIDs,
     pinnedNotes,
-    currentNoteID: noteIDs[0] || null,
+    currentNoteID: filteredNoteIDs[0] || null,
     allTags: [...new Set(allTags)],
-    collabsByName
+    collabsByName,
+    filteredNoteIDs,
+    sortType
   };
 };
 
@@ -105,101 +129,154 @@ const createNote = (state, { payload: { note, username } }) => {
     createdAt: note.createdAt,
     updatedAt: note.updatedAt
   };
+
+  const noteIDs = [note._id, ...state.noteIDs];
+  const notesByID = { [note._id]: newNote, ...state.notesByID };
+
   return {
     ...state,
-    noteIDs: [note._id, ...state.noteIDs],
-    notesByID: { [note._id]: newNote, ...state.notesByID },
+    noteIDs,
+    notesByID,
     currentNoteID: note._id,
     changesSaved: true,
     shownTag: null,
-    filteredNoteIDs: state.filteredNoteIDs.length ? [] : state.filteredNoteIDs,
+    filteredNoteIDs: filterAndSortNoteIDs(
+      noteIDs,
+      notesByID,
+      state.pinnedNotes,
+      state.sortType
+    ),
     searchQuery: '',
     trashShown: false
   };
 };
 
-const updateNote = (state, { payload: { noteID, body } }) => ({
-  ...state,
-  notesByID: {
+const updateNote = (state, { payload: { noteID, body } }) => {
+  const notesByID = {
     ...state.notesByID,
     [noteID]: {
       ...state.notesByID[noteID],
       body,
       updatedAt: String(new Date())
     }
-  }
-});
+  };
 
-const trashNote = (state, { payload: { noteID } }) => {
-  const noteIDs = state.noteIDs.filter(id => id !== noteID);
-  const filteredNoteIDs = (state.shownTag && state.filteredNoteIDs.includes(noteID)) ?
-    state.filteredNoteIDs.filter(id => id !== noteID) :
-    state.filteredNoteIDs;
-
-  const currentNoteID = (
-    (state.currentNoteID && state.currentNoteID !== noteID) ? state.currentNoteID :
-    (state.trashShown && !state.currentNoteID) ? noteID :
-    (state.shownTag && filteredNoteIDs.length && state.currentNoteID === noteID) ? filteredNoteIDs[0] :
-    noteIDs[0] || null
+  const filteredNoteIDs = resortBodyUpdate(
+    noteID,
+    state.filteredNoteIDs,
+    state.trashShown ? state.trashIDs : state.noteIDs,
+    notesByID,
+    state.pinnedNotes,
+    state.sortType,
+    state.trashShown,
+    state.searchQuery,
+    state.shownTag
   );
 
   return {
     ...state,
-    notesByID: {
-      ...state.notesByID,
-      [noteID]: {
-        ...state.notesByID[noteID],
-        updatedAt: String(new Date())
-      }
-    },
-    noteIDs,
-    trashIDs: [noteID, ...state.trashIDs],
-    currentNoteID,
-    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved,
-    filteredNoteIDs,
-    shownTag: (state.shownTag && filteredNoteIDs.length) ? state.shownTag : null
+    notesByID,
+    filteredNoteIDs
   };
 };
 
-const setShowTrash = (state, action) => {
-  if (action.bool === state.trashShown && !state.shownTag) { return state; }
+const trashNote = (state, { payload: { noteID } }) => {
+  const noteIDs = state.noteIDs.filter(id => id !== noteID);
+  const trashIDs = [noteID, ...state.trashIDs];
+
+  const notesByID = {
+    ...state.notesByID,
+    [noteID]: {
+      ...state.notesByID[noteID],
+      updatedAt: String(new Date())
+    }
+  };
+
+  const filteredNoteIDs = filterAndSortNoteIDs(
+    state.trashShown ? trashIDs : noteIDs,
+    notesByID,
+    state.pinnedNotes,
+    state.sortType,
+    state.trashShown,
+    state.searchQuery,
+    state.shownTag
+  );
+
+  const currentNoteID = (
+    (state.currentNoteID && state.currentNoteID !== noteID) ? state.currentNoteID :
+    filteredNoteIDs[0]
+  );
+
   return {
     ...state,
-    trashShown: action.bool,
-    currentNoteID: (action.bool ? state.trashIDs[0] : state.noteIDs[0]) || null,
+    notesByID,
+    noteIDs,
+    trashIDs,
+    currentNoteID,
+    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved,
+    filteredNoteIDs
+  };
+};
+
+const setShowTrash = (state, { bool }) => {
+  if (bool === state.trashShown && !state.shownTag) { return state; }
+
+  const filteredNoteIDs = filterAndSortNoteIDs(
+    bool ? state.trashIDs : state.noteIDs,
+    state.notesByID,
+    state.pinnedNotes,
+    state.sortType,
+    bool,
+    '',
+    null
+  );
+
+  return {
+    ...state,
+    trashShown: bool,
+    currentNoteID: filteredNoteIDs[0] || null,
     changesSaved: true,
     shownTag: null,
-    filteredNoteIDs: state.filteredNoteIDs.length ? [] : state.filteredNoteIDs,
+    filteredNoteIDs,
     searchQuery: ''
   };
 };
 
 const restoreNote = (state, { payload: { noteID } }) => {
   const trashIDs = state.trashIDs.filter(id => id !== noteID);
+  const noteIDs = [noteID, ...state.noteIDs];
 
-  const hasCurrTag = state.shownTag && state.notesByID[noteID].tags.includes(state.shownTag);
+  const notesByID = {
+    ...state.notesByID,
+    [noteID]: {
+      ...state.notesByID[noteID],
+      updatedAt: String(new Date())
+    }
+  };
+
+  const filteredNoteIDs = filterAndSortNoteIDs(
+    state.trashShown ? trashIDs : noteIDs,
+    notesByID,
+    state.pinnedNotes,
+    state.sortType,
+    state.trashShown,
+    state.searchQuery,
+    state.shownTag
+  );
 
   const currentNoteID = (
     (state.currentNoteID && state.currentNoteID !== noteID) ? state.currentNoteID :
-    (!state.currentNoteID && !state.trashShown && !state.shownTag) ? noteID :
-    (!state.currentNoteID && state.shownTag && hasCurrTag) ? noteID :
-    trashIDs[0] || null
+    filteredNoteIDs[0] || null
   );
 
   return {
     ...state,
     trashIDs,
-    noteIDs: [noteID, ...state.noteIDs],
-    notesByID: {
-      ...state.notesByID,
-      [noteID]: {
-        ...state.notesByID[noteID],
-        updatedAt: String(new Date())
-      }
-    },
+    noteIDs,
+    notesByID,
     currentNoteID,
     changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved,
-    filteredNoteIDs: hasCurrTag ? [noteID, ...state.filteredNoteIDs] : state.filteredNoteIDs
+    filteredNoteIDs
   };
 };
 
@@ -207,9 +284,23 @@ const deleteNote = (state, { payload: { noteID } }) => {
   const notesByID = { ...state.notesByID };
   delete notesByID[noteID];
   const trashIDs = state.trashIDs.filter(id => id !== noteID);
+
+  let filteredNoteIDs = state.filteredNoteIDs;
+  if (state.trashShown) {
+    filteredNoteIDs = filterAndSortNoteIDs(
+      trashIDs,
+      notesByID,
+      state.pinnedNotes,
+      state.sortType,
+      state.trashShown,
+      state.searchQuery,
+      state.shownTag
+    );
+  }
+
   const currentNoteID = (
     state.currentNoteID !== noteID ? state.currentNoteID :
-    trashIDs[0] || null
+    filteredNoteIDs[0] || null
   );
 
   return {
@@ -220,19 +311,41 @@ const deleteNote = (state, { payload: { noteID } }) => {
       state.pinnedNotes.filter(id => id !== noteID) :
       state.pinnedNotes,
     currentNoteID,
+    filteredNoteIDs,
     changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved
   };
 };
 
-const pinNote = (state, { payload: { noteID } }) => ({
-  ...state,
-  pinnedNotes: [noteID, ...state.pinnedNotes]
-});
+const pinNote = (state, { payload: { noteID } }) => {
+  const pinnedNotes = [noteID, ...state.pinnedNotes];
 
-const unpinNote = (state, { payload: { noteID } }) => ({
-  ...state,
-  pinnedNotes: state.pinnedNotes.filter(id => id !== noteID)
-});
+  return {
+    ...state,
+    pinnedNotes,
+    filteredNoteIDs: resortByPinned(
+      state.filteredNoteIDs,
+      state.trashShown,
+      pinnedNotes,
+      noteID
+    )
+  };
+};
+
+const unpinNote = (state, { payload: { noteID } }) => {
+  const pinnedNotes = state.pinnedNotes.filter(id => id !== noteID);
+
+  return {
+    ...state,
+    pinnedNotes,
+    filteredNoteIDs: resortNotes(
+      state.filteredNoteIDs,
+      state.notesByID,
+      pinnedNotes,
+      state.sortType,
+      state.trashShown
+    )
+  };
+};
 
 const setStatus = (state, { bool }) => {
   return state.changesSaved === bool ? state : { ...state, changesSaved: bool };
@@ -240,17 +353,42 @@ const setStatus = (state, { bool }) => {
 
 const createTag = (state, { payload: { noteID, tag } }) => {
   if (state.notesByID[noteID].tags.includes(tag)) { return state; }
+
+  const notesByID = {
+    ...state.notesByID,
+    [noteID]: {
+      ...state.notesByID[noteID],
+      updatedAt: String(new Date()),
+      tags: [...state.notesByID[noteID].tags, tag]
+    }
+  };
+
+  let filteredNoteIDs = state.filteredNoteIDs;
+  if (state.shownTag === tag) {
+    filteredNoteIDs = filterAndSortNoteIDs(
+      state.noteIDs,
+      notesByID,
+      state.pinnedNotes,
+      state.sortType,
+      state.trashShown,
+      state.searchQuery,
+      state.shownTag
+    );
+  } else if (shouldResortByModified(noteID, state.filteredNotes, state.sortType)) {
+    filteredNoteIDs = resortByModified(
+      notesByID,
+      state.filteredNoteIDs,
+      state.pinnedNotes,
+      state.sortType,
+      state.trashShown
+    );
+  }
+
   return {
     ...state,
-    notesByID: {
-      ...state.notesByID,
-      [noteID]: {
-        ...state.notesByID[noteID],
-        updatedAt: String(new Date()),
-        tags: [...state.notesByID[noteID].tags, tag]
-      }
-    },
-    allTags: state.allTags.includes(tag) ? state.allTags : [tag, ...state.allTags]
+    notesByID,
+    allTags: state.allTags.includes(tag) ? state.allTags : [tag, ...state.allTags],
+    filteredNoteIDs
   };
 };
 
@@ -264,14 +402,51 @@ const removeTag = (state, { payload: { noteID, tag } }) => {
     }
   };
 
-  const shouldKeepTag = state.noteIDs.find(id => notesByID[id].tags.includes(tag))
-  || state.trashIDs.find(id => notesByID[id].tags.includes(tag));
+  const shouldDelete = !state.noteIDs.find(id => notesByID[id].tags.includes(tag))
+  && !state.trashIDs.find(id => notesByID[id].tags.includes(tag));
+
+  const backToAll = state.shownTag === tag && shouldDelete;
+
+  let filteredNoteIDs = state.filteredNoteIDs;
+  if (backToAll) {
+    filteredNoteIDs = filterAndSortNoteIDs(
+      state.noteIDs,
+      notesByID,
+      state.pinnedNotes,
+      state.sortType
+    );
+  } else if (state.shownTag === tag) {
+    filteredNoteIDs = filterAndSortNoteIDs(
+      state.noteIDs,
+      notesByID,
+      state.pinnedNotes,
+      state.sortType,
+      false,
+      state.searchQuery,
+      tag
+    );
+  } else if (shouldResortByModified(noteID, filteredNoteIDs, state.sortType)) {
+    filteredNoteIDs = resortByModified(
+      notesByID,
+      filteredNoteIDs,
+      state.pinnedNotes,
+      state.sortType,
+      state.trashShown
+    );
+  }
 
   return {
     ...state,
     notesByID,
-    allTags: shouldKeepTag ? state.allTags : state.allTags.filter(t => t !== tag),
-    shownTag: state.shownTag === tag ? null : state.shownTag
+    allTags: shouldDelete ? state.allTags.filter(t => t !== tag) : state.allTags,
+    shownTag: backToAll ? null : state.shownTag,
+    filteredNoteIDs,
+    currentNoteID: (
+      (state.shownTag === tag && state.currentNoteID === noteID) ?
+      filteredNoteIDs[0] || null :
+      state.currentNoteID
+    ),
+    searchQuery: backToAll ? '' : state.searchQuery
   };
 };
 
@@ -283,7 +458,15 @@ const showNote = (state, { noteID }) => ({
 const showNotesByTag = (state, { tag }) => {
   if (tag === state.shownTag) { return state; }
 
-  const filteredNoteIDs = state.noteIDs.filter(id => state.notesByID[id].tags.includes(tag));
+  const filteredNoteIDs = filterAndSortNoteIDs(
+    state.noteIDs,
+    state.notesByID,
+    state.pinnedNotes,
+    state.sortType,
+    state.trashShown,
+    state.searchQuery,
+    tag
+  );
 
   return {
     ...state,
@@ -319,18 +502,36 @@ const acceptInvite = (state, { payload: { note } }) => {
     allTags = [...new Set([...newNote.tags, state.allTags])];
   }
 
-  const hasCurrTag = state.shownTag && newNote.tags.includes(state.shownTag);
+  const notesByID = {
+    ...state.notesByID,
+    [noteID]: newNote
+  };
+
+  const noteIDs = [noteID, ...state.noteIDs];
+
+  let filteredNoteIDs = state.filteredNoteIDs;
+  if (!state.trashShown && !state.shownTag) {
+    filteredNoteIDs = filterAndSortNoteIDs(
+      noteIDs,
+      notesByID,
+      state.pinnedNotes,
+      state.sortType,
+      state.trashShown,
+      state.searchQuery,
+      state.shownTag
+    );
+  }
 
   return {
     ...state,
-    notesByID: {
-      ...state.notesByID,
-      [noteID]: newNote
-    },
-    noteIDs: [noteID, ...state.noteIDs],
+    notesByID,
+    noteIDs,
     allTags,
-    currentNoteID: (!state.noteIDs.length && !state.trashShown) ? noteID : state.currentNoteID,
-    filteredNoteIDs: hasCurrTag ? [noteID, ...state.filteredNoteIDs] : state.filteredNoteIDs,
+    currentNoteID: (
+      (!state.currentNoteID && filteredNoteIDs.includes(noteID)) ? noteID :
+      state.currentNoteID
+    ),
+    filteredNoteIDs,
     collabsByName
   };
 };
@@ -462,32 +663,21 @@ const setUserInactive = (state, { payload: { username, color } }) => {
 const setSearchQuery = (state, { query }) => {
   if (query === state.searchQuery) { return state; }
 
-  if (!query) {
-    return {
-      ...state,
-      searchQuery: '',
-      currentNoteID: (
-        state.shownTag ? state.filteredNoteIDs[0] :
-        state.trashShown ? state.trashIDs[0] :
-        state.noteIDs[0]
-      ) || null
-    };
-  }
-
-  let filteredNoteIDs = (
-    state.shownTag ? state.filteredNoteIDs :
-    state.trashShown ? state.trashIDs
-    : state.noteIDs
+  const filteredNoteIDs = filterAndSortNoteIDs(
+    state.trashShown ? state.trashIDs : state.noteIDs,
+    state.notesByID,
+    state.pinnedNotes,
+    state.sortType,
+    state.trashShown,
+    query,
+    state.shownTag
   );
-
-  filteredNoteIDs = filteredNoteIDs.filter(id => (
-    serializeToText(state.notesByID[id].body).includes(query)
-  ));
 
   return {
     ...state,
     searchQuery: query,
-    currentNoteID: filteredNoteIDs[0] || null
+    currentNoteID: filteredNoteIDs[0] || null,
+    filteredNoteIDs
   };
 };
 
@@ -527,7 +717,8 @@ const emptyTrash = (state, action) => {
     notesByID,
     currentNoteID: null,
     pinnedNotes: state.pinnedNotes.filter(noteID => !state.trashIDs.includes(noteID)),
-    changesSaved: true
+    changesSaved: true,
+    filteredNoteIDs: []
   };
 };
 
@@ -543,7 +734,49 @@ const refreshNotes = (state, action) => {
     }
   }
 
-  return isDiff ? { ...state, notesByID } : state;
+  if (!isDiff) { return state; }
+
+  const filteredNoteIDs = filterAndSortNoteIDs(
+    state.trashShown ? state.trashIDs : state.noteIDs,
+    notesByID,
+    state.pinnedNotes,
+    state.sortType,
+    state.trashShown,
+    state.searchQuery,
+    state.shownTag
+  );
+
+  const currentNoteID = (
+    filteredNoteIDs.includes(state.currentNoteID) ? state.currentNoteID :
+    filteredNoteIDs[0] || null
+  );
+
+  return {
+    ...state,
+    notesByID,
+    filteredNoteIDs,
+    currentNoteID
+  };
+};
+
+const setSortType = (state, { sortType }) => {
+  if (state.sortType === sortType) { return state; }
+
+  localStorage['sortType'] = sortType;
+
+  const filteredNoteIDs = resortNotes(
+    state.filteredNoteIDs,
+    state.notesByID,
+    state.pinnedNotes,
+    sortType,
+    state.trashShown
+  );
+
+  return {
+    ...state,
+    sortType,
+    filteredNoteIDs
+  };
 };
 
 export default reducer;

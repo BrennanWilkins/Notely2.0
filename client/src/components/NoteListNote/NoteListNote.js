@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import './NoteListNote.css';
 import PropTypes from 'prop-types';
 import Highlighter from 'react-highlight-words';
 import { connect } from 'react-redux';
 import { showNote, pinNote, unpinNote } from '../../store/actions';
 import { pinIcon } from '../UI/icons';
+import { selectNoteIsPinned } from '../../store/selectors';
+import { serializeBody } from '../../utils/slateHelpers';
 
 const NoteListNote = props => {
-  const pinHandler = (isPinned, noteID) => {
-    isPinned ? props.unpinNote(noteID) : props.pinNote(noteID);
+  const { title, subTitle } = useMemo(() => {
+    return serializeBody(props.body);
+  }, [props.body]);
+
+  const pinHandler = () => {
+    props.isPinned ? props.unpinNote(props.noteID) : props.pinNote(props.noteID);
   };
 
   const keyPressHandler = e => {
@@ -36,36 +42,36 @@ const NoteListNote = props => {
       {!props.trashShown &&
         <span
           className={`NoteListNote__pin ${props.isPinned ? 'NoteListNote__pin--hl' : ''}`}
-          onClick={() => pinHandler(props.isPinned, props.noteID)}
+          onClick={pinHandler}
         >
           {pinIcon}
         </span>
       }
-      {(props.searchQuery && props.title) ?
+      {(props.searchQuery && title) ?
         <>
           <Highlighter
             className="NoteListNote__title"
             highlightClassName="NoteListNote__txt--hl"
             searchWords={[props.searchQuery]}
-            textToHighlight={props.title}
+            textToHighlight={title}
           />
-          {!!props.subTitle && props.display !== 'Condensed' &&
+          {!!subTitle && props.display !== 'Condensed' &&
             <Highlighter
               className="NoteListNote__txt"
               highlightClassName="NoteListNote__txt--hl"
               searchWords={[props.searchQuery]}
-              textToHighlight={props.subTitle}
+              textToHighlight={subTitle}
             />
           }
         </>
         :
         <>
           <div className="NoteListNote__title">
-            {props.title || 'New Note'}
+            {title || 'New Note'}
           </div>
           {props.display !== 'Condensed' &&
             <div className="NoteListNote__txt">
-              {props.subTitle}
+              {subTitle}
             </div>
           }
         </>
@@ -82,17 +88,18 @@ NoteListNote.propTypes = {
   isCurrent: PropTypes.bool.isRequired,
   noteID: PropTypes.string.isRequired,
   isPinned: PropTypes.bool.isRequired,
-  subTitle: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
   trashShown: PropTypes.bool.isRequired,
-  display: PropTypes.string.isRequired
+  display: PropTypes.string.isRequired,
+  body: PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => ({
   searchQuery: state.notes.searchQuery,
   isCurrent: state.notes.currentNoteID === ownProps.noteID,
   trashShown: state.notes.trashShown,
-  display: state.ui.noteListDisplay
+  display: state.ui.noteListDisplay,
+  isPinned: selectNoteIsPinned(state, ownProps.noteID),
+  body: state.notes.notesByID[ownProps.noteID].body
 });
 
 const mapDispatchToProps = dispatch => ({

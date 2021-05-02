@@ -5,7 +5,6 @@ const initialState = {
   sideNavShown: window.innerWidth > 900,
   isFullscreen: false,
   listShown: true,
-  sortType: 'Modified Newest',
   darkMode: false,
   noteMargins: 'Normal',
   noteFontSize: 'Normal',
@@ -19,7 +18,6 @@ const reducer = (state = initialState, action) => {
     case actionTypes.TOGGLE_FULLSCREEN: return { ...state, isFullscreen: !state.isFullscreen };
     case actionTypes.SET_LIST_SHOWN: return { ...state, listShown: action.bool };
     case actionTypes.SHOW_NOTE: return showNote(state);
-    case actionTypes.SET_SORT_TYPE: return setSortType(state, action);
     case actionTypes.TOGGLE_DARK_MODE: return toggleDarkMode(state);
     case actionTypes.LOGOUT: return logout();
     case actionTypes.SET_NOTE_MARGINS: return setNoteMargins(state, action);
@@ -47,7 +45,6 @@ const login = (state, { payload: { email } }) => {
 
   const newState = {
     ...state,
-    sortType: localStorage['sortType'] || 'Modified Newest',
     darkMode: localStorage['theme'] === 'dark' ? true : false,
     noteMargins: localStorage['margin'] || 'Normal',
     noteFontSize: localStorage['fontSize'] || 'Normal',
@@ -66,12 +63,6 @@ const showNote = state => {
   return window.innerWidth <= 750 ?
   { ...state, listShown: false } :
   state;
-};
-
-const setSortType = (state, { sortType }) => {
-  if (state.sortType === sortType) { return state; }
-  localStorage['sortType'] = sortType;
-  return { ...state, sortType };
 };
 
 const toggleDarkMode = state => {

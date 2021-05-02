@@ -63,7 +63,10 @@ NoteListHeader.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  shownTag: state.notes.shownTag
+  shownTag: state.notes.shownTag,
+  searchQuery: state.notes.searchQuery,
+  trashShown: state.notes.trashShown,
+  noteCount: state.notes.filteredNoteIDs.length
 });
 
 const mapDispatchToProps = dispatch => ({

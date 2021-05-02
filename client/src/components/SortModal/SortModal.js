@@ -47,7 +47,7 @@ SortModal.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  sortType: state.ui.sortType
+  sortType: state.notes.sortType
 });
 
 const mapDispatchToProps = dispatch => ({

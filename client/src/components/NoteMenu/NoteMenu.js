@@ -140,7 +140,7 @@ const mapStateToProps = state => ({
   isFullscreen: state.ui.isFullscreen,
   trashShown: state.notes.trashShown,
   noteID: state.notes.currentNoteID,
-  noteIsPinned: selectNoteIsPinned(state),
+  noteIsPinned: selectNoteIsPinned(state, state.notes.currentNoteID),
   isCollab: selectIsCollab(state)
 });
 

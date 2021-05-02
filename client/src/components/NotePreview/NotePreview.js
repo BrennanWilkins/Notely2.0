@@ -7,7 +7,7 @@ import { CloseBtn } from '../UI/Buttons/Buttons';
 import { sendUpdate } from '../../socket';
 import SimpleSpinner from '../UI/SimpleSpinner/SimpleSpinner';
 
-const NotePreview = props => {
+const NotePreview = ({ close, noteID }) => {
   const [value, setValue] = useState([]);
   const editor = useMemo(() => withReact(createEditor()), []);
   const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +15,7 @@ const NotePreview = props => {
 
   useEffect(() => {
     setIsLoading(false);
-    sendUpdate('get/note/invite', { noteID: props.noteID }, res => {
+    sendUpdate('get/note/invite', { noteID }, res => {
       setIsLoading(false);
       if (res.error) {
         setErr(true);
@@ -24,11 +24,11 @@ const NotePreview = props => {
         setValue(res.body);
       }
     });
-  }, [props.noteID]);
+  }, [noteID]);
 
   return (
     <div className="NotePreview">
-      <CloseBtn className="NotePreview__closeBtn" onClick={props.close} />
+      <CloseBtn className="NotePreview__closeBtn" onClick={close} />
       <div className="NotePreview__slate">
         {
           err ?
@@ -38,7 +38,11 @@ const NotePreview = props => {
           : isLoading ?
             <SimpleSpinner className="NotePreview__spinner" />
           :
-            <Slate editor={editor} value={value} onChange={value => setValue(value)}>
+            <Slate
+              editor={editor}
+              value={value}
+              onChange={value => setValue(value)}
+            >
               <Editable readOnly placeholder="Empty Note" />
             </Slate>
         }

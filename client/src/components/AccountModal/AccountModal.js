@@ -17,6 +17,12 @@ const AccountModal = ({ close, email, username, logout }) => {
     setShowDeleteAccnt(false);
   };
 
+  const keyPressHandler = e => {
+    if (e.key === 'Enter') {
+      e.currentTarget.click();
+    }
+  };
+
   return (
     <ModalContainer
       close={close}
@@ -44,11 +50,7 @@ const AccountModal = ({ close, email, username, logout }) => {
             <div
               className="AccountModal__btn"
               onClick={() => setShowChangePass(true)}
-              onKeyPress={e => {
-                if (e.key === 'Enter') {
-                  setShowChangePass(true);
-                }
-              }}
+              onKeyPress={keyPressHandler}
               tabIndex="0"
             >
               Change my password
@@ -56,11 +58,7 @@ const AccountModal = ({ close, email, username, logout }) => {
             <div
               className="AccountModal__btn"
               onClick={() => setShowDeleteAccnt(true)}
-              onKeyPress={e => {
-                if (e.key === 'Enter') {
-                  setShowDeleteAccnt(true);
-                }
-              }}
+              onKeyPress={keyPressHandler}
               tabIndex="0"
             >
               Delete my account

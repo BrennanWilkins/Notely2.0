@@ -13,9 +13,9 @@ const SideNavTags = props => {
     }
   };
 
-  const keyPressHandler = (e, tag) => {
+  const keyPressHandler = e => {
     if (e.key === 'Enter') {
-      showNotesByTagHandler(tag);
+      e.currentTarget.click();
     }
   };
 
@@ -33,7 +33,7 @@ const SideNavTags = props => {
           key={tag}
           onClick={() => showNotesByTagHandler(tag)}
           tabIndex={props.showTags ? '0' : '-1'}
-          onKeyPress={e => keyPressHandler(e, tag)}
+          onKeyPress={keyPressHandler}
         >
           {tag}
         </div>

@@ -22,8 +22,9 @@
   color: rgb(50,50,50);
   border-radius: 3px;
   transition: background 250ms;
+  outline: none;
 }
-.SettingsModal__opt:hover {
+.SettingsModal__opt:hover, .SettingsModal__opt:focus {
   background: rgb(235,235,235);
 }
 .SettingsModal__opt--active {
@@ -55,7 +56,7 @@
   color: #ddd;
   background: rgba(var(--gray), 0.5);
 }
-.dark .SettingsModal__opt:hover {
+.dark .SettingsModal__opt:hover, .dark .SettingsModal__opt:focus {
   background: rgba(var(--gray), 0.65);
 }
 .dark .SettingsModal__opt:active {

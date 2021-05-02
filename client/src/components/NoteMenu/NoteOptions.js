@@ -8,27 +8,25 @@ const NoteOptions = ({ close }) => {
   const modalRef = useRef();
   useModalToggle(modalRef, close);
 
+  const keyPressHandler = e => {
+    if (e.key === 'Enter') {
+      e.currentTarget.click();
+    }
+  };
+
   return (
     <div ref={modalRef} className="NoteMenu__optModal">
       <div
         onClick={() => window.print()}
         tabIndex="0"
-        onKeyPress={e => {
-          if (e.key === 'Enter') {
-            window.print();
-          }
-        }}
+        onKeyPress={keyPressHandler}
       >
         Print Note
       </div>
       <div
         onClick={() => downloadCurrNote()}
         tabIndex="0"
-        onKeyPress={e => {
-          if (e.key === 'Enter') {
-            downloadCurrNote();
-          }
-        }}
+        onKeyPress={keyPressHandler}
       >
         Export Note
       </div>

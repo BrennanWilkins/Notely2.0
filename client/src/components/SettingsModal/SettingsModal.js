@@ -16,68 +16,84 @@ const SettingsModal = ({
   setMargins,
   setFontSize,
   setDisplay
-}) => (
-  <ModalContainer close={close} title="Settings">
-    <DarkModeToggle />
-    <div className="SettingsModal__title">
-      Note Margins
-    </div>
-    <div className="SettingsModal__options">
-      {marginOptions.map(opt => (
-        <div
-          key={opt}
-          className={`
-            SettingsModal__opt
-            ${margins === opt ? 'SettingsModal__opt--active' : ''}
-          `}
-          onClick={() => setMargins(opt)}
-        >
-          {opt}
-        </div>
-      ))}
-    </div>
-    <div className="SettingsModal__title">
-      Note font size
-    </div>
-    <div className="SettingsModal__options">
-      {fontSizeOptions.map(opt => (
-        <div
-          key={opt}
-          className={`
-            SettingsModal__opt
-            ${fontSize === opt ? 'SettingsModal__opt--active' : ''}
-          `}
-          onClick={() => setFontSize(opt)}
-        >
-          {opt}
-        </div>
-      ))}
-    </div>
-    <div className="SettingsModal__title">
-      Note list display
-    </div>
-    <div className="SettingsModal__options">
-      {listDisplayOptions.map(opt => (
-        <div
-          key={opt}
-          className={`
-            SettingsModal__opt
-            ${display === opt ? 'SettingsModal__opt--active' : ''}
-          `}
-          onClick={() => setDisplay(opt)}
-        >
-          {opt}
-        </div>
-      ))}
-    </div>
-    <div
-      className="SettingsModal__opt SettingsModal__export"
-      onClick={downloadNotes}
-    >
-      Export Notes
-    </div>
-  </ModalContainer>
-);
+}) => {
+  const keyPressHandler = e => {
+    if (e.key === 'Enter') {
+      e.currentTarget.click();
+    }
+  };
+
+  return (
+    <ModalContainer close={close} title="Settings">
+      <DarkModeToggle />
+      <div className="SettingsModal__title">
+        Note Margins
+      </div>
+      <div className="SettingsModal__options">
+        {marginOptions.map(opt => (
+          <div
+            key={opt}
+            className={`
+              SettingsModal__opt
+              ${margins === opt ? 'SettingsModal__opt--active' : ''}
+            `}
+            onClick={() => setMargins(opt)}
+            tabIndex="0"
+            onKeyPress={keyPressHandler}
+          >
+            {opt}
+          </div>
+        ))}
+      </div>
+      <div className="SettingsModal__title">
+        Note font size
+      </div>
+      <div className="SettingsModal__options">
+        {fontSizeOptions.map(opt => (
+          <div
+            key={opt}
+            className={`
+              SettingsModal__opt
+              ${fontSize === opt ? 'SettingsModal__opt--active' : ''}
+            `}
+            onClick={() => setFontSize(opt)}
+            tabIndex="0"
+            onKeyPress={keyPressHandler}
+          >
+            {opt}
+          </div>
+        ))}
+      </div>
+      <div className="SettingsModal__title">
+        Note list display
+      </div>
+      <div className="SettingsModal__options">
+        {listDisplayOptions.map(opt => (
+          <div
+            key={opt}
+            className={`
+              SettingsModal__opt
+              ${display === opt ? 'SettingsModal__opt--active' : ''}
+            `}
+            onClick={() => setDisplay(opt)}
+            tabIndex="0"
+            onKeyPress={keyPressHandler}
+          >
+            {opt}
+          </div>
+        ))}
+      </div>
+      <div
+        className="SettingsModal__opt SettingsModal__export"
+        onClick={downloadNotes}
+        tabIndex="0"
+        onKeyPress={keyPressHandler}
+      >
+        Export Notes
+      </div>
+    </ModalContainer>
+  );
+};
 
 SettingsModal.propTypes = {
   close: PropTypes.func.isRequired,

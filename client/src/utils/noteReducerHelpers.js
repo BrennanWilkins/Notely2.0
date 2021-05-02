@@ -76,13 +76,8 @@ export const resortByPinned = (filteredNoteIDs, trashShown, pinnedNotes, noteID)
 
 export const shouldResortByModified = (noteID, noteIDs, sortType) => {
   // dont need to resort if not sorting by modified or if note not present
-  if (
-    (sortType !== 'Modified Newest' && sortType !== 'Modified Oldest')
-    || !noteIDs.includes(noteID)
-  ) {
-    return false;
-  }
-  return true;
+  return (sortType === 'Modified Newest' || sortType === 'Modified Oldest')
+  && noteIDs.includes(noteID);
 }
 
 export const resortByModified = (

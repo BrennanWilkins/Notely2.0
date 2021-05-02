@@ -374,7 +374,7 @@ const createTag = (state, { payload: { noteID, tag } }) => {
       state.searchQuery,
       state.shownTag
     );
-  } else if (shouldResortByModified(noteID, state.filteredNotes, state.sortType)) {
+  } else if (shouldResortByModified(noteID, state.filteredNoteIDs, state.sortType)) {
     filteredNoteIDs = resortByModified(
       notesByID,
       state.filteredNoteIDs,

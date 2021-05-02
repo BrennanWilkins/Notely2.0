@@ -39,7 +39,7 @@
   background: rgba(0,0,0,0.05);
   border-radius: 3px;
 }
-.NoteListHeader__sortBtn:hover {
+.NoteListHeader__sortBtn:hover, .NoteListHeader__sortBtn:focus {
   background: rgba(0,0,0,0.08);
 }
 .NoteListHeader__sortBtn:active {
@@ -65,7 +65,7 @@
   color: #ddd;
   background: rgba(var(--gray), 0.5);
 }
-.dark .NoteListHeader__sortBtn:hover {
+.dark .NoteListHeader__sortBtn:hover, .dark .NoteListHeader__sortBtn:focus {
   background: rgba(var(--gray), 0.65);
 }
 .dark .NoteListHeader__sortBtn:active {

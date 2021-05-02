@@ -31,8 +31,9 @@
   padding: 10px;
   cursor: pointer;
   font-size: 14.5px;
+  outline: none;
 }
-.SortModal__options div:hover {
+.SortModal__options div:hover, .SortModal__options div:focus {
   background: rgb(250,250,250);
 }
 .SortModal__activeOption {
@@ -47,7 +48,7 @@
 .dark .SortModal__title {
   border-bottom: var(--darkBorder);
 }
-.dark .SortModal__options div:hover {
+.dark .SortModal__options div:hover, .dark .SortModal__options div:focus {
   background: rgba(var(--gray), 0.15);
 }
 .dark .SortModal__activeOption {

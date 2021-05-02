@@ -16,7 +16,10 @@ const NoteListHeader = ({ trashShown, shownTag, noteCount, createNote, searchQue
         <div className="NoteListHeader__title">
           <button
             className="NoteListHeader__sortBtn"
-            onClick={() => setShowSortModal(true)}
+            onClick={e => {
+              e.currentTarget.blur();
+              setShowSortModal(true);
+            }}
           >
             {sortIcon}
             <Tooltip position="down">Sort Notes</Tooltip>

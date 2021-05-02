@@ -31,6 +31,12 @@ const SortModal = props => {
             key={type}
             className={props.sortType === type ? 'SortModal__activeOption' : ''}
             onClick={() => props.setSortType(type)}
+            tabIndex="0"
+            onKeyPress={e => {
+              if (e.key === 'Enter') {
+                props.setSortType(type);
+              }
+            }}
           >
             {val}
           </div>

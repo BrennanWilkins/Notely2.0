@@ -7,7 +7,14 @@ import SortModal from '../SortModal/SortModal';
 import { connect } from 'react-redux';
 import { createNote, emptyTrash } from '../../store/actions';
 
-const NoteListHeader = ({ trashShown, shownTag, noteCount, createNote, searchQuery }) => {
+const NoteListHeader = ({
+  trashShown,
+  shownTag,
+  noteCount,
+  createNote,
+  searchQuery,
+  emptyTrash
+}) => {
   const [showSortModal, setShowSortModal] = useState(false);
 
   return (

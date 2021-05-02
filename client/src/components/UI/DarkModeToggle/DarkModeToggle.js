@@ -6,7 +6,16 @@ import { connect } from 'react-redux';
 import { toggleDarkMode } from '../../../store/actions';
 
 const DarkModeToggle = ({ toggleDarkMode }) => (
-  <div className="DarkModeToggle" onClick={toggleDarkMode}>
+  <div
+    className="DarkModeToggle"
+    onClick={toggleDarkMode}
+    tabIndex="0"
+    onKeyPress={e => {
+      if (e.key === 'Enter') {
+        toggleDarkMode();
+      }
+    }}
+  >
     <div className="DarkModeToggle__sun">{sunIcon}</div>
     <div className="DarkModeToggle__moon">{moonIcon}</div>
     <div className="DarkModeToggle__btn" />

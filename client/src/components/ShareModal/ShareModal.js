@@ -7,7 +7,7 @@ import { useDidUpdate } from '../../utils/customHooks';
 import { sendUpdate } from '../../socket';
 import { selectCurrCollabs } from '../../store/selectors';
 
-const ShareModal = props => {
+const ShareModal = ({ close, collabs, byName, noteID }) => {
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showMsg, setShowMsg] = useState(false);
@@ -15,8 +15,8 @@ const ShareModal = props => {
   const [showInviteSuccess, setShowInviteSuccess] = useState(false);
 
   useDidUpdate(() => {
-    props.close();
-  }, [props.noteID]);
+    close();
+  }, [noteID]);
 
   const inputHandler = e => {
     setUserInput(e.target.value);
@@ -43,7 +43,7 @@ const ShareModal = props => {
     setShowMsg(false);
     setShowInviteSuccess(false);
 
-    sendUpdate('post/note/invite', { noteID: props.noteID, username: userInput }, res => {
+    sendUpdate('post/note/invite', { noteID, username: userInput }, res => {
       if (res.error) {
         return msgHandler(res.errMsg);
       }
@@ -52,7 +52,7 @@ const ShareModal = props => {
   };
 
   return (
-    <ModalContainer close={props.close} title="Share">
+    <ModalContainer close={close} title="Share">
       <div className="ShareModal__subTitle">
         Add the username or email of another Notely user to collaborate on this note with them.
         Once they receive the invitation, they can choose to accept or decline it.
@@ -64,7 +64,13 @@ const ShareModal = props => {
           onChange={inputHandler}
           placeholder="Username or email"
         />
-        <button type="submit" disabled={isLoading} className="Btn BlueBtn">Send Invite</button>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="Btn BlueBtn"
+        >
+          Send Invite
+        </button>
       </form>
       <div
         className={`
@@ -77,8 +83,8 @@ const ShareModal = props => {
       </div>
       <div className="ShareModal__collabs">
         <div className="ShareModal__collabsTitle">Collaborators</div>
-        {props.collaborators.map(username => {
-          const user = props.collabsByName[username];
+        {collabs.map(username => {
+          const user = byName[username];
           return (
             <div key={username} className="ShareModal__collab">
               <div className="ShareModal__user">{username}</div>
@@ -93,14 +99,14 @@ const ShareModal = props => {
 
 ShareModal.propTypes = {
   close: PropTypes.func.isRequired,
-  collaborators: PropTypes.array.isRequired,
+  collabs: PropTypes.array.isRequired,
   noteID: PropTypes.string,
-  collabsByName: PropTypes.object.isRequired
+  byName: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  collaborators: selectCurrCollabs(state),
-  collabsByName: state.notes.collabsByName,
+  collabs: selectCurrCollabs(state),
+  byName: state.notes.collabsByName,
   noteID: state.notes.currentNoteID
 });
 

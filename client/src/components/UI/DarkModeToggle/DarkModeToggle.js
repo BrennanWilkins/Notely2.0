@@ -5,8 +5,8 @@ import { sunIcon, moonIcon } from '../icons';
 import { connect } from 'react-redux';
 import { toggleDarkMode } from '../../../store/actions';
 
-const DarkModeToggle = props => (
-  <div className="DarkModeToggle" onClick={props.toggleDarkMode}>
+const DarkModeToggle = ({ toggleDarkMode }) => (
+  <div className="DarkModeToggle" onClick={toggleDarkMode}>
     <div className="DarkModeToggle__sun">{sunIcon}</div>
     <div className="DarkModeToggle__moon">{moonIcon}</div>
     <div className="DarkModeToggle__btn" />

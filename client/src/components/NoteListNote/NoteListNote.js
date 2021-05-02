@@ -8,51 +8,62 @@ import { pinIcon } from '../UI/icons';
 import { selectNoteIsPinned } from '../../store/selectors';
 import { serializeBody } from '../../utils/slateHelpers';
 
-const NoteListNote = props => {
+const NoteListNote = ({
+  searchQuery,
+  pinNote,
+  unpinNote,
+  showNote,
+  isCurrent,
+  noteID,
+  isPinned,
+  trashShown,
+  display,
+  body
+}) => {
   const { title, subTitle } = useMemo(() => {
-    return serializeBody(props.body);
-  }, [props.body]);
+    return serializeBody(body);
+  }, [body]);
 
   const pinHandler = () => {
-    props.isPinned ? props.unpinNote() : props.pinNote();
+    isPinned ? unpinNote() : pinNote();
   };
 
   return (
     <div
       className={`
         NoteListNote
-        ${props.isCurrent ? 'NoteListNote--active' : ''}
-        NoteListNote--${props.display}
+        ${isCurrent ? 'NoteListNote--active' : ''}
+        NoteListNote--${display}
       `}
-      onClick={props.showNote}
+      onClick={showNote}
       onKeyPress={e => {
         if (e.key === 'Enter') {
-          props.showNote();
+          showNote();
         }
       }}
       tabIndex="0"
     >
-      {!props.trashShown &&
+      {!trashShown &&
         <span
-          className={`NoteListNote__pin ${props.isPinned ? 'NoteListNote__pin--hl' : ''}`}
+          className={`NoteListNote__pin ${isPinned ? 'NoteListNote__pin--hl' : ''}`}
           onClick={pinHandler}
         >
           {pinIcon}
         </span>
       }
-      {(props.searchQuery && title) ?
+      {(searchQuery && title) ?
         <>
           <Highlighter
             className="NoteListNote__title"
             highlightClassName="NoteListNote__txt--hl"
-            searchWords={[props.searchQuery]}
+            searchWords={[searchQuery]}
             textToHighlight={title}
           />
-          {!!subTitle && props.display !== 'Condensed' &&
+          {!!subTitle && display !== 'Condensed' &&
             <Highlighter
               className="NoteListNote__txt"
               highlightClassName="NoteListNote__txt--hl"
-              searchWords={[props.searchQuery]}
+              searchWords={[searchQuery]}
               textToHighlight={subTitle}
             />
           }
@@ -62,7 +73,7 @@ const NoteListNote = props => {
           <div className="NoteListNote__title">
             {title || 'New Note'}
           </div>
-          {props.display !== 'Condensed' &&
+          {display !== 'Condensed' &&
             <div className="NoteListNote__txt">
               {subTitle}
             </div>

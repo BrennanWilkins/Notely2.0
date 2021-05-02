@@ -2,14 +2,14 @@ import React from 'react';
 import { xIcon, backIcon } from '../icons';
 import './Buttons.css';
 
-export const CloseBtn = props => (
+export const CloseBtn = ({ onClick, className }) => (
   <div
-    className={`CloseBtn ${props.className || ''}`}
-    onClick={props.onClick}
+    className={`CloseBtn ${className || ''}`}
+    onClick={onClick}
     tabIndex="0"
     onKeyPress={e => {
       if (e.key === 'Enter') {
-        props.onClick();
+        onClick();
       }
     }}
   >
@@ -17,14 +17,14 @@ export const CloseBtn = props => (
   </div>
 );
 
-export const BackBtn = props => (
+export const BackBtn = ({ onClick, className }) => (
   <div
-    className={`BackBtn ${props.className || ''}`}
-    onClick={props.onClick}
+    className={`BackBtn ${className || ''}`}
+    onClick={onClick}
     tabIndex="0"
     onKeyPress={e => {
       if (e.key === 'Enter') {
-        props.onClick();
+        onClick();
       }
     }}
   >

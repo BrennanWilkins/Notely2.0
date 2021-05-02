@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { login } from '../../store/actions';
 import PassInput from '../UI/PassInput/PassInput';
 
-const LoginPage = props => {
+const LoginPage = ({ login }) => {
   const [loginName, setLoginName] = useState('');
   const [pass, setPass] = useState('');
   const [rememberUser, setRememberUser] = useState(false);
@@ -31,7 +31,7 @@ const LoginPage = props => {
     setShowMsg(false);
     axios.post('/auth/login', { loginName, pass, rememberUser }).then(res => {
       setIsLoading(false);
-      props.login(res.data);
+      login(res.data);
     }).catch(err => {
       setIsLoading(false);
       let errMsg = err?.response?.data?.msg || 'There was an error while logging in.';

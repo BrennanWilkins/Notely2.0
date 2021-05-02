@@ -15,26 +15,26 @@ const sortTypes = [
   { type: 'ZtoA', val: 'Alphabetically (Z to A)' }
 ];
 
-const SortModal = props => {
+const SortModal = ({ close, sortType, setSortType }) => {
   const modalRef = useRef();
-  useModalToggle(modalRef, props.close);
+  useModalToggle(modalRef, close);
 
   return (
     <div className="SortModal" ref={modalRef}>
       <div className="SortModal__title">
         Sort By
-        <CloseBtn className="SortModal__closeBtn" onClick={props.close} />
+        <CloseBtn className="SortModal__closeBtn" onClick={close} />
       </div>
       <div className="SortModal__options">
         {sortTypes.map(({ type, val }) => (
           <div
             key={type}
-            className={props.sortType === type ? 'SortModal__activeOption' : ''}
-            onClick={() => props.setSortType(type)}
+            className={sortType === type ? 'SortModal__activeOption' : ''}
+            onClick={() => setSortType(type)}
             tabIndex="0"
             onKeyPress={e => {
               if (e.key === 'Enter') {
-                props.setSortType(type);
+                setSortType(type);
               }
             }}
           >

@@ -8,8 +8,16 @@ import { setNoteMargins, setNoteFontSize, setNoteListDisplay } from '../../store
 import { marginOptions, fontSizeOptions, listDisplayOptions } from '../../utils/displayOptions';
 import { downloadNotes } from '../../utils/downloadNotes';
 
-const SettingsModal = props => (
-  <ModalContainer close={props.close} title="Settings">
+const SettingsModal = ({
+  close,
+  margins,
+  fontSize,
+  display,
+  setMargins,
+  setFontSize,
+  setDisplay
+}) => (
+  <ModalContainer close={close} title="Settings">
     <DarkModeToggle />
     <div className="SettingsModal__title">
       Note Margins
@@ -20,9 +28,9 @@ const SettingsModal = props => (
           key={opt}
           className={`
             SettingsModal__opt
-            ${props.noteMargins === opt ? 'SettingsModal__opt--active' : ''}
+            ${margins === opt ? 'SettingsModal__opt--active' : ''}
           `}
-          onClick={() => props.setNoteMargins(opt)}
+          onClick={() => setMargins(opt)}
         >
           {opt}
         </div>
@@ -37,9 +45,9 @@ const SettingsModal = props => (
           key={opt}
           className={`
             SettingsModal__opt
-            ${props.noteFontSize === opt ? 'SettingsModal__opt--active' : ''}
+            ${fontSize === opt ? 'SettingsModal__opt--active' : ''}
           `}
-          onClick={() => props.setNoteFontSize(opt)}
+          onClick={() => setFontSize(opt)}
         >
           {opt}
         </div>
@@ -54,9 +62,9 @@ const SettingsModal = props => (
           key={opt}
           className={`
             SettingsModal__opt
-            ${props.noteListDisplay === opt ? 'SettingsModal__opt--active' : ''}
+            ${display === opt ? 'SettingsModal__opt--active' : ''}
           `}
-          onClick={() => props.setNoteListDisplay(opt)}
+          onClick={() => setDisplay(opt)}
         >
           {opt}
         </div>
@@ -73,24 +81,24 @@ const SettingsModal = props => (
 
 SettingsModal.propTypes = {
   close: PropTypes.func.isRequired,
-  noteMargins: PropTypes.string.isRequired,
-  noteFontSize: PropTypes.string.isRequired,
-  noteListDisplay: PropTypes.string.isRequired,
-  setNoteMargins: PropTypes.func.isRequired,
-  setNoteFontSize: PropTypes.func.isRequired,
-  setNoteListDisplay: PropTypes.func.isRequired
+  margins: PropTypes.string.isRequired,
+  fontSize: PropTypes.string.isRequired,
+  display: PropTypes.string.isRequired,
+  setMargins: PropTypes.func.isRequired,
+  setFontSize: PropTypes.func.isRequired,
+  setDisplay: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  noteMargins: state.ui.noteMargins,
-  noteFontSize: state.ui.noteFontSize,
-  noteListDisplay: state.ui.noteListDisplay
+  margins: state.ui.noteMargins,
+  fontSize: state.ui.noteFontSize,
+  display: state.ui.noteListDisplay
 });
 
 const mapDispatchToProps = dispatch => ({
-  setNoteMargins: size => dispatch(setNoteMargins(size)),
-  setNoteFontSize: size => dispatch(setNoteFontSize(size)),
-  setNoteListDisplay: size => dispatch(setNoteListDisplay(size))
+  setMargins: size => dispatch(setNoteMargins(size)),
+  setFontSize: size => dispatch(setNoteFontSize(size)),
+  setDisplay: size => dispatch(setNoteListDisplay(size))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsModal);

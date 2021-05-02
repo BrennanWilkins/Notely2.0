@@ -1,6 +1,8 @@
 import React from 'react';
 import './SimpleSpinner.css';
 
-const SimpleSpinner = props => <div className={`SimpleSpinner ${props.className || ''}`} />;
+const SimpleSpinner = ({ className }) => (
+  <div className={`SimpleSpinner ${className || ''}`} />
+);
 
 export default SimpleSpinner;

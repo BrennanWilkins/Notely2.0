@@ -14,7 +14,13 @@ import AccountModal from '../AccountModal/AccountModal';
 import { Link } from 'react-router-dom';
 import SideNavTags from './SideNavTags';
 
-const SideNav = props => {
+const SideNav = ({
+  shown,
+  toggleSideNav,
+  setShowTrash,
+  setListShown,
+  hasInvites
+}) => {
   const [showSettings, setShowSettings] = useState(false);
   const [showInvitesModal, setShowInvitesModal] = useState(false);
   const [showTags, setShowTags] = useState(false);
@@ -23,8 +29,8 @@ const SideNav = props => {
 
   useEffect(() => {
     const clickHandler = e => {
-      if (props.shown && !sideNavRef.current.contains(e.target)) {
-        props.toggleSideNav();
+      if (shown && !sideNavRef.current.contains(e.target)) {
+        toggleSideNav();
       }
     };
 
@@ -36,8 +42,8 @@ const SideNav = props => {
       }
     };
 
-    if (props.shown) { resizeHandler(); }
-    if (!props.shown && showTags) {
+    if (shown) { resizeHandler(); }
+    if (!shown && showTags) {
       setShowTags(false);
     }
 
@@ -46,76 +52,79 @@ const SideNav = props => {
       window.removeEventListener('resize', resizeHandler);
       document.removeEventListener('mousedown', clickHandler);
     };
-  }, [props.shown]);
+  }, [shown]);
 
   const toggleTagsHandler = () => {
-    if (!props.shown) {
-      props.toggleSideNav();
+    if (!shown) {
+      toggleSideNav();
     }
-    setShowTags(shown => !shown);
+    setShowTags(prev => !prev);
   };
 
   const resetListShown = () => {
     if (window.innerWidth <= 750) {
-      props.setListShown(true);
+      setListShown(true);
     }
   };
 
   const toggleTrashHandler = bool => {
-    props.setShowTrash(bool);
+    setShowTrash(bool);
     resetListShown();
   };
 
   return (
     <>
-      <div ref={sideNavRef} className={`SideNav ${props.shown ? 'SideNav--expand' : 'SideNav--contract'}`}>
-        <ToggleSideNavBtn isExpanded={props.shown} onClick={props.toggleSideNav} />
+      <div
+        ref={sideNavRef}
+        className={`SideNav ${shown ? 'SideNav--expand' : 'SideNav--contract'}`}
+      >
+        <ToggleSideNavBtn isExpanded={shown} onClick={toggleSideNav} />
         <div className="SideNav__title">
           {logo}
           <div>Notely</div>
         </div>
-        <SearchBar isExpanded={props.shown} toggleSideNav={props.toggleSideNav} />
+        <SearchBar isExpanded={shown} toggleSideNav={toggleSideNav} />
         <div className="SideNav__container">
           <SideNavLink
             onClick={() => toggleTrashHandler(false)}
             title="All Notes"
             icon={notesIcon}
-            shown={props.shown}
+            shown={shown}
           />
           <SideNavLink
             onClick={() => toggleTrashHandler(true)}
             title="Trash"
             icon={trashIcon}
-            shown={props.shown}
+            shown={shown}
           />
           <SideNavLink
             onClick={() => setShowSettings(true)}
             title="Settings"
             icon={settingsIcon}
-            shown={props.shown}
+            shown={shown}
           />
           <SideNavLink
             onClick={() => setShowAccnt(true)}
             title="Account"
             icon={personIcon}
-            shown={props.shown}
+            shown={shown}
           />
           <SideNavLink
             onClick={() => setShowInvitesModal(true)}
             title="Invites"
             icon={peopleIcon}
-            shown={props.shown}
+            shown={shown}
           >
             <div>
               Invites
-              {props.hasInvites && <span className="SideNav__notif" />}
+              {hasInvites && <span className="SideNav__notif" />}
             </div>
           </SideNavLink>
           <SideNavLink
             onClick={toggleTagsHandler}
             title="Tags"
             icon={tagsIcon}
-            shown={props.shown}
+            shown={shown}
           >
             <div>Tags</div>
             <span className={`SideNav__toggleTagBtn ${showTags ? 'SideNav__toggleTagBtn--rotate' : ''}`}>
@@ -124,8 +133,8 @@ const SideNav = props => {
           </SideNavLink>
           <SideNavTags
             showTags={showTags}
-            shown={props.shown}
-            toggleSideNav={props.toggleSideNav}
+            shown={shown}
+            toggleSideNav={toggleSideNav}
             resetListShown={resetListShown}
           />
         </div>
@@ -134,7 +143,7 @@ const SideNav = props => {
             {helpIcon}
             <div>Help</div>
           </div>
-          {!props.shown && <Tooltip position="right">Help</Tooltip>}
+          {!shown && <Tooltip position="right">Help</Tooltip>}
         </Link>
       </div>
       {showAccnt && <AccountModal close={() => setShowAccnt(false)} />}

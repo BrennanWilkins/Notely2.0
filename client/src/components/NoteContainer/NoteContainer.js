@@ -6,16 +6,16 @@ import NoteMenu from '../NoteMenu/NoteMenu';
 import NoteTags from '../NoteTags/NoteTags';
 import { connect } from 'react-redux';
 
-const NoteContainer = props => (
+const NoteContainer = ({ isFS, listShown, sideNavShown }) => (
   <div
     className={`
       NoteContainer
-      ${props.isFullscreen ? 'NoteContainer--expanded' : 'NoteContainer--contract'}
-      ${props.listShown ? 'NoteContainer--hide' : ''}
+      ${isFS ? 'NoteContainer--expanded' : 'NoteContainer--contract'}
+      ${listShown ? 'NoteContainer--hide' : ''}
     `}
     style={
-      !props.isFullscreen ?
-      { maxWidth: props.sideNavShown ? 'calc(100% - 541px)' : 'calc(100% - 376px)'}
+      !isFS ?
+      { maxWidth: sideNavShown ? 'calc(100% - 541px)' : 'calc(100% - 376px)'}
       : null
     }
   >
@@ -26,13 +26,13 @@ const NoteContainer = props => (
 );
 
 NoteContainer.propTypes = {
-  isFullscreen: PropTypes.bool.isRequired,
+  isFS: PropTypes.bool.isRequired,
   sideNavShown: PropTypes.bool.isRequired,
   listShown: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
-  isFullscreen: state.ui.isFullscreen,
+  isFS: state.ui.isFullscreen,
   sideNavShown: state.ui.sideNavShown,
   listShown: state.ui.listShown
 });

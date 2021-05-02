@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import Avatar from '../UI/Avatar/Avatar';
 import { selectCurrCollabs } from '../../store/selectors';
 
-const NoteCollaborators = props => (
+const NoteCollaborators = ({ collabs, byName }) => (
   <div className="NoteMenu__collabs">
-    {props.collaborators.map(username => {
-      const user = props.collabsByName[username];
+    {collabs.map(username => {
+      const user = byName[username];
       return (
         <Avatar
           key={username}
@@ -26,13 +26,13 @@ const NoteCollaborators = props => (
 );
 
 NoteCollaborators.propTypes = {
-  collaborators: PropTypes.array.isRequired,
-  collabsByName: PropTypes.object.isRequired
+  collabs: PropTypes.array.isRequired,
+  byName: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  collaborators: selectCurrCollabs(state),
-  collabsByName: state.notes.collabsByName
+  collabs: selectCurrCollabs(state),
+  byName: state.notes.collabsByName
 });
 
 export default connect(mapStateToProps)(NoteCollaborators);

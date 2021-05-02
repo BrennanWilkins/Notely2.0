@@ -3,17 +3,17 @@ import './PassInput.css';
 import PropTypes from 'prop-types';
 import { eyeIcon, eyeHideIcon } from '../icons';
 
-const PassInput = props => {
+const PassInput = ({ className, value, onChange, placeholder }) => {
   const [showPass, setShowPass] = useState(false);
 
   return (
-    <div className={`PassInput ${props.className || ''}`}>
+    <div className={`PassInput ${className || ''}`}>
       <input
         className="Input PassInput__input"
         type={showPass ? 'text' : 'password'}
-        value={props.value}
-        onChange={props.onChange}
-        placeholder={props.placeholder || ''}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder || ''}
       />
       <div className="PassInput__eye" onClick={() => setShowPass(show => !show)}>
         {showPass ? eyeHideIcon : eyeIcon}

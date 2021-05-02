@@ -6,7 +6,7 @@ import { xIcon } from '../UI/icons';
 import { createTag, removeTag } from '../../store/actions';
 import { selectCurrTags } from '../../store/selectors';
 
-const NoteTags = props => {
+const NoteTags = ({ tags, noteID, createTag, removeTag }) => {
   const [newTag, setNewTag] = useState('');
 
   const changeHandler = e => {
@@ -16,18 +16,18 @@ const NoteTags = props => {
 
   const keyPressHandler = e => {
     if (e.key === 'Enter') {
-      props.createTag(props.noteID, newTag);
+      createTag(noteID, newTag);
       setNewTag('');
     }
   };
 
-  return !props.noteID ? null : (
+  return !noteID ? null : (
     <div className="NoteTags">
-      {props.tags.map(tag => (
+      {tags.map(tag => (
         <div className="NoteTags__tag" key={tag}>
           <div className="NoteTags__tagTitle">{tag}</div>
           <div
-            onClick={() => props.removeTag(props.noteID, tag)}
+            onClick={() => removeTag(noteID, tag)}
             className="NoteTags__deleteBtn"
           >
             {xIcon}

@@ -6,16 +6,16 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { connect } from 'react-redux';
 import { deleteNotif } from '../../store/actions';
 
-const Notifications = props => (
+const Notifications = ({ notifs, deleteNotif }) => (
   <TransitionGroup className="Notifications">
-    {props.notifs.map(({ msgID, msg }) => (
+    {notifs.map(({ msgID, msg }) => (
       <CSSTransition key={msgID} timeout={350} classNames="Notifications__notif">
         <div
           className="Notifications__notif"
           style={msgID === 'reconnect' ? { background: '#0a9f10' } : null}
         >
           <div className="Notifications__msg">{msg}</div>
-          <div className="Notifications__btn" onClick={() => props.deleteNotif(msgID)}>
+          <div className="Notifications__btn" onClick={() => deleteNotif(msgID)}>
             {xIcon}
           </div>
         </div>

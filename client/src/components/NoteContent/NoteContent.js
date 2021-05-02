@@ -17,8 +17,15 @@ import withLinks from './plugins/withLinks';
 import useSearch from './plugins/useSearch';
 import { selectIsCollab, selectCurrBody } from '../../store/selectors';
 
-const NoteContent = props => {
-  const [value, setValue] = useState(props.body);
+const NoteContent = ({
+  body,
+  searchQuery,
+  noteID,
+  isCollab,
+  setStatus,
+  updateNote
+}) => {
+  const [value, setValue] = useState(body);
   const editor = useMemo(() => withLinks(withChecklists(withHistory(withReact(createEditor())))), []);
   const isRemoteChange = useRef(false);
   const hasChanged = useRef(false);
@@ -26,14 +33,14 @@ const NoteContent = props => {
   const prevNoteID = useRef(null);
   const { decorate: cursorDecorate, cursorHandler, removeCursor, resetCursors } = useCursors();
   const oldSelection = useRef(null);
-  const { decorate: searchDecorate } = useSearch(props.searchQuery);
+  const { decorate: searchDecorate } = useSearch(searchQuery);
 
   const decorate = useCallback((...args) => {
     return [...cursorDecorate(...args), ...searchDecorate(...args)];
   }, [cursorDecorate, searchDecorate]);
 
   useEffect(() => {
-    setValue(props.body);
+    setValue(body);
     resetCursors();
     // reset history
     editor.history = {
@@ -42,7 +49,7 @@ const NoteContent = props => {
     };
 
     // leaving editor, notify collabs user is leaving
-    if (!props.noteID && prevNoteID.current) {
+    if (!noteID && prevNoteID.current) {
       const socket = sendUpdate('leave editor');
       socket.off('receive ops');
       socket.off('receive cursor');
@@ -50,12 +57,18 @@ const NoteContent = props => {
       return;
     }
 
-    const socket = sendUpdate('join editor', props.noteID);
-    prevNoteID.current = props.noteID;
+    const socket = sendUpdate('join editor', noteID);
+    prevNoteID.current = noteID;
 
     socket.on('receive ops', data => {
-      if (data.noteID !== props.noteID || !data.ops
-        || !Array.isArray(data.ops)) { return; }
+      if (
+        data.noteID !== noteID
+        || !data.ops
+        || !Array.isArray(data.ops)
+      ) {
+        return;
+      }
+
       isRemoteChange.current = true;
       // prevent normalizing to stop split_node bug
       // uses withoutSaving to not populate user's history with other users
@@ -73,27 +86,34 @@ const NoteContent = props => {
     });
 
     socket.on('receive cursor', data => {
-      if (!data.noteID || data.noteID !== props.noteID) { return; }
+      if (!data.noteID || data.noteID !== noteID) { return; }
       cursorHandler(data);
     });
 
     socket.on('user inactive', data => removeCursor(data.username));
     socket.on('user offline', data => removeCursor(data.username));
-  }, [props.noteID]);
+  }, [noteID]);
 
   useEffect(() => {
-    if (!props.noteID || value === props.body ||
-      isRemoteChange.current || hasChanged.current) { return; }
+    if (
+      !noteID
+      || value === body
+      || isRemoteChange.current
+      || hasChanged.current
+    ) {
+      return;
+    }
     if (wasRemote.current) {
       return wasRemote.current = false;
     }
-    props.updateNote(props.noteID, value);
-    props.setStatus(false);
+    
+    updateNote(noteID, value);
+    setStatus(false);
     // save changes to DB 700ms after stop typing
     const delay = setTimeout(() => {
-      if (!props.noteID || isRemoteChange.current) { return; }
-      sendUpdate('put/note/save', { noteID: props.noteID, body: value }, () => {
-        props.setStatus(true);
+      if (!noteID || isRemoteChange.current) { return; }
+      sendUpdate('put/note/save', { noteID, body: value }, () => {
+        setStatus(true);
       });
     }, 700);
 
@@ -103,21 +123,21 @@ const NoteContent = props => {
   const changeHandler = val => {
     setValue(val);
     const ops = editor.operations;
-    if (props.noteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
+    if (noteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
       const sendOps = ops.filter(op => op && OP_TYPES[op.type]);
       if (sendOps.length) {
-        sendUpdate('send ops', { noteID: props.noteID, ops: sendOps });
+        sendUpdate('send ops', { noteID, ops: sendOps });
       }
     }
-    if (props.isCollab && props.noteID && oldSelection.current !== editor.selection) {
-      sendUpdate('send cursor', { noteID: props.noteID, selection: editor.selection });
+    if (isCollab && noteID && oldSelection.current !== editor.selection) {
+      sendUpdate('send cursor', { noteID, selection: editor.selection });
     }
     hasChanged.current = false;
     oldSelection.current = editor.selection;
   };
 
   return (
-    props.noteID ?
+    noteID ?
       <div className="NoteContent">
         <Slate editor={editor} value={value} onChange={changeHandler}>
           <Toolbar />

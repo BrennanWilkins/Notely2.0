@@ -9,20 +9,20 @@ import { selectPublishID } from '../../store/selectors';
 import { publishNote, unpublishNote } from '../../store/actions';
 import { baseURL } from '../../axios';
 
-const PublishModal = props => {
+const PublishModal = ({ noteID, close, pubID, publishNote, unpublishNote }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showMsg, setShowMsg] = useState(false);
   const [msg, setMsg] = useState('');
 
   useDidUpdate(() => {
-    props.close();
-  }, [props.noteID]);
+    close();
+  }, [noteID]);
 
   useDidUpdate(() => {
-    if (!props.publishID && showMsg) { setShowMsg(false); }
-  }, [props.publishID]);
+    if (!pubID && showMsg) { setShowMsg(false); }
+  }, [pubID]);
 
-  const msgHandler = (txt, socket) => {
+  const msgHandler = txt => {
     setShowMsg(true);
     setIsLoading(false);
     setMsg(txt);
@@ -30,21 +30,21 @@ const PublishModal = props => {
 
   const publishHandler = () => {
     setShowMsg(false);
-    if (!props.publishID) {
-      sendUpdate('put/note/publish', { noteID: props.noteID }, res => {
+    if (!pubID) {
+      sendUpdate('put/note/publish', { noteID }, res => {
         if (res.error) {
           return msgHandler('There was an error while publishing your note.');
         }
         msgHandler('Note published! You can visit it using the link below.');
-        props.publishNote({ noteID: props.noteID, publishID: res.publishID });
+        publishNote({ noteID, publishID: res.publishID });
       });
     } else {
-      props.unpublishNote(props.noteID);
+      unpublishNote(noteID);
     }
   };
 
   return (
-    <ModalContainer close={props.close} title="Publish">
+    <ModalContainer close={close} title="Publish">
       <p className="PublishModal__info">
         Publishing a note will create a public link that will allow anyone with
         your note's link to view your note in a read-only mode.
@@ -54,12 +54,12 @@ const PublishModal = props => {
         className="Btn BlueBtn PublishModal__pubBtn"
         onClick={publishHandler}
       >
-        {props.publishID ? 'Unpublish Note' : 'Create a public link'}
+        {pubID ? 'Unpublish Note' : 'Create a public link'}
       </button>
       <div className="PublishModal__msg" style={!showMsg ? {opacity: '0'} : null}>
         {msg}
       </div>
-      {!!props.publishID &&
+      {!!pubID &&
         <div className="PublishModal__link">
           <label>
             Public Link
@@ -67,7 +67,7 @@ const PublishModal = props => {
               className="Input"
               readOnly
               onFocus={e => e.target.select()}
-              value={`${baseURL}/n/${props.publishID}`}
+              value={`${baseURL}/n/${pubID}`}
             />
           </label>
         </div>
@@ -79,14 +79,14 @@ const PublishModal = props => {
 PublishModal.propTypes = {
   close: PropTypes.func.isRequired,
   noteID: PropTypes.string,
-  publishID: PropTypes.string,
+  pubID: PropTypes.string,
   publishNote: PropTypes.func.isRequired,
   unpublishNote: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   noteID: state.notes.currentNoteID,
-  publishID: selectPublishID(state)
+  pubID: selectPublishID(state)
 });
 
 const mapDispatchToProps = dispatch => ({

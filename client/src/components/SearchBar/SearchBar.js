@@ -6,20 +6,26 @@ import Tooltip from '../UI/Tooltip/Tooltip';
 import { connect } from 'react-redux';
 import { setSearchQuery } from '../../store/actions';
 
-const SearchBar = props => {
+const SearchBar = ({
+  isExpanded,
+  toggleSideNav,
+  setSearchQuery,
+  searchQuery,
+  shownTag
+}) => {
   const [searchVal, setSearchVal] = useState('');
   const inputRef = useRef();
   const valRef = useRef('');
 
   const clickHandler = () => {
-    if (!props.isExpanded) {
-      props.toggleSideNav();
+    if (!isExpanded) {
+      toggleSideNav();
       setTimeout(() => inputRef.current.focus(), 250);
     }
   };
 
   const keyPressHandler = e => {
-    if (e.key === 'Enter' && !props.isExpanded) {
+    if (e.key === 'Enter' && !isExpanded) {
       clickHandler();
       e.currentTarget.blur();
     }
@@ -27,13 +33,13 @@ const SearchBar = props => {
 
   const clearSearch = () => {
     setSearchVal('');
-    props.setSearchQuery('');
+    setSearchQuery('');
   };
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (valRef.current === searchVal) { return; }
-      props.setSearchQuery(searchVal);
+      setSearchQuery(searchVal);
       valRef.current = searchVal;
     }, 400);
 
@@ -41,14 +47,14 @@ const SearchBar = props => {
   }, [searchVal]);
 
   useEffect(() => {
-    setSearchVal(props.searchQuery);
-  }, [props.searchQuery]);
+    setSearchVal(searchQuery);
+  }, [searchQuery]);
 
   return (
     <div
-      className={`SearchBar ${props.isExpanded ? '' : 'SearchBar--contract'}`}
+      className={`SearchBar ${isExpanded ? '' : 'SearchBar--contract'}`}
       onClick={clickHandler}
-      tabIndex={props.isExpanded ? '-1' : '0'}
+      tabIndex={isExpanded ? '-1' : '0'}
       onKeyPress={keyPressHandler}
     >
       <div className="SearchBar__icon">{searchIcon}</div>
@@ -57,7 +63,7 @@ const SearchBar = props => {
         value={searchVal}
         onChange={e => setSearchVal(e.target.value)}
         className="SearchBar__input"
-        placeholder={props.shownTag ? `Search in ${props.shownTag}` : 'Search Notes'}
+        placeholder={shownTag ? `Search in ${shownTag}` : 'Search Notes'}
       />
       <div
         className={`SearchBar__clear ${searchVal ? 'SearchBar__clear--active' : ''}`}
@@ -65,7 +71,7 @@ const SearchBar = props => {
       >
         {xIcon}
       </div>
-      {!props.isExpanded && <Tooltip position="right">Search</Tooltip>}
+      {!isExpanded && <Tooltip position="right">Search</Tooltip>}
     </div>
   );
 };

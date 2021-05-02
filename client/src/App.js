@@ -12,8 +12,8 @@ const ResetPassPage = lazy(() => import('./components/AuthPages/ResetPassPage'))
 const NotelyContainer = lazy(() => import('./components/NotelyContainer/NotelyContainer'));
 const HelpPage = lazy(() => import('./components/HelpPage/HelpPage'));
 
-const App = props => {
-  useEffect(() => props.tryAutoLogin(), []);
+const App = ({ isAutoLoggingIn, isAuth, tryAutoLogin }) => {
+  useEffect(() => tryAutoLogin(), []);
 
   // if trying to auto log in or not auth yet but token in LS then show spinner
   // if user is auth then show notely container
@@ -21,10 +21,10 @@ const App = props => {
   return (
     <BrowserRouter>
       {
-        (props.isAutoLoggingIn || (!props.isAuth && localStorage['token'])) ?
+        (isAutoLoggingIn || (!isAuth && localStorage['token'])) ?
           <Spinner />
         :
-        props.isAuth ?
+        isAuth ?
           <Switch>
             <Route exact path="/">
               <Suspense fallback={<Spinner />}><NotelyContainer /></Suspense>

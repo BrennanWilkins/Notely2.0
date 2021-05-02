@@ -3,16 +3,16 @@ import './Avatar.css';
 import PropTypes from 'prop-types';
 import Tooltip from '../Tooltip/Tooltip';
 
-const Avatar = props => (
-  <div className="Avatar" style={{ background: props.color }}>
+const Avatar = ({ color, username, status }) => (
+  <div className="Avatar" style={{ background: color }}>
     <div
       className="Avatar__name"
-      style={{ color: props.status === 'Offline' ? 'black' : 'white' }}
+      style={{ color: status === 'Offline' ? 'black' : 'white' }}
     >
-      {props.username[0]}
+      {username[0]}
     </div>
-    {props.status === 'Inactive' && <div className="Avatar__symb" />}
-    <Tooltip position="down">{props.username}<div>Status: {props.status}</div></Tooltip>
+    {status === 'Inactive' && <div className="Avatar__symb" />}
+    <Tooltip position="down">{username}<div>Status: {status}</div></Tooltip>
   </div>
 );
 

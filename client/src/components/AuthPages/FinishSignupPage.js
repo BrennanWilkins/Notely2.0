@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { login } from '../../store/actions';
 import { getTokenParam } from '../../utils/authValidation';
 
-const FinishSignupPage = props => {
+const FinishSignupPage = ({ login }) => {
   const history = useHistory();
   const [msg, setMsg] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +22,7 @@ const FinishSignupPage = props => {
     }
     axios.get(`/auth/finishSignup/${signupID}`).then(res => {
       setIsLoading(false);
-      props.login(res.data);
+      login(res.data);
     }).catch(err => {
       setIsLoading(false);
       let errMsg = err?.response?.data?.msg || 'There was an error while finishing your signup.';

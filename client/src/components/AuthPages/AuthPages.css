@@ -45,9 +45,10 @@
 }
 .AuthPages__link a {
   text-decoration: none;
+  outline: none;
   color: rgb(var(--blue));
 }
-.AuthPages__link a:hover {
+.AuthPages__link a:hover, .AuthPages__link a:focus {
   color: rgb(var(--blue3));
 }
 .AuthPages__msg--show, .AuthPages__msg--hide {

@@ -15,14 +15,14 @@
 .NoteList__notes::-webkit-scrollbar-track,
 .NoteList__notes::-webkit-scrollbar {
   border-radius: 15px;
-  background: var(--lightGray);
+  background: rgb(220,220,220);
 }
 .NoteList__notes::-webkit-scrollbar {
   width: 10px;
 }
 .NoteList__notes::-webkit-scrollbar-thumb {
   border-radius: 15px;
-  background: rgb(180,180,180);
+  background: rgb(195,195,195);
 }
 .NoteList__noNotes {
   width: 100%;

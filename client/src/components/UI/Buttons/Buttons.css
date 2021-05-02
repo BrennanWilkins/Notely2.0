@@ -29,6 +29,9 @@
     transform: translateX(0);
   }
 }
+.CloseBtn:focus, .BackBtn:focus {
+  background: rgb(245,245,245);
+}
 .CloseBtn:hover, .BackBtn:hover {
   background: rgb(240,240,240);
   color: black;
@@ -36,6 +39,9 @@
 
 .dark .CloseBtn, .dark .BackBtn {
   color: var(--textColor);
+}
+.dark .CloseBtn:focus, .dark .BackBtn:focus {
+  background: rgba(var(--gray), 0.15);
 }
 .dark .CloseBtn:hover, .dark .BackBtn:hover {
   background: rgba(var(--gray), 0.25);

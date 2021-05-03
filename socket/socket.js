@@ -33,37 +33,36 @@ const initSocket = server => {
         [String(curr._id)]: true
       }), {});
 
+      // check if user already connected on another device/tab/etc
+      const connectedUser = [...io.sockets.sockets].find(([_,user]) => user.userID === socket.userID);
+
+      // use same color if already connected else new random
+      socket.userColor = (
+        (connectedUser && connectedUser[1].userColor) ?
+        connectedUser[1].userColor :
+        randomColor({
+          luminosity: 'dark',
+          format: 'rgba',
+          alpha: 1
+        })
+      );
+
+      socket.activeNoteID = null;
+
       next();
     } catch (err) {
       next(new Error('join error'));
     }
   }).on('connection', socket => {
-    const { userID, username } = socket;
+    const { userID, username, userColor } = socket;
     const userRoom = `user-${userID}`;
-
-    // check if user already connected on another device/tab/etc
-    const connectedUser = [...io.sockets.sockets].find(([_,user]) => user.userID === userID);
-
-    // use same color if already connected
-    socket.userColor = (
-      (connectedUser && connectedUser[1].userColor) ?
-      connectedUser[1].userColor :
-      randomColor({
-        luminosity: 'dark',
-        format: 'rgba',
-        alpha: 1
-      })
-    );
-
     // data sent for cursor/activity events
-    const userData = { username, color: socket.userColor };
-
-    socket.activeNoteID = null;
+    const userData = { username, color: userColor };
 
     // join user to their own private room to manage multiple connections
     socket.join(userRoom);
 
-    const connectedUsers = { [username]: socket.userColor };
+    const connectedUsers = { [username]: userColor };
     const collabSet = new Set();
 
     // auto join user to all of their note's rooms

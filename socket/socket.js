@@ -64,24 +64,27 @@ const initSocket = server => {
     socket.join(userRoom);
 
     const connectedUsers = { [username]: socket.userColor };
+    const collabSet = new Set();
 
     // auto join user to all of their note's rooms
     for (let noteID in socket.userNotes) {
       socket.join(noteID);
 
-      // notify other users that user is online
-      socket.to(noteID).emit('user online', userData);
-
-      // find connected users in room
+      // find unique connected users in room
       const room = io.sockets.adapter.rooms.get(noteID);
       room.forEach((userSocket, socketID) => {
         const user = io.sockets.sockets.get(socketID);
         if (user && !connectedUsers[user.username]) {
+          collabSet.add(socketID);
           connectedUsers[user.username] = user.userColor;
         }
       });
     }
 
+    // notify other users that user is online
+    collabSet.forEach(socketID => {
+      socket.to(socketID).emit('user online', userData);
+    });
     // send all connected users to user
     socket.emit('receive connected users', connectedUsers);
 
@@ -90,9 +93,19 @@ const initSocket = server => {
       const room = io.sockets.adapter.rooms.get(userRoom);
       if (room) { return; }
 
+      // find unique connected collaborators in user's note rooms
+      const collabs = new Set();
       for (let noteID in socket.userNotes) {
-        socket.to(noteID).except(userRoom).emit('user offline', { username });
+        const room = io.sockets.adapter.rooms.get(noteID);
+        if (room) {
+          room.forEach((_, id) => collabs.add(id));
+        }
       }
+
+      // send offline event to all collabs besides user's other connections
+      collabs.forEach(socketID => {
+        socket.to(socketID).except(userRoom).emit('user offline', { username });
+      });
     });
 
     // send note body update to other collaborators but dont update body in DB

@@ -32,6 +32,14 @@
   padding: 0;
   border-radius: 50%;
 }
+@media (max-width: 750px) {
+  .NoteListHeader__addBtn .Tooltip {
+    left: -30px;
+  }
+  .NoteListHeader__addBtn .Tooltip::after {
+    left: 40px;
+  }
+}
 .NoteListHeader__sortBtn {
   font-size: 20px;
   padding: 5px;

@@ -93,3 +93,11 @@ export const emptyTrash = () => dispatch => {
 };
 
 export const refreshNotes = notes => ({ type: actionTypes.REFRESH_NOTES, notes });
+
+export const copyNote = () => (dispatch, getState) => {
+  const noteID = getState().notes.currentNoteID;
+  
+  sendUpdate('post/note/copy', { noteID }, payload => {
+    dispatch({ type: actionTypes.COPY_NOTE, payload });
+  });
+};

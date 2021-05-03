@@ -21,7 +21,8 @@ const socketMap = {
   'put/note/invite/accept': actionTypes.ACCEPT_INVITE,
   'put/note/pin': actionTypes.PIN_NOTE,
   'put/note/unpin': actionTypes.UNPIN_NOTE,
-  'put/note/invite/reject': actionTypes.REJECT_INVITE
+  'put/note/invite/reject': actionTypes.REJECT_INVITE,
+  'post/note/copy': actionTypes.COPY_NOTE
 };
 
 export default socketMap;

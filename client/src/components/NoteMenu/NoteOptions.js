@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import './NoteMenu.css';
 import { useModalToggle } from '../../utils/customHooks';
 import { downloadCurrNote } from '../../utils/downloadNotes';
+import { copyNote } from '../../store/actions';
+import { connect } from 'react-redux';
 
-const NoteOptions = ({ close }) => {
+const NoteOptions = ({ close, copyNote }) => {
   const modalRef = useRef();
   useModalToggle(modalRef, close);
 
@@ -30,12 +32,24 @@ const NoteOptions = ({ close }) => {
       >
         Export Note
       </div>
+      <div
+        onClick={() => copyNote()}
+        tabIndex="0"
+        onKeyPress={keyPressHandler}
+      >
+        Copy Note
+      </div>
     </div>
   );
 };
 
 NoteOptions.propTypes = {
-  close: PropTypes.func.isRequired
+  close: PropTypes.func.isRequired,
+  copyNote: PropTypes.func.isRequired
 };
 
-export default NoteOptions;
+const mapDispatchToProps = dispatch => ({
+  copyNote: () => dispatch(copyNote())
+});
+
+export default connect(null, mapDispatchToProps)(NoteOptions);

@@ -55,6 +55,7 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.EMPTY_TRASH: return emptyTrash(state, action);
     case actionTypes.REFRESH_NOTES: return refreshNotes(state, action);
     case actionTypes.SET_SORT_TYPE: return setSortType(state, action);
+    case actionTypes.COPY_NOTE: return copyNote(state, action);
     default: return state;
   }
 };
@@ -119,7 +120,7 @@ const login = (state, { payload: { notes, pinnedNotes, email }}) => {
   };
 };
 
-const createNote = (state, { payload: { note, username } }) => {
+const createNoteHelper = (state, note, username) => {
   const newNote = {
     noteID: note._id,
     body: note.body,
@@ -132,6 +133,12 @@ const createNote = (state, { payload: { note, username } }) => {
 
   const noteIDs = [note._id, ...state.noteIDs];
   const notesByID = { [note._id]: newNote, ...state.notesByID };
+
+  return { noteIDs, notesByID };
+};
+
+const createNote = (state, { payload: { note, username } }) => {
+  const { noteIDs, notesByID } = createNoteHelper(state, note, username);
 
   return {
     ...state,
@@ -793,6 +800,40 @@ const setSortType = (state, { sortType }) => {
     ...state,
     sortType,
     filteredNoteIDs
+  };
+};
+
+const copyNote = (state, { payload: { note, username } }) => {
+  const { noteIDs, notesByID } = createNoteHelper(state, note, username);
+
+  const filteredNoteIDs = (
+    (state.trashShown || state.shownTag) ?
+    state.filteredNoteIDs :
+    filterAndSortNoteIDs(
+      noteIDs,
+      notesByID,
+      state.pinnedNotes,
+      state.sortType,
+      state.trashShown,
+      state.searchQuery,
+      state.shownTag
+    )
+  );
+
+  return {
+    ...state,
+    noteIDs,
+    notesByID,
+    filteredNoteIDs,
+    currentNoteID: (
+      (!state.currentNoteID
+        && !state.trashShown
+        && !state.shownTag
+        && filteredNoteIDs.includes(note._id)
+      ) ?
+      note._id :
+      state.currentNoteID
+    ),
   };
 };
 

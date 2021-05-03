@@ -46,11 +46,15 @@ router.delete('/:pass',
         return res.status(400).json({ msg: 'Incorrect password.' });
       }
 
-      // delete user, delete user's notes if only collaborator, remove user if note has other collaborator
+      // delete user, delete user's notes if only collaborator,
+      // & remove user if note has other collaborator
       await Promise.all([
         User.deleteOne({ _id: user._id }),
         Note.deleteMany({ _id: { $in: user.notes }, collaborators: { $size: 1 } }),
-        Note.updateMany({ _id: { $in: user.notes }, 'collaborators.1': { $exists: true }  }, { $pull: { collaborators: user._id } })
+        Note.updateMany(
+          { _id: { $in: user.notes }, 'collaborators.1': { $exists: true } },
+          { $pull: { collaborators: user._id } }
+        )
       ]);
 
       res.sendStatus(200);

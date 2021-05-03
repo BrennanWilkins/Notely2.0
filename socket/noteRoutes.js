@@ -3,21 +3,32 @@ const User = require('../models/user');
 const { nanoid } = require('nanoid');
 
 const parseData = (socket, payload, options) => {
-  if (!socket.userNotes[payload.noteID]) { throw 'Unauthorized'; }
+  if (!socket.userNotes[payload.noteID]) {
+    throw 'Unauthorized';
+  }
   if (!options) { return payload; }
+
   if (options.body && (!payload.body || !Array.isArray(payload.body))) {
     throw 'Invalid body';
   }
-  if (options.tag && (!payload.tag || typeof payload.tag !== 'string'
-      || payload.tag.length > 100)) {
+  if (
+    options.tag
+    && (
+      !payload.tag
+      || typeof payload.tag !== 'string'
+      || payload.tag.length > 100
+    )
+  ) {
     throw 'Invalid tag';
   }
+
   return payload;
 };
 
 const deleteRoomHandler = (noteID, sockets) => {
   // remove all users in room & update their userNotes
   const room = sockets.adapter.rooms.get(noteID);
+
   room.forEach(socketID => {
     const client = sockets.sockets.get(socketID);
     client.leave(noteID);
@@ -29,6 +40,7 @@ const deleteRoomHandler = (noteID, sockets) => {
 const joinRoomHandler = (noteID, userRoom, sockets) => {
   // auto join all of user's clients to note room
   const room = sockets.adapter.rooms.get(userRoom);
+
   room.forEach(socketID => {
     const client = sockets.sockets.get(socketID);
     client.userNotes[noteID] = true;
@@ -37,6 +49,7 @@ const joinRoomHandler = (noteID, userRoom, sockets) => {
 };
 
 const errHandler = (socket, msg) => {
+  // note error triggers client notif
   const msgID = nanoid();
   socket.emit('note error', { msgID, msg });
 };
@@ -51,18 +64,14 @@ const createNote = async (socket, sockets, callback) => {
       isTrash: false
     });
 
-    const user = await User.findById(socket.userID);
-    user.notes.unshift(note._id);
-
     await Promise.all([
       note.save(),
-      user.save()
+      User.findByIdAndUpdate(socket.userID, { $push: { notes: note._id } })
     ]);
 
-    const noteID = String(note._id);
     const userRoom = `user-${socket.userID}`;
 
-    joinRoomHandler(noteID, userRoom, sockets);
+    joinRoomHandler(String(note._id), userRoom, sockets);
 
     const payload = { note, username: socket.username };
     socket.to(userRoom).emit('post/note', payload);
@@ -78,6 +87,7 @@ const updateNote = async (socket, data, callback) => {
 
     const note = await Note.findByIdAndUpdate(noteID, { body });
     if (!note) { throw 'Invalid noteID'; }
+
     callback();
   } catch (err) {
     errHandler(socket, 'There was an error while updating your note.');
@@ -90,6 +100,7 @@ const trashNote = async (socket, data) => {
 
     const note = await Note.findByIdAndUpdate(noteID, { isTrash: true });
     if (!note) { throw 'Invalid noteID'; }
+
     socket.to(noteID).emit('put/note/trash', data);
   } catch (err) {
     errHandler(socket, 'There was an error while sending your note to trash.');
@@ -102,6 +113,7 @@ const restoreNote = async (socket, data) => {
 
     const note = await Note.findByIdAndUpdate(noteID, { isTrash: false });
     if (!note) { throw 'Invalid noteID'; }
+
     socket.to(noteID).emit('put/note/restore', data);
   } catch (err) {
     errHandler(socket, 'There was an error while restoring your note.');
@@ -114,14 +126,19 @@ const deleteNote = async (socket, sockets, data) => {
 
     const [note] = await Promise.all([
       Note.findByIdAndDelete(noteID),
-      User.updateMany({ notes: noteID }, { $pull: { notes: noteID, pinnedNotes: noteID } }),
-      User.updateMany({ 'invites.noteID': noteID }, { $pull: { invites: { noteID } } })
+      User.updateMany(
+        { notes: noteID },
+        { $pull: { notes: noteID, pinnedNotes: noteID } }
+      ),
+      User.updateMany(
+        { 'invites.noteID': noteID },
+        { $pull: { invites: { noteID } } }
+      )
     ]);
     if (!note) { throw 'Invalid noteID'; }
 
     socket.to(noteID).emit('delete/note', data);
     deleteRoomHandler(noteID, sockets);
-
   } catch (err) {
     errHandler(socket, 'There was an error while deleting your note.');
   }
@@ -161,10 +178,12 @@ const createTag = async (socket, data) => {
     const { noteID, tag } = parseData(socket, data, { tag: true });
 
     const note = await Note.findById(noteID);
+    if (!note) { throw 'Invalid noteID'; }
     if (note.tags.includes(tag)) { return; }
-    note.tags.push(tag);
 
+    note.tags.push(tag);
     await note.save();
+
     socket.to(noteID).emit('post/note/tag', data);
   } catch (err) {
     errHandler(socket, 'There was an error while creating your tag.');
@@ -175,7 +194,9 @@ const removeTag = async (socket, data) => {
   try {
     const { noteID, tag } = parseData(socket, data, { tag: true });
 
-    await Note.findByIdAndUpdate(noteID, { $pull: { tags: tag } });
+    const note = await Note.findByIdAndUpdate(noteID, { $pull: { tags: tag } });
+    if (!note) { throw 'Invalid noteID'; }
+
     socket.to(noteID).emit('delete/note/tag', data);
   } catch (err) {
     errHandler(socket, 'There was an error while removing the tag.');
@@ -193,19 +214,31 @@ const sendInvite = async (socket, data, callback) => {
       Note.exists({ _id: noteID, isTrash: false })
     ]);
     if (!user) {
-      const errMsg = userQuery.email ? 'No user was found with that email.' :
-      'No user was found with that username.';
-      return callback({ error: true, errMsg });
+      return callback({
+        error: true,
+        errMsg: (
+          userQuery.email ?
+          'No user was found with that email.' :
+          'No user was found with that username.'
+        )
+      });
     }
     if (!note) { throw 'Invalid noteID'; }
 
     if (user.notes.includes(noteID)) {
-      return callback({ error: true, errMsg: 'That user is already a collaborator on this note.' });
+      return callback({
+        error: true,
+        errMsg: 'That user is already a collaborator on this note.'
+      });
     }
 
     if (user.invites.find(invite => invite.noteID === noteID)) {
-      return callback({ error: true, errMsg: 'You have already invited that user to this note.' });
+      return callback({
+        error: true,
+        errMsg: 'You have already invited that user to this note.'
+      });
     }
+
     const invite = { inviter: socket.username, noteID };
     user.invites.push(invite);
     await user.save();
@@ -214,7 +247,10 @@ const sendInvite = async (socket, data, callback) => {
 
     callback({ error: false });
   } catch (err) {
-    onError({ error: true, errMsg: 'There was an error while sending the note invite.' });
+    callback({
+      error: true,
+      errMsg: 'There was an error while sending the note invite.'
+    });
   }
 };
 
@@ -229,7 +265,7 @@ const acceptInvite = async (socket, sockets, data, callback) => {
     if (!user && !note) { throw 'Invalid data'; }
 
     if (!user.invites.find(invite => invite.noteID === noteID)) {
-      throw 'Invalid noteID';
+      throw 'Invite not found';
     }
 
     user.invites = user.invites.filter(invite => invite.noteID !== noteID);
@@ -241,7 +277,11 @@ const acceptInvite = async (socket, sockets, data, callback) => {
 
     user.notes.push(noteID);
     note.collaborators.push(socket.userID);
-    await Promise.all([user.save(), note.save()]);
+
+    await Promise.all([
+      user.save(),
+      note.save()
+    ]);
 
     await note.populate('collaborators', 'username email -_id').execPopulate();
 
@@ -304,10 +344,12 @@ const publishNote = async (socket, data, callback) => {
       publishID = nanoid(7);
       exists = await Note.exists({ publishID });
     }
+
     note.publishID = publishID;
     await note.save();
 
     callback({ error: false, publishID });
+
     socket.to(noteID).emit('put/note/publish', { noteID, publishID });
   } catch (err) {
     callback({ error: true });
@@ -334,19 +376,25 @@ const emptyUserTrash = async (socket, sockets, data) => {
 
     const trashNotes = await Note.find({ _id: { $in: user.notes }, isTrash: true }).select('_id').lean();
     if (!trashNotes || !trashNotes.length) { return; }
+
     const trashIDs = trashNotes.map(note => String(note._id));
 
     await Promise.all([
       Note.deleteMany({ _id: { $in: trashIDs } }),
-      User.updateMany({ notes: { $in: trashIDs } }, { $pull: { notes: { $in: trashIDs }, pinnedNotes: { $in: trashIDs } } }),
-      User.updateMany({ 'invites.noteID': { $in: trashIDs } }, { $pull: { invites: { noteID: { $in: trashIDs } } } })
+      User.updateMany(
+        { notes: { $in: trashIDs } },
+        { $pull: { notes: { $in: trashIDs }, pinnedNotes: { $in: trashIDs } } }
+      ),
+      User.updateMany(
+        { 'invites.noteID': { $in: trashIDs } },
+        { $pull: { invites: { noteID: { $in: trashIDs } } } }
+      )
     ]);
 
     for (let noteID of trashIDs) {
       socket.to(noteID).emit('delete/note', { noteID });
       deleteRoomHandler(noteID, sockets);
     }
-
   } catch (err) {
     errHandler(socket, 'There was an error while emptying your trash.');
   }

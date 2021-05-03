@@ -12,34 +12,50 @@ const firstNoteBody = require('../utils/firstNoteBody');
 
 const signToken = async (user, expiration) => {
   // create jwt token that expires in given expiration days when logging in
-  const jwtPayload = { email: user.email, username: user.username, userID: user._id };
-  const token = await jwt.sign(jwtPayload, process.env.AUTH_KEY, { expiresIn: expiration });
+  const jwtPayload = {
+    email: user.email,
+    username: user.username,
+    userID: user._id
+  };
+  const token = await jwt.sign(
+    jwtPayload,
+    process.env.AUTH_KEY,
+    { expiresIn: expiration }
+  );
   return token;
 };
 
 router.post('/signup',
-  validate(
-    [body('email').isEmail(),
+  validate([
+    body('email').isEmail(),
     body('username').isAlphanumeric().isLength({ min: 1, max: 50 }),
     body('pass').matches(passwordRE),
-    body('rememberUser').isBoolean()]
-  ),
+    body('rememberUser').isBoolean()
+  ]),
   async (req, res) => {
     try {
       const { email, pass, username, rememberUser } = req.body;
 
       // check if email exists already
       const emailExists = await User.exists({ email });
-      if (emailExists) { return res.status(400).json({ msg: 'That email is already taken.' }); }
+      if (emailExists) {
+        return res.status(400).json({ msg: 'That email is already taken.' });
+      }
 
       // check if username taken
       const usernameExists = await User.exists({ username });
-      if (usernameExists) { return res.status(400).json({ msg: 'That username is already taken.' }); }
+      if (usernameExists) {
+        return res.status(400).json({ msg: 'That username is already taken.' });
+      }
 
       const hashedPassword = await bcryptjs.hash(pass, 10);
 
       // signup token expires in 8 hrs
-      const signupID = await jwt.sign({ email, rememberUser }, process.env.AUTH_KEY, { expiresIn: '8h' });
+      const signupID = await jwt.sign(
+        { email, rememberUser },
+        process.env.AUTH_KEY,
+        { expiresIn: '8h' }
+      );
 
       const user = new User({
         email,
@@ -66,26 +82,33 @@ router.post('/signup',
       );
 
       res.sendStatus(200);
-    } catch(err) { res.status(500).json({ msg: 'There was an error while signing up.' }); }
+    } catch(err) {
+      res.status(500).json({ msg: 'There was an error while signing up.' });
+    }
   }
 );
 
 router.get('/finishSignup/:signupID',
   validate([param('signupID').notEmpty()]),
   (req, res) => {
-    const signupID = req.params.signupID;
+    const { signupID } = req.params;
+
     jwt.verify(signupID, process.env.AUTH_KEY, async (err, decoded) => {
       try {
         if (err) {
           if (err.name === 'TokenExpiredError') {
             await User.deleteOne({ email: decoded.email, signupID });
-            return res.status(400).json({ msg: 'Your signup link has expired. Try signing up again.' });
+            return res.status(400).json({
+              msg: 'Your signup link has expired. Try signing up again.'
+            });
           }
           throw err;
         }
         const user = await User.findOne({ email: decoded.email });
         if (user.signupID === null) {
-          return res.status(400).json({ msg: 'Your account has already been signed up.' });
+          return res.status(400).json({
+            msg: 'Your account has already been signed up.'
+          });
         }
         const firstNote = new Note({
           body: firstNoteBody,
@@ -113,7 +136,9 @@ router.get('/finishSignup/:signupID',
           email: user.email,
           username: user.username
         });
-      } catch (err) { res.status(500).json({ msg: 'There was an error while finishing your signup.' }); }
+      } catch (err) {
+        res.status(500).json({ msg: 'There was an error while finishing your signup.' });
+      }
     });
   }
 );
@@ -127,17 +152,29 @@ router.post('/login',
   async (req, res) => {
     try {
       const { loginName, pass, rememberUser } = req.body;
-      // if loginName includes '@' then user logging in with email, else with username
-      const userQuery = loginName.includes('@') ? { email: loginName } : { username: loginName };
-      const user = await User.findOne(userQuery);
 
-      const errMsg = userQuery.email ? 'Incorrect email or password.' : 'Incorrect username or password.';
+      // if loginName includes '@' then user logging in with email, else with username
+      const isEmail = loginName.includes('@');
+      const user = await User.findOne(
+        isEmail ?
+        { email: loginName } :
+        { username: loginName }
+      );
+
+      const errMsg = (
+        isEmail ?
+        'Incorrect email or password.' :
+        'Incorrect username or password.'
+      );
+
       if (!user) {
         return res.status(400).json({ msg: errMsg });
       }
 
       if (user.signupID) {
-        return res.status(400).json({ msg: 'Please click on the link sent to your email to finish signing up.' });
+        return res.status(400).json({
+          msg: 'Please click on the link sent to your email to finish signing up.'
+        });
       }
 
       // verify password
@@ -147,7 +184,9 @@ router.post('/login',
       }
 
       // user logged in so no longer needs password recovery token if was generated
-      if (user.recoverPassID) { await User.updateOne({ _id: user._id }, { recoverPassID: null }); }
+      if (user.recoverPassID) {
+        await User.updateOne({ _id: user._id }, { recoverPassID: null });
+      }
 
       const token = await signToken(user, rememberUser ? '30d' : '7d');
 
@@ -167,7 +206,9 @@ router.post('/login',
         email: user.email,
         username: user.username
       });
-    } catch (err) { res.status(500).json({ msg: 'There was an error while logging in.' }); }
+    } catch (err) {
+      res.status(500).json({ msg: 'There was an error while logging in.' });
+    }
   }
 );
 
@@ -179,23 +220,36 @@ router.post('/resetPass',
   async (req, res) => {
     try {
       const { recoverPassID, newPass } = req.body;
+
       jwt.verify(recoverPassID, process.env.AUTH_KEY, async (err, decoded) => {
         if (err) {
           if (err.name === 'TokenExpiredError') {
-            const user = await User.updateOne({ email: decoded.email, recoverPassID }, { recoverPassID: null });
-            if (!user) { return res.status(400).json({ msg: 'Your recovery link is not valid.' }); }
+            const user = await User.updateOne(
+              { email: decoded.email, recoverPassID },
+              { recoverPassID: null }
+            );
+            if (!user) {
+              return res.status(400).json({ msg: 'Your recovery link is not valid.' });
+            }
             return res.status(400).json({ msg: 'Your recovery link has expired.' });
           }
           throw err;
         }
         try {
           const hashedPass = await bcryptjs.hash(newPass, 10);
-          await User.updateOne({ email: decoded.email, recoverPassID }, { recoverPassID: null, password: hashedPass });
-        } catch (err) { throw err; }
+          await User.updateOne(
+            { email: decoded.email, recoverPassID },
+            { recoverPassID: null, password: hashedPass }
+          );
+        } catch (err) {
+          throw err;
+        }
       });
 
       res.sendStatus(200);
-    } catch (err) { res.status(500).json({ msg: 'There was an error while changing your password.' }); }
+    } catch (err) {
+      res.status(500).json({ msg: 'There was an error while changing your password.' });
+    }
   }
 );
 
@@ -203,12 +257,19 @@ router.post('/forgotPass',
   validate([body('email').isEmail()]),
   async (req, res) => {
     try {
-      const email = req.body.email;
+      const { email } = req.body;
+
       const user = await User.findOne({ email });
-      if (!user) { return res.status(400).json({ msg: 'No user was found for the provided email.' }); }
+      if (!user) {
+        return res.status(400).json({ msg: 'No user was found for the provided email.' });
+      }
 
       // jwt token expires in 8hr to recover password
-      const recoverPassID = await jwt.sign({ email }, process.env.AUTH_KEY, { expiresIn: '8h' });
+      const recoverPassID = await jwt.sign(
+        { email },
+        process.env.AUTH_KEY,
+        { expiresIn: '8h' }
+      );
 
       user.recoverPassID = recoverPassID;
       await user.save();
@@ -225,7 +286,9 @@ router.post('/forgotPass',
       );
 
       res.sendStatus(200);
-    } catch (err) { res.sendStatus(500); }
+    } catch (err) {
+      res.sendStatus(500);
+    }
   }
 );
 
@@ -238,6 +301,7 @@ router.post('/changePass',
   async (req, res) => {
     try {
       const { oldPass, newPass } = req.body;
+
       const user = await User.findById(req.userID);
       if (!user) { throw 'User not found'; }
 
@@ -246,11 +310,14 @@ router.post('/changePass',
         bcryptjs.compare(oldPass, user.password),
         bcryptjs.compare(newPass, user.password)
       ]);
+
       if (!isValidPass) {
         return res.status(400).json({ msg: 'Your old password is not correct.' });
       }
       if (isSamePass) {
-        return res.status(400).json({ msg: 'Your new password cannot be the same as your old password.' });
+        return res.status(400).json({
+          msg: 'Your new password cannot be the same as your old password.'
+        });
       }
 
       const hashedPass = await bcryptjs.hash(newPass, 10);
@@ -258,7 +325,9 @@ router.post('/changePass',
       await user.save();
 
       res.sendStatus(200);
-    } catch (err) { res.sendStatus(500); }
+    } catch (err) {
+      res.sendStatus(500);
+    }
   }
 );
 

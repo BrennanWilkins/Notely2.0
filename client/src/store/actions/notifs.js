@@ -14,7 +14,7 @@ export const deleteNotif = msgID => ({ type: actionTypes.DELETE_NOTIF, msgID });
 
 export const connectErrNotif = () => dispatch => {
   dispatch(addNotif({
-    msg: 'There was an error connecting to the server.',
+    msg: 'There was an error connecting to the server. Please try refreshing the page.',
     msgID: 'connect'
   }));
 };

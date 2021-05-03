@@ -21,7 +21,15 @@ export const initSocket = () => {
 
   newSocket.on('disconnect', () => {
     store.dispatch(disconnectNotif());
+
     newSocket.once('connect', () => {
+      const noteID = store.getState().notes.currentNoteID;
+      if (noteID) {
+        // if currently viewing note then need to rejoin editor room
+        newSocket.emit('join editor', noteID);
+      }
+
+      // on reconnect query notes to prevent any note sync errors
       newSocket.emit('get/user/notes', res => {
         if (res.error || !res.notes) { return; }
         store.dispatch(reconnectNotif());

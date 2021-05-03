@@ -361,6 +361,40 @@ const getNotes = async (socket, callback) => {
   }
 };
 
+const copyNote = async (socket, sockets, data, callback) => {
+  try {
+    const { noteID } = parseData(socket, data);
+
+    const oldNote = await Note.findById(noteID).select('body isTrash').lean();
+    if (!oldNote || oldNote.isTrash) {
+      throw 'Invalid noteID';
+    }
+
+    const copy = new Note({
+      body: oldNote.body,
+      tags: [],
+      collaborators: [socket.userID],
+      publishID: null,
+      isTrash: false
+    });
+
+    await Promise.all([
+      copy.save(),
+      User.findByIdAndUpdate(socket.userID, { $push: { notes: copy._id } })
+    ]);
+
+    const userRoom = `user-${socket.userID}`;
+
+    joinRoomHandler(String(copy._id), userRoom, sockets);
+
+    const payload = { note: copy, username: socket.username };
+    socket.to(userRoom).emit('post/note/copy', payload);
+    callback(payload);
+  } catch (err) {
+    errHandler(socket, 'There was an error while copying the note.');
+  }
+};
+
 module.exports.noteRoutes = {
   'put/note/save' : updateNote,
   'put/note/trash' : trashNote,
@@ -381,5 +415,6 @@ module.exports.noteRoutesWithSockets = {
   'post/note' : createNote,
   'delete/note' : deleteNote,
   'put/user/emptyTrash': emptyUserTrash,
-  'put/note/invite/accept': acceptInvite
+  'put/note/invite/accept': acceptInvite,
+  'post/note/copy': copyNote
 };

@@ -42,7 +42,25 @@
 }
 .ShareModal__collab {
   margin-bottom: 10px;
-  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.ShareModal__owner {
+  color: rgb(100,100,100);
+  font-size: 20px;
+}
+.ShareModal__removeBtn {
+  font-size: 14px;
+  color: var(--darkerGray);
+  background: rgba(0,0,0,0.05);
+}
+.ShareModal__removeBtn:hover, .ShareModal__removeBtn:focus {
+  background: rgba(0,0,0,0.08);
+}
+.ShareModal__removeBtn:active {
+  background: rgba(var(--blue), 0.2);
 }
 .ShareModal__user, .ShareModal__email {
   overflow: hidden;
@@ -79,19 +97,28 @@
   transition: opacity 250ms ease-out, max-height 300ms ease-out 250ms;
 }
 
-.dark .ShareModal__subTitle {
+.dark .ShareModal__subTitle,
+.dark .ShareModal__owner,
+.dark .ShareModal__collabsTitle,
+.dark .ShareModal__user {
   color: var(--textColor);
 }
 .dark .ShareModal__collabsTitle {
-  color: var(--textColor);
   border-bottom: var(--darkBorder);
-}
-.dark .ShareModal__user {
-  color: var(--textColor);
 }
 .dark .ShareModal__email {
   color: rgb(150,150,150);
 }
 .dark .ShareModal__msg {
   color: var(--lightGray);
+}
+.dark .ShareModal__removeBtn {
+  color: #ddd;
+  background: rgba(var(--gray), 0.5);
+}
+.dark .ShareModal__removeBtn:hover, .dark .ShareModal__removeBtn:focus {
+  background: rgba(var(--gray), 0.7);
+}
+.dark .ShareModal__removeBtn:active {
+  background: rgba(var(--lightBlue), 0.4);
 }

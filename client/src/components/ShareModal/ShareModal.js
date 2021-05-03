@@ -5,9 +5,10 @@ import ModalContainer from '../UI/ModalContainer/ModalContainer';
 import { connect } from 'react-redux';
 import { useDidUpdate } from '../../utils/customHooks';
 import { sendUpdate } from '../../socket';
-import { selectCurrCollabs } from '../../store/selectors';
+import { selectCurrCollabs, selectUserIsOwner } from '../../store/selectors';
+import { keyIcon } from '../UI/icons';
 
-const ShareModal = ({ close, collabs, byName, noteID }) => {
+const ShareModal = ({ close, collabs, byName, noteID, userIsOwner }) => {
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showMsg, setShowMsg] = useState(false);
@@ -83,12 +84,25 @@ const ShareModal = ({ close, collabs, byName, noteID }) => {
       </div>
       <div className="ShareModal__collabs">
         <div className="ShareModal__collabsTitle">Collaborators</div>
-        {collabs.map(username => {
-          const user = byName[username];
+        {collabs.map((username, idx) => {
+          const { email } = byName[username];
           return (
             <div key={username} className="ShareModal__collab">
-              <div className="ShareModal__user">{username}</div>
-              <div className="ShareModal__email">{user.email}</div>
+              <div>
+                <div className="ShareModal__user">{username}</div>
+                <div className="ShareModal__email">{email}</div>
+              </div>
+              {
+                idx === 0 ?
+                  <div className="ShareModal__owner" title="Note Owner">
+                    {keyIcon}
+                  </div>
+                : userIsOwner ?
+                  <button className="Btn ShareModal__removeBtn">
+                    Remove
+                  </button>
+                : null
+              }
             </div>
           );
         })}
@@ -101,13 +115,15 @@ ShareModal.propTypes = {
   close: PropTypes.func.isRequired,
   collabs: PropTypes.array.isRequired,
   noteID: PropTypes.string,
-  byName: PropTypes.object.isRequired
+  byName: PropTypes.object.isRequired,
+  userIsOwner: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
   collabs: selectCurrCollabs(state),
   byName: state.notes.collabsByName,
-  noteID: state.notes.currentNoteID
+  noteID: state.notes.currentNoteID,
+  userIsOwner: selectUserIsOwner(state)
 });
 
 export default connect(mapStateToProps)(ShareModal);

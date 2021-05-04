@@ -166,7 +166,7 @@ const updateNote = (state, { payload: { noteID, body } }) => {
     [noteID]: {
       ...state.notesByID[noteID],
       body,
-      updatedAt: String(new Date())
+      updatedAt: Date.now()
     }
   };
 
@@ -197,7 +197,7 @@ const trashNote = (state, { payload: { noteID } }) => {
     ...state.notesByID,
     [noteID]: {
       ...state.notesByID[noteID],
-      updatedAt: String(new Date())
+      updatedAt: Date.now()
     }
   };
 
@@ -259,7 +259,7 @@ const restoreNote = (state, { payload: { noteID } }) => {
     ...state.notesByID,
     [noteID]: {
       ...state.notesByID[noteID],
-      updatedAt: String(new Date())
+      updatedAt: Date.now()
     }
   };
 
@@ -367,7 +367,7 @@ const createTag = (state, { payload: { noteID, tag } }) => {
     ...state.notesByID,
     [noteID]: {
       ...state.notesByID[noteID],
-      updatedAt: String(new Date()),
+      updatedAt: Date.now(),
       tags: [...state.notesByID[noteID].tags, tag]
     }
   };
@@ -406,7 +406,7 @@ const removeTag = (state, { payload: { noteID, tag } }) => {
     ...state.notesByID,
     [noteID]: {
       ...state.notesByID[noteID],
-      updatedAt: String(new Date()),
+      updatedAt: Date.now(),
       tags: state.notesByID[noteID].tags.filter(t => t !== tag)
     }
   };
@@ -551,7 +551,7 @@ const addCollaborator = (state, { payload: { noteID, email, username } }) => {
     [noteID]: {
       ...state.notesByID[noteID],
       collaborators: [...state.notesByID[noteID].collaborators, username],
-      updatedAt: String(new Date())
+      updatedAt: Date.now()
     }
   };
 
@@ -857,7 +857,7 @@ const removeCollaborator = (state, { payload: { noteID, username } }) => {
     [noteID]: {
       ...state.notesByID[noteID],
       collaborators: state.notesByID[noteID].collaborators.filter(u => u !== username),
-      updatedAt: String(new Date())
+      updatedAt: Date.now()
     }
   };
 

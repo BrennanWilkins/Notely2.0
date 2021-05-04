@@ -17,7 +17,7 @@ const getValue = secs => (
 );
 
 const getSecs = date => {
-  const timestamp = new Date(date).getTime();
+  const timestamp = !isNaN(date) ? date : new Date(date).getTime();
   const secs = Math.round(Math.abs(Date.now() - timestamp) / 1000);
   return secs;
 };

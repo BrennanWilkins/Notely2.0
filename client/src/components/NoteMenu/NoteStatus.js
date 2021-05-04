@@ -24,7 +24,10 @@ const NoteStatus = ({ updatedAt, changesSaved }) => {
 };
 
 NoteStatus.propTypes = {
-  updatedAt: PropTypes.string.isRequired,
+  updatedAt: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]).isRequired,
   changesSaved: PropTypes.bool.isRequired
 };
 

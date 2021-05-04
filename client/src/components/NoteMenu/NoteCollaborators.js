@@ -32,7 +32,7 @@ NoteCollaborators.propTypes = {
 
 const mapStateToProps = state => ({
   collabs: selectCurrCollabs(state),
-  byName: state.notes.collabsByName
+  byName: state.collabs
 });
 
 export default connect(mapStateToProps)(NoteCollaborators);

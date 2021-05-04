@@ -19,7 +19,6 @@ const initialState = {
   allTags: [],
   filteredNoteIDs: [],
   shownTag: null,
-  collabsByName: {},
   searchQuery: '',
   sortType: 'Modified Newest',
 };
@@ -43,12 +42,6 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.SHOW_NOTES_BY_TAG: return showNotesByTag(state, action);
     case actionTypes.ACCEPT_INVITE: return acceptInvite(state, action);
     case actionTypes.ADD_COLLABORATOR: return addCollaborator(state, action);
-    case actionTypes.SET_CONNECTED_USERS: return setConnectedUsers(state, action);
-    case actionTypes.SET_ACTIVE_USERS: return setActiveUsers(state, action);
-    case actionTypes.SET_USER_ONLINE: return setUserOnline(state, action);
-    case actionTypes.SET_USER_OFFLINE: return setUserOffline(state, action);
-    case actionTypes.SET_USER_ACTIVE: return setUserActive(state, action);
-    case actionTypes.SET_USER_INACTIVE: return setUserInactive(state, action);
     case actionTypes.SET_SEARCH_QUERY: return setSearchQuery(state, action);
     case actionTypes.PUBLISH_NOTE: return publishNote(state, action);
     case actionTypes.UNPUBLISH_NOTE: return unpublishNote(state, action);
@@ -67,7 +60,6 @@ const login = (state, { payload: { notes, pinnedNotes, email }}) => {
   const noteIDs = [];
   const trashIDs = [];
   const allTags = [];
-  const collabsByName = {};
 
   for (let note of notes) {
     const { _id: noteID, isTrash, __v, collaborators, ...rest } = note;
@@ -83,16 +75,6 @@ const login = (state, { payload: { notes, pinnedNotes, email }}) => {
     }
     note.tags.length && allTags.push(...note.tags);
     notesByID[noteID] = newNote;
-    collaborators.forEach(user => {
-      if (!collabsByName[user.username]) {
-        collabsByName[user.username] = {
-          ...user,
-          color: null,
-          isActive: false,
-          isOnline: false
-        };
-      }
-    });
   }
 
   const sortType = (
@@ -116,7 +98,6 @@ const login = (state, { payload: { notes, pinnedNotes, email }}) => {
     pinnedNotes,
     currentNoteID: filteredNoteIDs[0] || null,
     allTags: [...new Set(allTags)],
-    collabsByName,
     filteredNoteIDs,
     sortType
   };
@@ -494,18 +475,6 @@ const acceptInvite = (state, { payload: { note } }) => {
     collaborators: collaborators.map(user => user.username)
   };
 
-  const collabsByName = { ...state.collabsByName };
-  collaborators.forEach(user => {
-    if (!collabsByName[user.username]) {
-      collabsByName[user.username] = {
-        ...user,
-        color: null,
-        isOnline: false,
-        isActive: false
-      };
-    }
-  });
-
   let allTags = state.allTags;
   if (newNote.tags.length) {
     allTags = [...new Set([...newNote.tags, state.allTags])];
@@ -541,7 +510,6 @@ const acceptInvite = (state, { payload: { note } }) => {
       state.currentNoteID
     ),
     filteredNoteIDs,
-    collabsByName
   };
 };
 
@@ -570,131 +538,6 @@ const addCollaborator = (state, { payload: { noteID, email, username } }) => {
     ...state,
     notesByID,
     filteredNoteIDs,
-    collabsByName:
-      state.collabsByName[username] ?
-      state.collabsByName :
-      {
-        ...state.collabsByName,
-        [username]: {
-          username,
-          email,
-          color: null,
-          isActive: false,
-          isOnline: false
-        }
-      }
-  };
-};
-
-const setConnectedUsers = (state, { payload: users }) => {
-  if (!users) { return state; }
-  const collabsByName = { ...state.collabsByName };
-
-  for (let username in collabsByName) {
-    const color = users[username];
-    const user = collabsByName[username];
-    if (!color || user.isOnline) { continue; }
-    collabsByName[username] = {
-      ...user,
-      isOnline: true,
-      color
-    };
-  }
-
-  return {
-    ...state,
-    collabsByName
-  };
-};
-
-const setActiveUsers = (state, { payload: users }) => {
-  if (!users) { return state; }
-  const collabsByName = { ...state.collabsByName };
-
-  for (let username in collabsByName) {
-    const color = users[username];
-    const user = collabsByName[username];
-
-    collabsByName[username] = (
-      color ? { ...user, isActive: true, isOnline: true, color } :
-      user.isActive ? { ...user, isActive: false } :
-      user
-    );
-  }
-
-  return {
-    ...state,
-    collabsByName
-  };
-};
-
-const setUserOnline = (state, { payload: { username, color } }) => {
-  const user = state.collabsByName[username];
-  if (!user || user.isOnline) { return state; }
-
-  return {
-    ...state,
-    collabsByName: {
-      ...state.collabsByName,
-      [username]: {
-        ...user,
-        isOnline: true,
-        color
-      }
-    }
-  };
-};
-
-const setUserOffline = (state, { payload: { username } }) => {
-  const user = state.collabsByName[username];
-  if (!user || !user.isOnline) { return state; }
-
-  return {
-    ...state,
-    collabsByName: {
-      ...state.collabsByName,
-      [username]: {
-        ...user,
-        isOnline: false,
-        color: null,
-        isActive: false
-      }
-    }
-  };
-};
-
-const setUserActive = (state, { payload: { username, color } }) => {
-  const user = state.collabsByName[username];
-  if (!user || user.isActive) { return state; }
-
-  return {
-    ...state,
-    collabsByName: {
-      ...state.collabsByName,
-      [username]: {
-        ...user,
-        color,
-        isActive: true,
-        isOnline: true
-      }
-    }
-  };
-};
-
-const setUserInactive = (state, { payload: { username, color } }) => {
-  const user = state.collabsByName[username];
-  if (!user || !user.isActive) { return state; }
-
-  return {
-    ...state,
-    collabsByName: {
-      ...state.collabsByName,
-      [username]: {
-        ...user,
-        color,
-        isActive: false
-      }
-    }
   };
 };
 

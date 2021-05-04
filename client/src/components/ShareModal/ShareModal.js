@@ -145,7 +145,7 @@ ShareModal.propTypes = {
 
 const mapStateToProps = state => ({
   collabs: selectCurrCollabs(state),
-  byName: state.notes.collabsByName,
+  byName: state.collabs,
   noteID: state.notes.currentNoteID,
   userIsOwner: selectUserIsOwner(state)
 });

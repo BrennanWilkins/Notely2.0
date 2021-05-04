@@ -1,9 +1,9 @@
-// auth actionTypes
+// auth types
 export const AUTO_LOGIN_IS_LOADING = 'AUTO_LOGIN_IS_LOADING';
 export const LOGOUT = 'LOGOUT';
 export const LOGIN = 'LOGIN';
 
-// UI actionTypes
+// UI types
 export const TOGGLE_SIDE_NAV = 'TOGGLE_SIDE_NAV';
 export const TOGGLE_FULLSCREEN = 'TOGGLE_FULLSCREEN';
 export const SET_LIST_SHOWN = 'SET_LIST_SHOWN';
@@ -13,7 +13,7 @@ export const SET_NOTE_MARGINS = 'SET_NOTE_MARGINS';
 export const SET_NOTE_FONT_SIZE = 'SET_NOTE_FONT_SIZE';
 export const SET_NOTE_LIST_DISPLAY = 'SET_NOTE_LIST_DISPLAY';
 
-// note actionTypes
+// note types
 export const CREATE_NOTE = 'CREATE_NOTE';
 export const UPDATE_NOTE = 'UPDATE_NOTE';
 export const TRASH_NOTE = 'TRASH_NOTE';
@@ -30,12 +30,6 @@ export const SHOW_NOTES_BY_TAG = 'SHOW_NOTES_BY_TAG';
 export const ACCEPT_INVITE = 'ACCEPT_INVITE';
 export const REJECT_INVITE = 'REJECT_INVITE';
 export const ADD_COLLABORATOR = 'ADD_COLLABORATOR';
-export const SET_CONNECTED_USERS = 'SET_CONNECTED_USERS';
-export const SET_ACTIVE_USERS = 'SET_ACTIVE_USERS';
-export const SET_USER_ONLINE = 'SET_USER_ONLINE';
-export const SET_USER_OFFLINE = 'SET_USER_OFFLINE';
-export const SET_USER_ACTIVE = 'SET_USER_ACTIVE';
-export const SET_USER_INACTIVE = 'SET_USER_INACTIVE';
 export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY';
 export const PUBLISH_NOTE = 'PUBLISH_NOTE';
 export const UNPUBLISH_NOTE = 'UNPUBLISH_NOTE';
@@ -45,9 +39,17 @@ export const COPY_NOTE = 'COPY_NOTE';
 export const REMOVE_COLLABORATOR = 'REMOVE_COLLABORATOR';
 export const REMOVE_SELF_FROM_NOTE = 'REMOVE_SELF_FROM_NOTE';
 
-// user actionTypes
+// collabs types
+export const SET_CONNECTED_USERS = 'SET_CONNECTED_USERS';
+export const SET_ACTIVE_USERS = 'SET_ACTIVE_USERS';
+export const SET_USER_ONLINE = 'SET_USER_ONLINE';
+export const SET_USER_OFFLINE = 'SET_USER_OFFLINE';
+export const SET_USER_ACTIVE = 'SET_USER_ACTIVE';
+export const SET_USER_INACTIVE = 'SET_USER_INACTIVE';
+
+// user types
 export const ADD_NEW_INVITE = 'ADD_NEW_INVITE';
 
-// notifs actionTypes
+// notifs types
 export const ADD_NOTIF = 'ADD_NOTIF';
 export const DELETE_NOTIF = 'DELETE_NOTIF';

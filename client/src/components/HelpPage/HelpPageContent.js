@@ -54,6 +54,14 @@ export const notesContent = [
     q: `How does search work?`,
     a: `When you search for a keyword or phrase in the search bar, a list of notes that match that search query will be shown.
     If you want to search notes with a certain tag, click on that tag in the menu before searching.`
+  },
+  {
+    q: 'How do I copy a note?',
+    a: `To copy a note, click on the note options button at the top right and click on 'Copy Note'.`
+  },
+  {
+    q: 'How do I sort my notes?',
+    a: 'To sort your notes, click on the sort button at the top of the note list.'
   }
 ];
 
@@ -89,6 +97,11 @@ export const collabContent = [
     a: `When a user is online, a random color is generated to allow you to distinguish the different collaborator's cursors in the note editor.
     When a collaborator is online but working on a different note, their status will show inactive, and a orange icon will appear next to their name.
     If a user is offline, their name will be grayed out.`
+  },
+  {
+    q: 'How do I remove a collaborator from a note?',
+    a: `If you are the original creator of the note, you can remove any of the note's collaborators by click on the share icon and clicking on 'Remove'
+     next to the user.`
   }
 ];
 

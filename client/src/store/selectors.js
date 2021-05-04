@@ -35,3 +35,10 @@ export const selectPublishID = state => (
   state.notes.notesByID[state.notes.currentNoteID].publishID
   : null
 );
+
+export const selectUserIsOwner = state => (
+  state.notes.currentNoteID ?
+  state.notes.notesByID[state.notes.currentNoteID].collaborators[0]
+  === state.user.username
+  : false
+);

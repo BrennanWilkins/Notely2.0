@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './ShareModal.css';
 import PropTypes from 'prop-types';
 import ModalContainer from '../UI/ModalContainer/ModalContainer';
@@ -7,13 +7,22 @@ import { useDidUpdate } from '../../utils/customHooks';
 import { sendUpdate } from '../../socket';
 import { selectCurrCollabs, selectUserIsOwner } from '../../store/selectors';
 import { keyIcon } from '../UI/icons';
+import { removeCollab } from '../../store/actions';
 
-const ShareModal = ({ close, collabs, byName, noteID, userIsOwner }) => {
+const ShareModal = ({
+  close,
+  collabs,
+  byName,
+  noteID,
+  userIsOwner,
+  removeCollab
+}) => {
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showMsg, setShowMsg] = useState(false);
   const [msg, setMsg] = useState('');
   const [showInviteSuccess, setShowInviteSuccess] = useState(false);
+  const removeLoading = useRef(new Set());
 
   useDidUpdate(() => {
     close();
@@ -39,7 +48,7 @@ const ShareModal = ({ close, collabs, byName, noteID, userIsOwner }) => {
 
   const sendInviteHandler = e => {
     e.preventDefault();
-    if (!userInput) { return; }
+    if (!userInput || isLoading) { return; }
     setIsLoading(true);
     setShowMsg(false);
     setShowInviteSuccess(false);
@@ -49,6 +58,18 @@ const ShareModal = ({ close, collabs, byName, noteID, userIsOwner }) => {
         return msgHandler(res.errMsg);
       }
       successHandler();
+    });
+  };
+
+  const removeHandler = username => {
+    if (removeLoading.current.has(username)) { return; }
+    removeLoading.current.add(username);
+    const payload = { noteID, username };
+    sendUpdate('put/note/removeCollab', payload, success => {
+      if (success) {
+        removeCollab(payload);
+      }
+      removeLoading.current.delete(username);
     });
   };
 
@@ -98,7 +119,10 @@ const ShareModal = ({ close, collabs, byName, noteID, userIsOwner }) => {
                     {keyIcon}
                   </div>
                 : userIsOwner ?
-                  <button className="Btn ShareModal__removeBtn">
+                  <button
+                    className="Btn ShareModal__removeBtn"
+                    onClick={() => removeHandler(username)}
+                  >
                     Remove
                   </button>
                 : null
@@ -126,4 +150,4 @@ const mapStateToProps = state => ({
   userIsOwner: selectUserIsOwner(state)
 });
 
-export default connect(mapStateToProps)(ShareModal);
+export default connect(mapStateToProps, { removeCollab })(ShareModal);

@@ -56,6 +56,8 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.REFRESH_NOTES: return refreshNotes(state, action);
     case actionTypes.SET_SORT_TYPE: return setSortType(state, action);
     case actionTypes.COPY_NOTE: return copyNote(state, action);
+    case actionTypes.REMOVE_COLLABORATOR: return removeCollaborator(state, action);
+    case actionTypes.REMOVE_SELF_FROM_NOTE: return removeSelfFromNote(state, action);
     default: return state;
   }
 };
@@ -587,10 +589,16 @@ const addCollaborator = (state, { payload: { noteID, email, username } }) => {
 const setConnectedUsers = (state, { payload: users }) => {
   if (!users) { return state; }
   const collabsByName = { ...state.collabsByName };
+
   for (let username in collabsByName) {
     const color = users[username];
     const user = collabsByName[username];
-    collabsByName[username] = (color && !user.isOnline) ? { ...user, isOnline: true, color } : user;
+    if (!color || user.isOnline) { continue; }
+    collabsByName[username] = {
+      ...user,
+      isOnline: true,
+      color
+    };
   }
 
   return {
@@ -602,12 +610,14 @@ const setConnectedUsers = (state, { payload: users }) => {
 const setActiveUsers = (state, { payload: users }) => {
   if (!users) { return state; }
   const collabsByName = { ...state.collabsByName };
+
   for (let username in collabsByName) {
     const color = users[username];
     const user = collabsByName[username];
+
     collabsByName[username] = (
       color ? { ...user, isActive: true, isOnline: true, color } :
-      (!color && user.isActive) ? { ...user, isActive: false } :
+      user.isActive ? { ...user, isActive: false } :
       user
     );
   }
@@ -621,6 +631,7 @@ const setActiveUsers = (state, { payload: users }) => {
 const setUserOnline = (state, { payload: { username, color } }) => {
   const user = state.collabsByName[username];
   if (!user || user.isOnline) { return state; }
+
   return {
     ...state,
     collabsByName: {
@@ -637,6 +648,7 @@ const setUserOnline = (state, { payload: { username, color } }) => {
 const setUserOffline = (state, { payload: { username } }) => {
   const user = state.collabsByName[username];
   if (!user || !user.isOnline) { return state; }
+
   return {
     ...state,
     collabsByName: {
@@ -654,6 +666,7 @@ const setUserOffline = (state, { payload: { username } }) => {
 const setUserActive = (state, { payload: { username, color } }) => {
   const user = state.collabsByName[username];
   if (!user || user.isActive) { return state; }
+
   return {
     ...state,
     collabsByName: {
@@ -671,6 +684,7 @@ const setUserActive = (state, { payload: { username, color } }) => {
 const setUserInactive = (state, { payload: { username, color } }) => {
   const user = state.collabsByName[username];
   if (!user || !user.isActive) { return state; }
+
   return {
     ...state,
     collabsByName: {
@@ -834,6 +848,82 @@ const copyNote = (state, { payload: { note, username } }) => {
       note._id :
       state.currentNoteID
     ),
+  };
+};
+
+const removeCollaborator = (state, { payload: { noteID, username } }) => {
+  const notesByID = {
+    ...state.notesByID,
+    [noteID]: {
+      ...state.notesByID[noteID],
+      collaborators: state.notesByID[noteID].collaborators.filter(u => u !== username),
+      updatedAt: String(new Date())
+    }
+  };
+
+  let filteredNoteIDs = state.filteredNoteIDs;
+  if (shouldResortByModified(noteID, filteredNoteIDs, state.sortType)) {
+    filteredNoteIDs = resortByModified(
+      notesByID,
+      state.filteredNoteIDs,
+      state.pinnedNotes,
+      state.sortType,
+      state.trashShown
+    );
+  }
+
+  return {
+    ...state,
+    notesByID,
+    filteredNoteIDs
+  };
+};
+
+const removeSelfFromNote = (state, { payload: { noteID } }) => {
+  const isTrash = state.trashIDs.includes(noteID);
+  const noteIDs = (
+    !isTrash ?
+    state.noteIDs.filter(id => id !== noteID) :
+    state.noteIDs
+  );
+  const trashIDs = (
+    isTrash ?
+    state.trashIDs.filter(id => id !== noteID) :
+    state.trashIDs
+  );
+
+  const notesByID = { ...state.notesByID };
+  delete notesByID[noteID];
+
+  const pinnedNotes = (
+    state.pinnedNotes.includes(noteID) ?
+    state.pinnedNotes.filter(id => id !== noteID) :
+    state.pinnedNotes
+  );
+
+  const filteredNoteIDs = filterAndSortNoteIDs(
+    state.trashShown ? trashIDs : noteIDs,
+    notesByID,
+    pinnedNotes,
+    state.sortType,
+    state.trashShown,
+    state.searchQuery,
+    state.shownTag
+  );
+
+  const currentNoteID = (
+    state.currentNoteID !== noteID ? state.currentNoteID :
+    filteredNoteIDs[0] || null
+  );
+
+  return {
+    ...state,
+    noteIDs,
+    trashIDs,
+    filteredNoteIDs,
+    pinnedNotes,
+    currentNoteID,
+    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved
   };
 };
 

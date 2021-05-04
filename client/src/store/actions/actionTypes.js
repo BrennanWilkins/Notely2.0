@@ -42,6 +42,8 @@ export const UNPUBLISH_NOTE = 'UNPUBLISH_NOTE';
 export const EMPTY_TRASH = 'EMPTY_TRASH';
 export const REFRESH_NOTES = 'REFRESH_NOTES';
 export const COPY_NOTE = 'COPY_NOTE';
+export const REMOVE_COLLABORATOR = 'REMOVE_COLLABORATOR';
+export const REMOVE_SELF_FROM_NOTE = 'REMOVE_SELF_FROM_NOTE';
 
 // user actionTypes
 export const ADD_NEW_INVITE = 'ADD_NEW_INVITE';

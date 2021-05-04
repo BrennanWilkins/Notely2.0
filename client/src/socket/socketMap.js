@@ -22,7 +22,9 @@ const socketMap = {
   'put/note/pin': actionTypes.PIN_NOTE,
   'put/note/unpin': actionTypes.UNPIN_NOTE,
   'put/note/invite/reject': actionTypes.REJECT_INVITE,
-  'post/note/copy': actionTypes.COPY_NOTE
+  'post/note/copy': actionTypes.COPY_NOTE,
+  'remove collaborator': actionTypes.REMOVE_COLLABORATOR,
+  'remove self': actionTypes.REMOVE_SELF_FROM_NOTE
 };
 
 export default socketMap;

@@ -443,6 +443,46 @@ const copyNote = async (socket, sockets, data, callback) => {
   }
 };
 
+const removeCollab = async (socket, sockets, data, callback) => {
+  try {
+    const { noteID, username } = parseData(socket, data);
+
+    // user must be owner (first collaborator in arr) to remove a collaborator
+    const [note, user] = await Promise.all([
+      Note.findOne({ _id: noteID, 'collaborators.0': socket.userID }).select('collaborators').lean(),
+      User.findOne({ username, notes: noteID }).select('_id').lean()
+    ]);
+    if (!note || !user) { throw 'Invalid data'; }
+
+    const userID = String(user._id);
+
+    if (String(note.collaborators[0]) === userID) {
+      throw 'Cannot remove owner from note';
+    }
+
+    await Promise.all([
+      User.updateOne({ _id: userID }, { $pull: { notes: noteID, pinnedNotes: noteID } }),
+      Note.updateOne({ _id: noteID }, { $pull: { collaborators: userID } })
+    ]);
+
+    // update collaborator's sockets
+    const userRoom = sockets.adapter.rooms.get(`user-${userID}`);
+    userRoom.forEach(socketID => {
+      const client = sockets.sockets.get(socketID);
+      client.leave(noteID);
+      client.leave(`editor-${noteID}`);
+      delete client.userNotes[noteID];
+    });
+
+    callback(true);
+    socket.to(noteID).except(`user-${userID}`).emit('remove collaborator', data);
+    socket.to(`user-${userID}`).emit('remove self', { noteID });
+  } catch (err) {
+    callback(false);
+    errHandler(socket, 'There was an error while removing the collaborator.');
+  }
+};
+
 module.exports.noteRoutes = {
   'put/note/save' : updateNote,
   'put/note/trash' : trashNote,
@@ -464,5 +504,6 @@ module.exports.noteRoutesWithSockets = {
   'delete/note' : deleteNote,
   'put/user/emptyTrash': emptyUserTrash,
   'put/note/invite/accept': acceptInvite,
-  'post/note/copy': copyNote
+  'post/note/copy': copyNote,
+  'put/note/removeCollab': removeCollab
 };

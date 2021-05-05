@@ -413,14 +413,14 @@ const copyNote = async (socket, sockets, data, callback) => {
   try {
     const { noteID } = parseData(socket, data);
 
-    const oldNote = await Note.findById(noteID).select('body isTrash').lean();
-    if (!oldNote || oldNote.isTrash) {
+    const oldNote = await Note.findOne({ _id: noteID, isTrash: false }).select('body tags').lean();
+    if (!oldNote) {
       throw 'Invalid noteID';
     }
 
     const copy = new Note({
       body: oldNote.body,
-      tags: [],
+      tags: oldNote.tags,
       collaborators: [socket.userID],
       publishID: null,
       isTrash: false

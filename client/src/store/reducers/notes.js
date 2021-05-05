@@ -106,7 +106,7 @@ const createNoteHelper = (state, note, username) => {
     noteID: note._id,
     body: note.body,
     collaborators: [username],
-    tags: [],
+    tags: note.tags,
     publishID: null,
     createdAt: note.createdAt,
     updatedAt: note.updatedAt
@@ -652,7 +652,7 @@ const copyNote = (state, { payload: { note, username } }) => {
   const { noteIDs, notesByID } = createNoteHelper(state, note, username);
 
   const filteredNoteIDs = (
-    (state.trashShown || state.shownTag) ?
+    state.trashShown ?
     state.filteredNoteIDs :
     filterAndSortNoteIDs(
       noteIDs,
@@ -671,11 +671,7 @@ const copyNote = (state, { payload: { note, username } }) => {
     notesByID,
     filteredNoteIDs,
     currentNoteID: (
-      (!state.currentNoteID
-        && !state.trashShown
-        && !state.shownTag
-        && filteredNoteIDs.includes(note._id)
-      ) ?
+      (!state.currentNoteID && filteredNoteIDs.includes(note._id)) ?
       note._id :
       state.currentNoteID
     ),

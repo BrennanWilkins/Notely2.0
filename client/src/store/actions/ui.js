@@ -15,3 +15,5 @@ export const setNoteMargins = size => ({ type: actionTypes.SET_NOTE_MARGINS, siz
 export const setNoteFontSize = size => ({ type: actionTypes.SET_NOTE_FONT_SIZE, size });
 
 export const setNoteListDisplay = size => ({ type: actionTypes.SET_NOTE_LIST_DISPLAY, size });
+
+export const setStatus = bool => ({ type: actionTypes.SET_STATUS, bool });

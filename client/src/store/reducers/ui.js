@@ -8,7 +8,8 @@ const initialState = {
   darkMode: false,
   noteMargins: 'Normal',
   noteFontSize: 'Normal',
-  noteListDisplay: 'Normal'
+  noteListDisplay: 'Normal',
+  changesSaved: true
 };
 
 const reducer = (state = initialState, action) => {
@@ -23,6 +24,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_NOTE_MARGINS: return setNoteMargins(state, action);
     case actionTypes.SET_NOTE_FONT_SIZE: return setNoteFontSize(state, action);
     case actionTypes.SET_NOTE_LIST_DISPLAY: return setNoteListDisplay(state, action);
+    case actionTypes.SET_STATUS: return setStatus(state, action);
     default: return state;
   }
 };
@@ -106,6 +108,10 @@ const setNoteListDisplay = (state, { size }) => {
     ...state,
     noteListDisplay: size
   };
+};
+
+const setStatus = (state, { bool }) => {
+  return state.changesSaved === bool ? state : { ...state, changesSaved: bool };
 };
 
 export default reducer;

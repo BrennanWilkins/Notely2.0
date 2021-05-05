@@ -33,7 +33,7 @@ NoteStatus.propTypes = {
 
 const mapStateToProps = state => ({
   updatedAt: selectCurrUpdatedAt(state),
-  changesSaved: state.notes.changesSaved
+  changesSaved: state.ui.changesSaved
 });
 
 export default connect(mapStateToProps)(React.memo(NoteStatus));

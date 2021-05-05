@@ -15,7 +15,6 @@ const initialState = {
   pinnedNotes: [],
   currentNoteID: null,
   trashShown: false,
-  changesSaved: true,
   allTags: [],
   filteredNoteIDs: [],
   shownTag: null,
@@ -36,7 +35,6 @@ const reducer = (state  = initialState, action) => {
     case actionTypes.SET_SHOW_TRASH: return setShowTrash(state, action);
     case actionTypes.PIN_NOTE: return pinNote(state, action);
     case actionTypes.UNPIN_NOTE: return unpinNote(state, action);
-    case actionTypes.SET_STATUS: return setStatus(state, action);
     case actionTypes.CREATE_TAG: return createTag(state, action);
     case actionTypes.REMOVE_TAG: return removeTag(state, action);
     case actionTypes.SHOW_NOTES_BY_TAG: return showNotesByTag(state, action);
@@ -128,7 +126,6 @@ const createNote = (state, { payload: { note, username } }) => {
     noteIDs,
     notesByID,
     currentNoteID: note._id,
-    changesSaved: true,
     shownTag: null,
     filteredNoteIDs: filterAndSortNoteIDs(
       noteIDs,
@@ -203,7 +200,6 @@ const trashNote = (state, { payload: { noteID } }) => {
     noteIDs,
     trashIDs,
     currentNoteID,
-    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved,
     filteredNoteIDs
   };
 };
@@ -225,7 +221,6 @@ const setShowTrash = (state, { bool }) => {
     ...state,
     trashShown: bool,
     currentNoteID: filteredNoteIDs[0] || null,
-    changesSaved: true,
     shownTag: null,
     filteredNoteIDs,
     searchQuery: ''
@@ -265,7 +260,6 @@ const restoreNote = (state, { payload: { noteID } }) => {
     noteIDs,
     notesByID,
     currentNoteID,
-    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved,
     filteredNoteIDs
   };
 };
@@ -302,7 +296,6 @@ const deleteNote = (state, { payload: { noteID } }) => {
       state.pinnedNotes,
     currentNoteID,
     filteredNoteIDs,
-    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved
   };
 };
 
@@ -335,10 +328,6 @@ const unpinNote = (state, { payload: { noteID } }) => {
       state.trashShown
     )
   };
-};
-
-const setStatus = (state, { bool }) => {
-  return state.changesSaved === bool ? state : { ...state, changesSaved: bool };
 };
 
 const createTag = (state, { payload: { noteID, tag } }) => {
@@ -598,7 +587,6 @@ const emptyTrash = (state, action) => {
     notesByID,
     currentNoteID: null,
     pinnedNotes: state.pinnedNotes.filter(noteID => !state.trashIDs.includes(noteID)),
-    changesSaved: true,
     filteredNoteIDs: []
   };
 };
@@ -766,7 +754,6 @@ const removeSelfFromNote = (state, { payload: { noteID } }) => {
     filteredNoteIDs,
     pinnedNotes,
     currentNoteID,
-    changesSaved: currentNoteID !== state.currentNoteID ? true : state.changesSaved
   };
 };
 

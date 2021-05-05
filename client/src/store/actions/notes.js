@@ -46,8 +46,6 @@ export const unpinNote = noteID => dispatch => {
   dispatch({ type: actionTypes.UNPIN_NOTE, payload: { noteID } });
 };
 
-export const setStatus = bool => ({ type: actionTypes.SET_STATUS, bool });
-
 export const createTag = (noteID, tag) => dispatch => {
   if (tag.length > 100) { return; }
   const payload = { noteID, tag };

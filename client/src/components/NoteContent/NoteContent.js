@@ -27,12 +27,14 @@ const NoteContent = ({
 }) => {
   const [value, setValue] = useState(body);
   const editor = useMemo(() => withLinks(withChecklists(withHistory(withReact(createEditor())))), []);
-  const isRemoteChange = useRef(false);
-  const hasChanged = useRef(false);
-  const wasRemote = useRef(false);
-  const prevNoteID = useRef(null);
+  const status = useRef({
+    isRemoteChange: false,
+    hasChanged: false,
+    wasRemote: false,
+    oldSection: null,
+    prevNoteID: null
+  });
   const { decorate: cursorDecorate, cursorHandler, removeCursor, resetCursors } = useCursors();
-  const oldSelection = useRef(null);
   const { decorate: searchDecorate } = useSearch(searchQuery);
 
   const decorate = useCallback((...args) => {
@@ -49,16 +51,16 @@ const NoteContent = ({
     };
 
     // leaving editor, notify collabs user is leaving
-    if (!noteID && prevNoteID.current) {
+    if (!noteID && status.current.prevNoteID) {
       const socket = sendUpdate('leave editor');
       socket.off('receive ops');
       socket.off('receive cursor');
-      prevNoteID.current = null;
+      status.current.prevNoteID = null;
       return;
     }
 
     const socket = sendUpdate('join editor', noteID);
-    prevNoteID.current = noteID;
+    status.current.prevNoteID = noteID;
 
     socket.on('receive ops', data => {
       if (
@@ -69,7 +71,7 @@ const NoteContent = ({
         return;
       }
 
-      isRemoteChange.current = true;
+      status.current.isRemoteChange = true;
       // prevent normalizing to stop split_node bug
       // uses withoutSaving to not populate user's history with other users
       Editor.withoutNormalizing(editor, () => {
@@ -80,9 +82,9 @@ const NoteContent = ({
           });
         });
       });
-      isRemoteChange.current = false;
-      hasChanged.current = true;
-      wasRemote.current = true;
+      status.current.isRemoteChange = false;
+      status.current.hasChanged = true;
+      status.current.wasRemote = true;
     });
 
     socket.on('receive cursor', data => {
@@ -98,42 +100,51 @@ const NoteContent = ({
     if (
       !noteID
       || value === body
-      || isRemoteChange.current
-      || hasChanged.current
+      || status.current.isRemoteChange
+      || status.current.hasChanged
     ) {
       return;
     }
-    if (wasRemote.current) {
-      return wasRemote.current = false;
+    if (status.current.wasRemote) {
+      return status.current.wasRemote = false;
     }
-    
+
     updateNote(noteID, value);
     setStatus(false);
     // save changes to DB 700ms after stop typing
     const delay = setTimeout(() => {
-      if (!noteID || isRemoteChange.current) { return; }
+      if (!noteID || status.current.isRemoteChange) { return; }
       sendUpdate('put/note/save', { noteID, body: value }, () => {
         setStatus(true);
       });
     }, 700);
 
-    return () => clearTimeout(delay);
+    return () => {
+      if (status.current.prevNoteID === noteID) {
+        clearTimeout(delay);
+      }
+    };
   }, [value]);
 
   const changeHandler = val => {
     setValue(val);
     const ops = editor.operations;
-    if (noteID && ops.length && !isRemoteChange.current && !hasChanged.current) {
+    if (
+      noteID
+      && ops.length
+      && !status.current.isRemoteChange
+      && !status.current.hasChanged
+    ) {
       const sendOps = ops.filter(op => op && OP_TYPES[op.type]);
       if (sendOps.length) {
         sendUpdate('send ops', { noteID, ops: sendOps });
       }
     }
-    if (isCollab && noteID && oldSelection.current !== editor.selection) {
+    if (isCollab && noteID && status.current.oldSelection !== editor.selection) {
       sendUpdate('send cursor', { noteID, selection: editor.selection });
     }
-    hasChanged.current = false;
-    oldSelection.current = editor.selection;
+    status.current.hasChanged = false;
+    status.current.oldSelection = editor.selection;
   };
 
   return (

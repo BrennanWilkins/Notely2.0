@@ -22,6 +22,7 @@
 .SideNav__link:hover .Tooltip,
 .SideNav__link:focus .Tooltip,
 .ToggleSideNavBtn:hover .Tooltip,
+.ToggleSideNavBtn:focus .Tooltip,
 .Toolbar__btn:hover .Tooltip,
 .NoteListHeader__addBtn:hover .Tooltip,
 .NoteListHeader__addBtn:focus .Tooltip,

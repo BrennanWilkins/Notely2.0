@@ -6,11 +6,20 @@ import { doubleChevronIcon } from '../icons';
 
 const ToggleSideNavBtn = ({ onClick, isExpanded }) => (
   <div
-    onClick={onClick}
+    onClick={e => {
+      e.currentTarget.blur();
+      onClick();
+    }}
     className={`
       ToggleSideNavBtn
       ${isExpanded ? 'ToggleSideNavBtn--left' : 'ToggleSideNavBtn--right'}
     `}
+    tabIndex="0"
+    onKeyPress={e => {
+      if (e.key === 'Enter') {
+        e.currentTarget.click();
+      }
+    }}
   >
     {doubleChevronIcon}
     <Tooltip position="right">

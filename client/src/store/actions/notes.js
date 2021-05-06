@@ -8,10 +8,10 @@ export const createNote = () => dispatch => {
   });
 };
 
-export const updateNote = (noteID, body) => dispatch => {
+export const updateNote = (noteID, body) => {
   const payload = { noteID, body };
   sendUpdate('put/note', payload);
-  dispatch({ type: actionTypes.UPDATE_NOTE, payload });
+  return { type: actionTypes.UPDATE_NOTE, payload };
 };
 
 export const trashNote = () => (dispatch, getState) => {
@@ -36,27 +36,27 @@ export const showNote = noteID => ({ type: actionTypes.SHOW_NOTE, noteID });
 
 export const setShowTrash = bool => ({ type: actionTypes.SET_SHOW_TRASH, bool });
 
-export const pinNote = noteID => dispatch => {
+export const pinNote = noteID => {
   sendUpdate('put/note/pin', { noteID });
-  dispatch({ type: actionTypes.PIN_NOTE, payload: { noteID } });
+  return { type: actionTypes.PIN_NOTE, payload: { noteID } };
 };
 
-export const unpinNote = noteID => dispatch => {
+export const unpinNote = noteID => {
   sendUpdate('put/note/unpin', { noteID });
-  dispatch({ type: actionTypes.UNPIN_NOTE, payload: { noteID } });
+  return { type: actionTypes.UNPIN_NOTE, payload: { noteID } };
 };
 
-export const createTag = (noteID, tag) => dispatch => {
+export const createTag = (noteID, tag) => {
   if (tag.length > 100) { return; }
   const payload = { noteID, tag };
   sendUpdate('post/note/tag', payload);
-  dispatch({ type: actionTypes.CREATE_TAG, payload });
+  return { type: actionTypes.CREATE_TAG, payload };
 };
 
-export const removeTag = (noteID, tag) => dispatch => {
+export const removeTag = (noteID, tag) => {
   const payload = { noteID, tag };
   sendUpdate('delete/note/tag', payload);
-  dispatch({ type: actionTypes.REMOVE_TAG, payload });
+  return { type: actionTypes.REMOVE_TAG, payload };
 };
 
 export const showNotesByTag = tag => ({ type: actionTypes.SHOW_NOTES_BY_TAG, tag });
@@ -70,24 +70,24 @@ export const acceptInvite = noteID => dispatch => {
   });
 };
 
-export const rejectInvite = noteID => dispatch => {
+export const rejectInvite = noteID => {
   sendUpdate('put/note/invite/reject', { noteID });
-  dispatch({ type: actionTypes.REJECT_INVITE, payload: { noteID } });
+  return { type: actionTypes.REJECT_INVITE, payload: { noteID } };
 };
 
 export const setSearchQuery = query => ({ type: actionTypes.SET_SEARCH_QUERY, query });
 
 export const publishNote = payload => ({ type: actionTypes.PUBLISH_NOTE, payload });
 
-export const unpublishNote = noteID => dispatch => {
+export const unpublishNote = noteID => {
   const payload = { noteID };
   sendUpdate('put/note/unpublish', payload);
-  dispatch({ type: actionTypes.UNPUBLISH_NOTE, payload });
+  return { type: actionTypes.UNPUBLISH_NOTE, payload };
 };
 
-export const emptyTrash = () => dispatch => {
+export const emptyTrash = () => {
   sendUpdate('put/user/emptyTrash');
-  dispatch({ type: actionTypes.EMPTY_TRASH });
+  return { type: actionTypes.EMPTY_TRASH };
 };
 
 export const refreshNotes = notes => ({ type: actionTypes.REFRESH_NOTES, notes });

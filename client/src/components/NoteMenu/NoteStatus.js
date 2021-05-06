@@ -6,22 +6,23 @@ import { arrowRepeatIcon, checkIcon } from '../UI/icons';
 import { selectCurrUpdatedAt } from '../../store/selectors';
 import LiveDate from '../UI/LiveDate';
 
-const NoteStatus = ({ updatedAt, changesSaved }) => {
-  return (
-    <div className="NoteMenu__info">
-      <div className="NoteMenu__date">
-        <LiveDate date={updatedAt} prefix="Last updated" />
-      </div>
-      <div className={`NoteMenu__status ${!changesSaved ? 'NoteMenu__status--anim' : ''}`}>
-        {
-          changesSaved ?
-          <>{checkIcon}All changes saved</> :
-          <>{arrowRepeatIcon}Saving changes</>
-        }
-      </div>
+const NoteStatus = ({ updatedAt, changesSaved }) => (
+  <div className="NoteMenu__info">
+    <div className="NoteMenu__date">
+      <LiveDate date={updatedAt} prefix="Last updated" />
     </div>
-  );
-};
+    <div className={`
+      NoteMenu__status
+      ${!changesSaved ? 'NoteMenu__status--anim' : ''}
+    `}>
+      {
+        changesSaved ?
+        <>{checkIcon}All changes saved</> :
+        <>{arrowRepeatIcon}Saving changes</>
+      }
+    </div>
+  </div>
+);
 
 NoteStatus.propTypes = {
   updatedAt: PropTypes.oneOfType([

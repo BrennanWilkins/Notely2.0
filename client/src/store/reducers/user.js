@@ -17,11 +17,11 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-const login = (state, action) => ({
+const login = (state, { payload }) => ({
   ...state,
-  username: action.payload.username,
-  email: action.payload.email,
-  invites: action.payload.invites
+  username: payload.username,
+  email: payload.email,
+  invites: payload.invites
 });
 
 const addNewInvite = (state, action) => ({

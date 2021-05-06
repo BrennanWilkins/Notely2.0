@@ -4,22 +4,17 @@
   display: flex;
   flex-direction: column;
   transition: background 250ms;
-}
-.NoteContainer--contract {
   flex-grow: 1;
+  min-width: 0;
 }
-.NoteContainer--expanded {
+.NoteContainer--fs {
   position: fixed;
   width: 100vw;
-  z-index: 2;
 }
 @media (max-width: 900px) {
-  .NoteContainer {
-    max-width: calc(100% - 376px) !important;
-  }
-  .NoteContainer--expanded {
+  .NoteContainer--fs {
     margin-left: 55px;
-    max-width: calc(100vw - 55px) !important;
+    width: calc(100vw - 55px);
   }
 }
 @media (max-width: 750px) {
@@ -27,8 +22,6 @@
     position: fixed;
     width: calc(100vw - 55px);
     margin-left: 55px;
-    max-width: calc(100vw - 55px) !important;
-    z-index: 3;
   }
   .NoteContainer--hide {
     display: none;

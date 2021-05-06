@@ -1,10 +1,8 @@
 import * as actionTypes from '../actions/actionTypes';
 
-const initialState = {};
-
-const reducer = (state = initialState, action) => {
+const reducer = (state = {}, action) => {
   switch (action.type) {
-    case actionTypes.LOGOUT: return initialState;
+    case actionTypes.LOGOUT: return {};
     case actionTypes.LOGIN: return login(state, action);
     case actionTypes.ACCEPT_INVITE: return acceptInvite(state, action);
     case actionTypes.ADD_COLLABORATOR: return addCollaborator(state, action);

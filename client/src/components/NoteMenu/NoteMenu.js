@@ -14,15 +14,26 @@ import Collaborators from './NoteCollaborators';
 import PublishModal from '../PublishModal/PublishModal';
 import NoteOptions from './NoteOptions';
 
-const NoteMenu = props => {
+const NoteMenu = ({
+  toggleFS,
+  isFS,
+  trashNote,
+  trashShown,
+  restoreNote,
+  deleteNote,
+  noteID,
+  showList,
+  pinNote,
+  unpinNote,
+  isPinned,
+  isCollab,
+}) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [showNoteOptions, setShowNoteOptions] = useState(false);
 
   const pinHandler = () => {
-    props.noteIsPinned ?
-    props.unpinNote(props.noteID) :
-    props.pinNote(props.noteID);
+    isPinned ? unpinNote(noteID) : pinNote(noteID);
   };
 
   return (
@@ -31,9 +42,9 @@ const NoteMenu = props => {
         <div className="NoteMenu__btns">
           <button
             className="NoteMenu__btn NoteMenu__fsBtn"
-            onClick={props.toggleFullscreen}
+            onClick={toggleFS}
           >
-            {props.isFullscreen ? contractIcon : expandIcon}
+            {isFS ? contractIcon : expandIcon}
             <Tooltip position="down">
               Fullscreen
               <div>Alt+Shift+F</div>
@@ -41,7 +52,7 @@ const NoteMenu = props => {
           </button>
           <button
             className="NoteMenu__btn NoteMenu__backBtn"
-            onClick={props.showList}
+            onClick={showList}
           >
             {arrowIcon}
             <Tooltip position="down">
@@ -50,17 +61,17 @@ const NoteMenu = props => {
             </Tooltip>
           </button>
           <div className="NoteMenu__options">
-            {!!props.noteID && (props.trashShown ?
+            {!!noteID && (trashShown ?
               <>
                 <button
                   className="NoteMenu__btn NoteMenu__trashBtn"
-                  onClick={props.restoreNote}
+                  onClick={restoreNote}
                 >
                   Restore
                 </button>
                 <button
                   className="NoteMenu__btn NoteMenu__trashBtn"
-                  onClick={props.deleteNote}
+                  onClick={deleteNote}
                 >
                   Delete Forever
                 </button>
@@ -71,13 +82,13 @@ const NoteMenu = props => {
                   className={`
                     NoteMenu__btn
                     NoteMenu__iconBtn
-                    ${props.noteIsPinned ? 'NoteMenu__btn--hl' : ''}
+                    ${isPinned ? 'NoteMenu__btn--hl' : ''}
                   `}
                   onClick={pinHandler}
                 >
                   {pinIcon}
                   <Tooltip position="down">
-                    {props.noteIsPinned ? 'Unpin' : 'Pin to top'}
+                    {isPinned ? 'Unpin' : 'Pin to top'}
                   </Tooltip>
                 </button>
                 <button
@@ -96,7 +107,7 @@ const NoteMenu = props => {
                 </button>
                 <button
                   className="NoteMenu__btn NoteMenu__iconBtn"
-                  onClick={props.trashNote}
+                  onClick={trashNote}
                 >
                   {trashIcon}
                   <Tooltip position="down">Send to trash</Tooltip>
@@ -112,8 +123,8 @@ const NoteMenu = props => {
           </div>
         </div>
         {showNoteOptions && <NoteOptions close={() => setShowNoteOptions(false)} />}
-        {!!props.noteID && <NoteStatus />}
-        {props.isCollab && <Collaborators />}
+        {!!noteID && <NoteStatus />}
+        {isCollab && <Collaborators />}
       </div>
       {showShareModal && <ShareModal close={() => setShowShareModal(false)} />}
       {showPublishModal && <PublishModal close={() => setShowPublishModal(false)} />}
@@ -122,8 +133,8 @@ const NoteMenu = props => {
 };
 
 NoteMenu.propTypes = {
-  toggleFullscreen: PropTypes.func.isRequired,
-  isFullscreen: PropTypes.bool.isRequired,
+  toggleFS: PropTypes.func.isRequired,
+  isFS: PropTypes.bool.isRequired,
   trashNote: PropTypes.func.isRequired,
   trashShown: PropTypes.bool.isRequired,
   restoreNote: PropTypes.func.isRequired,
@@ -132,20 +143,20 @@ NoteMenu.propTypes = {
   showList: PropTypes.func.isRequired,
   pinNote: PropTypes.func.isRequired,
   unpinNote: PropTypes.func.isRequired,
-  noteIsPinned: PropTypes.bool.isRequired,
+  isPinned: PropTypes.bool.isRequired,
   isCollab: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
-  isFullscreen: state.ui.isFullscreen,
+  isFS: state.ui.isFullscreen,
   trashShown: state.notes.trashShown,
   noteID: state.notes.currentNoteID,
-  noteIsPinned: selectNoteIsPinned(state, state.notes.currentNoteID),
+  isPinned: selectNoteIsPinned(state, state.notes.currentNoteID),
   isCollab: selectIsCollab(state)
 });
 
 const mapDispatchToProps = dispatch => ({
-  toggleFullscreen: () => dispatch(toggleFullscreen()),
+  toggleFS: () => dispatch(toggleFullscreen()),
   trashNote: () => dispatch(trashNote()),
   restoreNote: () => dispatch(restoreNote()),
   deleteNote: () => dispatch(deleteNote()),

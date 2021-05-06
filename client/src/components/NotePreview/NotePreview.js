@@ -14,7 +14,7 @@ const NotePreview = ({ close, noteID }) => {
   const [err, setErr] = useState(false);
 
   useEffect(() => {
-    setIsLoading(false);
+    setIsLoading(true);
     sendUpdate('get/note/invite', { noteID }, res => {
       setIsLoading(false);
       if (res.error) {

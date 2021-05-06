@@ -9,28 +9,28 @@ import { toggleSideNav, toggleFullscreen, setListShown, createNote } from '../..
 import { connect } from 'react-redux';
 import isHotkey from 'is-hotkey';
 
-const NotelyContainer = props => {
+const NotelyContainer = ({ toggleSideNav, toggleFS, showList, createNote }) => {
   useEffect(() => {
     const shortcutHandler = e => {
       // alt + shift + m opens side nav
       if (isHotkey('alt+shift+m', e)) {
         e.preventDefault();
-        props.toggleSideNav();
+        toggleSideNav();
       }
       // alt + shift + f toggles fullscreen
       if (isHotkey('alt+shift+f', e)) {
         e.preventDefault();
-        props.toggleFullscreen();
+        toggleFS();
       }
       // alt + shift + b opens note list on < 750px width screen
       if (window.innerWidth <= 750 && isHotkey('alt+shift+b', e)) {
         e.preventDefault();
-        props.showList();
+        showList();
       }
       // alt + shift + n creates new note
       if (isHotkey('alt+shift+n', e)) {
         e.preventDefault();
-        props.createNote();
+        createNote();
       }
     };
 
@@ -50,14 +50,14 @@ const NotelyContainer = props => {
 
 NotelyContainer.propTypes = {
   toggleSideNav: PropTypes.func.isRequired,
-  toggleFullscreen: PropTypes.func.isRequired,
+  toggleFS: PropTypes.func.isRequired,
   showList: PropTypes.func.isRequired,
   createNote: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = dispatch => ({
   toggleSideNav: () => dispatch(toggleSideNav()),
-  toggleFullscreen: () => dispatch(toggleFullscreen()),
+  toggleFS: () => dispatch(toggleFullscreen()),
   showList: () => dispatch(setListShown(true)),
   createNote: () => dispatch(createNote())
 });

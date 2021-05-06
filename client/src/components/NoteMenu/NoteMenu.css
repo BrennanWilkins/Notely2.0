@@ -41,17 +41,11 @@
   margin-left: 10px;
   font-size: 14px;
 }
-.NoteMenu__iconBtn:hover,
-.NoteMenu__iconBtn:focus {
-  background: rgba(0,0,0,0.05);
-}
-.NoteMenu__fsBtn:hover,
-.NoteMenu__fsBtn:focus,
-.NoteMenu__trashBtn:hover,
-.NoteMenu__trashBtn:focus,
-.NoteMenu__backBtn:hover,
-.NoteMenu__backBtn:focus {
+.NoteMenu__btn:hover, .NoteMenu__btn:focus {
   background: rgba(0,0,0,0.08);
+}
+.NoteMenu__iconBtn:hover, .NoteMenu__iconBtn:focus {
+  background: rgba(0,0,0,0.05);
 }
 .NoteMenu__btn:active {
   background: rgba(var(--blue), 0.2);
@@ -85,6 +79,7 @@
   justify-content: center;
   align-items: center;
   white-space: nowrap;
+  margin-left: 10px;
 }
 .NoteMenu__status svg {
   font-size: 16px;
@@ -146,12 +141,7 @@
   color: #ddd;
   background: rgba(var(--gray), 0.5);
 }
-.dark .NoteMenu__fsBtn:hover,
-.dark .NoteMenu__fsBtn:focus,
-.dark .NoteMenu__trashBtn:hover,
-.dark .NoteMenu__backBtn:hover,
-.dark .NoteMenu__trashBtn:focus,
-.dark .NoteMenu__backBtn:focus {
+.dark .NoteMenu__btn:hover, .dark .NoteMenu__btn:focus {
   background: rgba(var(--gray), 0.65);
 }
 .dark .NoteMenu__btn:active {

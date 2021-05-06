@@ -195,7 +195,7 @@ const trashNote = (state, { payload: { noteID } }) => {
   const filteredNoteIDs = (
     state.filteredNoteIDs.includes(noteID) ?
     state.filteredNoteIDs.filter(id => id !== noteID) :
-    filteredNoteIDs = sortNoteIDs(
+    sortNoteIDs(
       state.trashShown ? trashIDs : noteIDs,
       notesByID,
       state.pinnedNotes,
@@ -701,22 +701,20 @@ const removeCollaborator = (state, { payload: { noteID, username } }) => {
     }
   };
 
-  const filteredNoteIDs = (
-    (state.filteredNoteIDs.includes(noteID) && isModSort(state.sortType)) ?
-    sortNoteIDs(
-      state.filteredNoteIDs,
-      notesByID,
-      state.pinnedNotes,
-      state.sortType,
-      state.trashShown
-    ) :
-    state.filteredNoteIDs
-  );
-
   return {
     ...state,
     notesByID,
-    filteredNoteIDs
+    filteredNoteIDs: (
+      (state.filteredNoteIDs.includes(noteID) && isModSort(state.sortType)) ?
+      sortNoteIDs(
+        state.filteredNoteIDs,
+        notesByID,
+        state.pinnedNotes,
+        state.sortType,
+        state.trashShown
+      ) :
+      state.filteredNoteIDs
+    )
   };
 };
 

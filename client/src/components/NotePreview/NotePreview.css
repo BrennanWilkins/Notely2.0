@@ -8,7 +8,7 @@
   padding: 35px 10px 10px;
   box-sizing: border-box;
   border: 1px solid var(--lighterGray2);
-  animation: notePreviewAnim 350ms ease-out;
+  animation: notePreviewAnim 250ms ease-out;
 }
 @keyframes notePreviewAnim {
   from {

@@ -52,7 +52,7 @@ const sortNoteIDs = (
       case 'Created Oldest': return a.createdAt - b.createdAt;
       case 'Modified Newest': return b.updatedAt - a.updatedAt;
       case 'Modified Oldest': return a.updatedAt - b.updatedAt;
-      case 'AtoZ': console.log(1); return a.text.localeCompare(b.text);
+      case 'AtoZ': return a.text.localeCompare(b.text);
       case 'ZtoA': return b.text.localeCompare(a.text);
       default: return 0;
     }

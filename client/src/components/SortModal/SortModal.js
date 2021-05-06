@@ -5,15 +5,7 @@ import { CloseBtn } from '../UI/Buttons/Buttons';
 import { useModalToggle } from '../../utils/customHooks';
 import { connect } from 'react-redux';
 import { setSortType } from '../../store/actions';
-
-const sortTypes = [
-  { type: 'Created Newest', val: 'Date created (newest first)' },
-  { type: 'Created Oldest', val: 'Date created (oldest first)' },
-  { type: 'Modified Newest', val: 'Last updated (newest first)' },
-  { type: 'Modified Oldest', val: 'Last updated (oldest first)' },
-  { type: 'AtoZ', val: 'Alphabetically (A to Z)' },
-  { type: 'ZtoA', val: 'Alphabetically (Z to A)' }
-];
+import { sortTypes } from '../../utils/sortTypes';
 
 const SortModal = ({ close, sortType, setSortType }) => {
   const modalRef = useRef();

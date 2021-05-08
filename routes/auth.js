@@ -67,7 +67,6 @@ router.post('/signup',
         recoverPassID: null,
         signupID
       });
-      await user.save();
 
       // send link to provided email with hash to finish signup
       const hRef = `${baseURL}/finish-signup?token=${signupID}`;
@@ -80,6 +79,8 @@ router.post('/signup',
         <p><a href="${hRef}">Sign up</a></p>
         `
       );
+
+      await user.save();
 
       res.sendStatus(200);
     } catch(err) {
@@ -105,11 +106,14 @@ router.get('/finishSignup/:signupID',
           throw err;
         }
         const user = await User.findOne({ email: decoded.email });
+        if (!user) { throw 'No user'; }
+
         if (user.signupID === null) {
           return res.status(400).json({
             msg: 'Your account has already been signed up.'
           });
         }
+        
         const firstNote = new Note({
           body: firstNoteBody,
           tags: [],

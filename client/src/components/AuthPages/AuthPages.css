@@ -1,67 +1,74 @@
-.AuthContainer {
+.Auth__container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.Auth__content {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  min-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  min-height: 100%;
   text-align: center;
 }
-.AuthContainer--dark {
+.Auth__container--dark {
   background: var(--lighterGray);
 }
-.AuthContainer__logo {
+.Auth__logo {
   font-size: 150px;
   width: 150px;
   height: 150px;
 }
-.AuthPages__form {
+.Auth__form {
   width: 100%;
   padding: 0 10px;
   box-sizing: border-box;
   position: relative;
 }
-.AuthPages__submitBtn {
+.Auth__submitBtn {
   display: block;
   font-size: 16px;
   width: 100%;
   max-width: 350px;
   margin: 0 auto 20px;
 }
-.AuthPages__rememberMe {
+.Auth__rememberMe {
   margin: 0 0 30px;
   font-size: 15px;
   display: flex;
   align-items: center;
   color: rgb(100,100,100);
 }
-.AuthPages__rememberMe input {
+.Auth__rememberMe input {
   margin-right: 5px;
 }
-.AuthPages__link {
+.Auth__link {
   font-size: 15px;
   margin-bottom: 15px;
 }
-.AuthPages__link a {
+.Auth__link a {
   text-decoration: none;
   outline: none;
   color: rgb(var(--blue));
 }
-.AuthPages__link a:hover, .AuthPages__link a:focus {
+.Auth__link a:hover, .Auth__link a:focus {
   color: rgb(var(--blue3));
 }
-.AuthPages__msg--show, .AuthPages__msg--hide {
+.Auth__msg--show, .Auth__msg--hide {
   width: 100%;
   max-width: 350px;
   max-height: 400px;
   font-size: 14.5px;
 }
-.AuthPages__msg--show {
+.Auth__msg--show {
   transition: max-height 350ms ease-in, opacity 300ms ease-out 200ms;
   margin: 0 auto 10px;
 }
-.AuthPages__msg--hide {
+.Auth__msg--hide {
   opacity: 0;
   max-height: 0;
   overflow: hidden;
@@ -79,12 +86,13 @@
   justify-content: center;
   margin: 60px 0 -30px;
 }
-.AuthPages__input, .AuthPages__passInput {
+.Auth__input, .Auth__passInput {
   margin: 10px auto;
   width: 100%;
   max-width: 350px;
 }
-.AuthPages__input, .AuthPages__passInput input {
+.Auth__input, .Auth__passInput input {
+  -webkit-appearance: none;
   display: block;
   padding: 8px;
   font-size: 15px;
@@ -94,19 +102,19 @@
   outline: none;
   transition: border 250ms;
 }
-.AuthPages__input:hover, .AuthPages__passInput input:hover {
+.Auth__input:hover, .Auth__passInput input:hover {
   border: 2px solid rgb(220,220,220);
   background: rgb(252,252,252);
 }
-.AuthPages__input:focus, .AuthPages__passInput input:focus {
+.Auth__input:focus, .Auth__passInput input:focus {
   border: 2px solid rgba(var(--blue), 0.5);
   background: white;
   box-shadow: 0 0 3px 0.5px rgba(var(--blue), 0.4);
 }
-.AuthPages__input::placeholder {
+.Auth__input::placeholder {
   color: var(--darkGray);
 }
-.AuthPages__passInput input {
+.Auth__passInput input {
   width: 100%;
   padding-right: 30px;
 }

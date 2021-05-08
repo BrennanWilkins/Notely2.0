@@ -12,7 +12,10 @@ const Avatar = ({ color, username, status }) => (
       {username[0]}
     </div>
     {status === 'Inactive' && <div className="Avatar__symb" />}
-    <Tooltip position="down">{username}<div>Status: {status}</div></Tooltip>
+    <Tooltip position="down">
+      {username}
+      <div>Status: {status}</div>
+    </Tooltip>
   </div>
 );
 

@@ -36,12 +36,27 @@ const ForgotPage = () => {
 
   return (
     <AuthContainer title="Forgot my password">
-      <form onSubmit={submitHandler} className="AuthPages__form">
-        <input className="AuthPages__input" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
-        <div className={showMsg ? 'AuthPages__msg--show' : 'AuthPages__msg--hide'}>{msg}</div>
-        <button type="Submit" className="Btn BlueBtn AuthPages__submitBtn" disabled={isLoading}>Send Link</button>
+      <form onSubmit={submitHandler} className="Auth__form">
+        <input
+          className="Auth__input"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="Email"
+        />
+        <div className={showMsg ? 'Auth__msg--show' : 'Auth__msg--hide'}>
+          {msg}
+        </div>
+        <button
+          type="Submit"
+          className="Btn BlueBtn Auth__submitBtn"
+          disabled={isLoading}
+        >
+          Send Link
+        </button>
       </form>
-      <div className="AuthPages__link"><Link to="/login">Back to login</Link></div>
+      <div className="Auth__link">
+        <Link to="/login">Back to login</Link>
+      </div>
     </AuthContainer>
   );
 };

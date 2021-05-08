@@ -1,7 +1,7 @@
 .NotelyContainer {
   position: fixed;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   display: flex;
 }

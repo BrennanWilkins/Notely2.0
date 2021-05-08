@@ -42,18 +42,44 @@ const LoginPage = ({ login }) => {
 
   return (
     <AuthContainer title="Log in to Notely">
-      <form onSubmit={submitHandler} className="AuthPages__form">
-        <input className="AuthPages__input" value={loginName} onChange={e => setLoginName(e.target.value)} placeholder="Username or email" />
-        <PassInput className="AuthPages__passInput" value={pass} onChange={e => setPass(e.target.value)} placeholder="Password" />
-        <div className={showMsg ? 'AuthPages__msg--show' : 'AuthPages__msg--hide'}>{msg}</div>
-        <button type="Submit" className="Btn BlueBtn AuthPages__submitBtn" disabled={isLoading}>Log in</button>
+      <form onSubmit={submitHandler} className="Auth__form">
+        <input
+          className="Auth__input"
+          value={loginName}
+          onChange={e => setLoginName(e.target.value)}
+          placeholder="Username or email"
+        />
+        <PassInput
+          className="Auth__passInput"
+          value={pass}
+          onChange={e => setPass(e.target.value)}
+          placeholder="Password"
+        />
+        <div className={showMsg ? 'Auth__msg--show' : 'Auth__msg--hide'}>
+          {msg}
+        </div>
+        <button
+          type="Submit"
+          className="Btn BlueBtn Auth__submitBtn"
+          disabled={isLoading}
+        >
+          Log in
+        </button>
       </form>
-      <label className="AuthPages__rememberMe">
-        <input type="checkbox" checked={rememberUser} onChange={() => setRememberUser(prev => !prev)} />
+      <label className="Auth__rememberMe">
+        <input
+          type="checkbox"
+          checked={rememberUser}
+          onChange={() => setRememberUser(prev => !prev)}
+        />
         Remember Me
       </label>
-      <div className="AuthPages__link"><Link to="/forgot">Forgot my password</Link></div>
-      <div className="AuthPages__link">Don't have an account? <Link to="/signup">Sign up</Link></div>
+      <div className="Auth__link">
+        <Link to="/forgot">Forgot my password</Link>
+      </div>
+      <div className="Auth__link">
+        Don't have an account? <Link to="/signup">Sign up</Link>
+      </div>
     </AuthContainer>
   );
 };

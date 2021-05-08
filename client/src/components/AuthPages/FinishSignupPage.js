@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router';
 import { instance as axios } from '../../axios';
-import { logo } from '../UI/icons';
 import Spinner from '../UI/Spinner/Spinner';
 import './AuthPages.css';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login } from '../../store/actions';
 import { getTokenParam } from '../../utils/authValidation';
+import AuthContainer from './AuthContainer';
 
 const FinishSignupPage = ({ login }) => {
   const history = useHistory();
@@ -31,17 +31,18 @@ const FinishSignupPage = ({ login }) => {
   }, []);
 
   return (
-    <div className="AuthContainer AuthContainer--dark">
+    <AuthContainer dark noLogo={isLoading}>
       {isLoading ?
         <Spinner />
         :
         <>
-          <div className="AuthContainer__logo">{logo}</div>
           {!!msg && <div className="SignupSuccess__text">{msg}</div>}
-          <div className="AuthPages__link"><Link to="/login">Back to login</Link></div>
+          <div className="Auth__link">
+            <Link to="/login">Back to login</Link>
+          </div>
         </>
       }
-    </div>
+    </AuthContainer>
   );
 };
 

@@ -113,7 +113,9 @@ const NoteContent = ({
     setStatus(false);
     // save changes to DB 700ms after stop typing
     const delay = setTimeout(() => {
-      if (!noteID || status.current.isRemoteChange) { return; }
+      if (!noteID || status.current.isRemoteChange || status.current.wasRemote) {
+        return setStatus(true);
+      }
       sendUpdate('put/note/save', { noteID, body: value }, () => {
         setStatus(true);
       });

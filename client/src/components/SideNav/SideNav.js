@@ -115,10 +115,8 @@ const SideNav = ({
             icon={peopleIcon}
             shown={shown}
           >
-            <div>
-              Invites
-              {hasInvites && <span className="SideNav__notif" />}
-            </div>
+            <div>Invites</div>
+            {hasInvites && <span className="SideNav__notif" />}
           </SideNavLink>
           <SideNavLink
             onClick={toggleTagsHandler}
@@ -127,7 +125,10 @@ const SideNav = ({
             shown={shown}
           >
             <div>Tags</div>
-            <span className={`SideNav__toggleTagBtn ${showTags ? 'SideNav__toggleTagBtn--rotate' : ''}`}>
+            <span className={`
+              SideNav__toggleTagBtn
+              ${showTags ? 'SideNav__toggleTagBtn--rotate' : ''}
+            `}>
               {backIcon}
             </span>
           </SideNavLink>

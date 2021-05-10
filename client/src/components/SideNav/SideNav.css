@@ -47,7 +47,7 @@
 }
 .SideNav--contract .SideNav__title div,
 .SideNav--contract .SideNav__innerLink div,
-.SideNav--contract .SideNav__innerLink span {
+.SideNav--contract .SideNav__toggleTagBtn {
   display: none;
 }
 .SideNav__link {
@@ -139,13 +139,17 @@
   }
 }
 .SideNav__notif {
-  display: inline-block;
+  position: absolute;
   background: orange;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  margin-left: 8px;
-  vertical-align: middle;
+  left: 104px;
+  top: 19px;
+}
+.SideNav--contract .SideNav__notif {
+  left: 7.5px;
+  top: 7.5px;
 }
 .SideNav__helpLink {
   text-decoration: none;
